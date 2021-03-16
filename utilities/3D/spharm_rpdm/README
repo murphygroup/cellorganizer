@@ -1,0 +1,17 @@
+The package is for the SPHARM-RPDM model training and postanalysis (Ruan & Murphy, 2018, Bioinformatics)
+
+External packages used:
+
+miniboundbox by John D'Errico under BSD 2.0 license
+SPHARM-MAT-v1-0-0 by Li Shen under GPL v3.0 license
+
+The function align_FOE_2.m is modified from a function in SPHARM-MAT-v1-0-0
+
+External packages used in SPHARM-RPDM-package:
+
+image_geometric_measures by  NS, Yazan Ahed, INRA, David Legland under BSD license
+
+S2 Sampling Toolbox by Anton Semechko under BSD license
+
+The functions in the 'util' directory are either directly or modified from some functions from SPHARM-MAT package (author: Li Shen, license: GPL v3). We acknowledge the author Shen Li for the package.
+

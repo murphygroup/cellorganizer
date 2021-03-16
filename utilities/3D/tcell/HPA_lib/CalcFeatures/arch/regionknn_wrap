@@ -1,0 +1,97 @@
+clear
+
+addpath lib/classification
+addpath lib/classification/libsvm-mat-2.84-1
+addpath lib/results
+addpath lib/wrappers
+
+load features/regionfeatures_all.mat
+
+filterfeats
+
+[r c] = find(isnan(allfeatures));
+allfeatures(r,:) = [];
+classlabels(r) = [];
+antibodyids(r) = [];
+imagelist(r) = [];
+
+
+
+break
+N = 10;
+% determine CV splits
+[proteins Ipr protlabels] = unique(antibodyids);
+splits = partition( classlabels(Ipr)', N);
+[trainidx, testidx] = partedsets( splits);
+
+U = unique(classlabels);
+s = zeros(size(U));
+numk = round(median(s));
+numk = 5;
+
+predlabels = zeros(length(classlabels),1);
+distances = zeros(length(classlabels),numk);
+indices = zeros(length(classlabels),numk);
+for i=1:N
+    trainind = find(ismember(protlabels,trainidx{i}));
+    testind = find(ismember(protlabels,testidx{i}));
+
+    traindata = allfeatures( trainind,:);
+    testdata = allfeatures( testind,:);
+    
+    trainlabels = classlabels(trainind);
+    
+    
+    % zscore standardization
+    mu = mean(traindata,1);  st = std(traindata,[],1);
+    traindata = (traindata - repmat( mu, [size(traindata,1) 1]))./ repmat( st, [size(traindata,1) 1]);
+    testdata = (testdata - repmat( mu, [size(testdata,1) 1]))./ repmat( st, [size(testdata,1) 1]);
+
+    % normalizing
+    traindata = traindata./repmat( sqrt(sum(traindata(:,:).^2,2)), [1 size(traindata,2)]);
+    testdata = testdata./repmat( sqrt(sum(testdata(:,:).^2,2)), [1 size(testdata,2)]);
+
+    feat = [];
+    for j=1:length(U)
+        idx = find(trainlabels==U(j));
+        feat{j} = traindata(idx,:);
+        s(j) = length(idx);
+    end
+    idx = ml_stepdisc( feat,'regionsda.txt');
+    
+    knn = pdist([testdata(:,idx); traindata(:,idx)], 'euclidean');
+    knn = squareform(knn);
+    knni = knn(1:size(testdata(:,idx),1),size(testdata(:,idx),1)+1:end);
+
+    [y ind] = sort(knni,2);
+    nlabels = trainlabels(ind(:,1:numk));
+    indices(testind,:) = nlabels;
+    distances(testind,:) = y(:,1:numk);
+    predlabels(testind) = mode(nlabels,2);
+end
+
+weights = 1./distances.^4;
+labelvalues = zeros(length(classlabels),length(U));
+for i=1:length(classlabels)
+    for j=1:size(indices,2)
+        labelvalues(i,indices(i,j)) = labelvalues(i,indices(i,j)) + weights(i,j);
+    end
+end
+% labelvalues(:,6) = labelvalues(:,6)*.5;
+
+[a predlabelsW] = max(labelvalues,[],2);
+
+
+[cc uu dd ww] = conmatrix( classlabels, predlabels);
+disp([num2str(round(1000*dd)/10) repmat('   ', [size(cc,1) 1]) num2str(sum(cc,2))]);
+disp(num2str([ round(uu*1000)/10 round(ww*1000)/10]));
+
+disp(' ');
+
+[cc uu dd ww] = conmatrix( classlabels, predlabelsW);
+disp([num2str(round(1000*dd)/10) repmat('   ', [size(cc,1) 1]) num2str(sum(cc,2))]);
+disp(num2str([ round(uu*1000)/10 round(ww*1000)/10]));
+
+
+
+save regionclass.mat

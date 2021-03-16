@@ -1,0 +1,6 @@
+#!/bin/csh -f
+# startup script for matlab
+
+setenv SHELL /bin/sh
+matlab -nosplash
+exit

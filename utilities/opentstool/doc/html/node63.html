@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002 (1.63)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>6.22 Class core</TITLE>
+<META NAME="description" CONTENT="6.22 Class core">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="node67.html">
+<LINK REL="previous" HREF="node59.html">
+<LINK REL="up" HREF="node35.html">
+<LINK REL="next" HREF="node64.html">
+</HEAD>
+
+<BODY bgcolor="#FFFFFF" text="#000000">
+<!--Navigation Panel--><font face="arial, helvetica">
+<TABLE WIDTH=100%><TR><TD ALIGN=LEFT><font face="arial, helvetica">  <A HREF=http://www.physik3.gwdg.de/tstool/index.html>TSTOOL home page</A>  | TSTOOL documentation page | <A HREF=http://www.physik3.gwdg.de/tstool/install.html>TSTOOL installation page</A> | <A HREF=http://www.physik3.gwdg.de/tstool/link.html>TSTOOL link page</A> <BR></TABLE><HR>
+<A NAME="tex2html1418"
+  HREF="node64.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.gif"></A> 
+<A NAME="tex2html1414"
+  HREF="node35.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.gif"></A> 
+<A NAME="tex2html1408"
+  HREF="node62.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.gif"></A> 
+<A NAME="tex2html1416"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.gif"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html1419"
+  HREF="node64.html">6.22.1 Overview</A>
+<B> Up:</B> <A NAME="tex2html1415"
+  HREF="node35.html">6. Mex-Function Reference</A>
+<B> Previous:</B> <A NAME="tex2html1409"
+  HREF="node62.html">6.21.3 Member functions</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION007220000000000000000">
+6.22 Class <TT>core</TT></A>
+</H1>
+
+<P>
+<A NAME="f27"></A>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html1420"
+  HREF="node64.html">6.22.1 Overview</A>
+<LI><A NAME="tex2html1421"
+  HREF="node65.html">6.22.2 Attributes</A>
+<LI><A NAME="tex2html1422"
+  HREF="node66.html">6.22.3 Member functions</A>
+<UL>
+<LI><A NAME="tex2html1423"
+  HREF="node66.html#SECTION007223100000000000000">6.22.3.1 acf</A>
+<LI><A NAME="tex2html1424"
+  HREF="node66.html#SECTION007223200000000000000">6.22.3.2 amutual2</A>
+<LI><A NAME="tex2html1425"
+  HREF="node66.html#SECTION007223300000000000000">6.22.3.3 compare</A>
+<LI><A NAME="tex2html1426"
+  HREF="node66.html#SECTION007223400000000000000">6.22.3.4 core</A>
+<LI><A NAME="tex2html1427"
+  HREF="node66.html#SECTION007223500000000000000">6.22.3.5 data</A>
+<LI><A NAME="tex2html1428"
+  HREF="node66.html#SECTION007223600000000000000">6.22.3.6 db</A>
+<LI><A NAME="tex2html1429"
+  HREF="node66.html#SECTION007223700000000000000">6.22.3.7 diff</A>
+<LI><A NAME="tex2html1430"
+  HREF="node66.html#SECTION007223800000000000000">6.22.3.8 display</A>
+<LI><A NAME="tex2html1431"
+  HREF="node66.html#SECTION007223900000000000000">6.22.3.9 dlens</A>
+<LI><A NAME="tex2html1432"
+  HREF="node66.html#SECTION0072231000000000000000">6.22.3.10 embed</A>
+<LI><A NAME="tex2html1433"
+  HREF="node66.html#SECTION0072231100000000000000">6.22.3.11 filterbank</A>
+<LI><A NAME="tex2html1434"
+  HREF="node66.html#SECTION0072231200000000000000">6.22.3.12 int</A>
+<LI><A NAME="tex2html1435"
+  HREF="node66.html#SECTION0072231300000000000000">6.22.3.13 intermutual</A>
+<LI><A NAME="tex2html1436"
+  HREF="node66.html#SECTION0072231400000000000000">6.22.3.14 isempty</A>
+<LI><A NAME="tex2html1437"
+  HREF="node66.html#SECTION0072231500000000000000">6.22.3.15 medianfilt</A>
+<LI><A NAME="tex2html1438"
+  HREF="node66.html#SECTION0072231600000000000000">6.22.3.16 minus</A>
+<LI><A NAME="tex2html1439"
+  HREF="node66.html#SECTION0072231700000000000000">6.22.3.17 movav</A>
+<LI><A NAME="tex2html1440"
+  HREF="node66.html#SECTION0072231800000000000000">6.22.3.18 multires</A>
+<LI><A NAME="tex2html1441"
+  HREF="node66.html#SECTION0072231900000000000000">6.22.3.19 ndim</A>
+<LI><A NAME="tex2html1442"
+  HREF="node66.html#SECTION0072232000000000000000">6.22.3.20 norm1</A>
+<LI><A NAME="tex2html1443"
+  HREF="node66.html#SECTION0072232100000000000000">6.22.3.21 norm2</A>
+<LI><A NAME="tex2html1444"
+  HREF="node66.html#SECTION0072232200000000000000">6.22.3.22 plus</A>
+<LI><A NAME="tex2html1445"
+  HREF="node66.html#SECTION0072232300000000000000">6.22.3.23 rang</A>
+<LI><A NAME="tex2html1446"
+  HREF="node66.html#SECTION0072232400000000000000">6.22.3.24 rms</A>
+<LI><A NAME="tex2html1447"
+  HREF="node66.html#SECTION0072232500000000000000">6.22.3.25 scalogram</A>
+<LI><A NAME="tex2html1448"
+  HREF="node66.html#SECTION0072232600000000000000">6.22.3.26 spec</A>
+<LI><A NAME="tex2html1449"
+  HREF="node66.html#SECTION0072232700000000000000">6.22.3.27 spec2</A>
+<LI><A NAME="tex2html1450"
+  HREF="node66.html#SECTION0072232800000000000000">6.22.3.28 surrogate1</A>
+<LI><A NAME="tex2html1451"
+  HREF="node66.html#SECTION0072232900000000000000">6.22.3.29 surrogate2</A>
+<LI><A NAME="tex2html1452"
+  HREF="node66.html#SECTION0072233000000000000000">6.22.3.30 surrogate3</A>
+<LI><A NAME="tex2html1453"
+  HREF="node66.html#SECTION0072233100000000000000">6.22.3.31 uminus</A>
+<LI><A NAME="tex2html1454"
+  HREF="node66.html#SECTION0072233200000000000000">6.22.3.32 vertcat</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
+<ADDRESS>
+<IMG SRC=logo.jpg  ALT=TSTOOL BORDER=0>
+<BR>
+<BR><FONT SIZE=2>Copyright &#169; 1997-2001 <A HREF=http://www.physik3.gwdg.de>DPI G&ouml;ttingen</A></TABLE>
+</BODY></HTML>
+
+</ADDRESS>
+</BODY>
+</HTML>

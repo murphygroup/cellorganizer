@@ -1,0 +1,9 @@
+
+downsampleProteinChannel
+
+downsampleNucleusChannel
+
+downsampleMicrotubuleChannel
+
+downsampleERChannel
+

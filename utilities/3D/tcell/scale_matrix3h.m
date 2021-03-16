@@ -1,0 +1,6 @@
+function [t] = scale_matrix3h(...
+  scale_vector...
+  )
+  % 3D translation matrix in homogenous coordinates.
+  % 2011-05-18 tebuck
+  t = diag([reshape(scale_vector, 1, []), ones(1, 4 - length(scale_vector))]); 

@@ -1,0 +1,33 @@
+The software and data used for the following paper can be downloaded 
+below:
+
+T. Peng and R.F. Murphy (2011) Image-derived, Three-dimensional 
+Generative Models of Cellular Organization. Cytometry Part A 
+79A:383-391. 
+
+This code has been tested on Matlab 7.10.0.499 (R2010A) for Linux x64.
+
+REQUIREMENTS
+============
+-Matlab
+ -Image Processing Toolbox
+ -Statistics Toolbox
+ -Spline Toolbox
+
+INSTRUCTIONS
+============
+
+1) To recreate the results, i.e. the 8 figures and 1 table, from the article download the source and data 
+from http://murphylab.web.cmu.edu/software/2011_Cytometry_Generative_Model/index.html
+
+2) Expand the data and source code to the desired destination.
+3) In Matlab set the location of the data and use it as an input argument to the 
+   main method run
+   
+   e.g.
+   >> imagepath = '/path/to/images/Hela/3D';
+   >> run( imagepath )
+
+3a) If you use the method run without input arguments, it will assume the location of 
+    the data folder is '/images/Hela/3D'
+

@@ -1,0 +1,10 @@
+The package is for the spherical parameterization of SPHARM-RPDM method (Ruan and Murphy, 2018, Bioinformatics)
+
+
+External packages used:
+
+image_geometric_measures from NS, Yazan Ahed, INRA, David Legland under BSD license
+
+S2 Sampling Toolbox from Anton Semechko under BSD license 
+
+The functions in the 'util' directory are either directly or modified from some functions from SPHARM-MAT package (author: Li Shen, license: GPL v3). We acknowledge the author Shen Li for the package. 

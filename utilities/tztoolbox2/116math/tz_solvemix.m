@@ -1,0 +1,58 @@
+function alpha=tz_solvemix(y,p,norm)
+%TZ_SOLVEMIX Solve linear equation by pseudo-inverse.
+%   ALPHA = TZ_SOLVEMIX(Y,P)
+%   
+%   See also
+
+%   18-Sep-2005 Initial write T. Zhao
+%   Copyright (c) Murphy Lab, Carnegie Mellon University
+
+%function alpha=tz_solvemix(y,p)
+%
+%OVERVIEW:
+%   solve linear equations approximately
+%PARAMETERS:
+%   y - mixture pattern
+%   p - fundamental patterns
+%RETURN:
+%   alpha - coeffiecients
+%DESCRIPTION:
+%   equation: Ax=y
+%   solution: x=inv(T(A)A)T(A)y
+%HISTORY:
+%   07-DEC-2004 Initial write TINGZ
+%
+
+if ~exist('norm','var')
+    norm = 'nonormalize';
+end
+
+alpha=zeros(1,size(p,1));
+
+tmpalpha=inv(p*p')*p*y';
+allindex=1:length(alpha);
+
+k=1;
+while any(tmpalpha<0)
+    [minalpha,minind]=min(tmpalpha);
+    p(minind,:)=[];
+    allindex(minind)=[];
+    tmpalpha=inv(p*p')*p*y';
+end
+
+if length(tmpalpha)==0
+    warning('solution failed');
+    return;
+end
+
+if length(tmpalpha)==1
+    % alpha(allindex)=1;
+else
+    alpha(allindex)=tmpalpha;
+    if strcmp(norm,'normalize')
+        alpha=alpha/sum(alpha);
+    end
+end
+    
+
+

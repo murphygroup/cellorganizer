@@ -1,0 +1,29 @@
+featTypeList{1} = 'haralick';               13
+featTypeList{2} = 'histpropwithcent';       6
+featTypeList{3} = 'harkd2';                 13
+featTypeList{4} = 'harkd4';                 13
+featTypeList{5} = 'totint';                 1
+featTypeList{6} = 'radIntensity';           5
+featTypeList{7} = 'edge';                   21
+
+  featTypeList{8} = 'haralick2';            78
+  featTypeList{9} = 'histpropwithcent2';    18
+  featTypeList{10} = 'histbinwithcent2';    376
+  featTypeList{11} = 'histDistLevel2';      6
+  featTypeList{12} = 'statDistLevel';       4
+  featTypeList{13} = 'distHist';            6
+
+13
+6
+13
+13
+1
+5
+21
+
+78
+18
+376
+6
+4
+6
