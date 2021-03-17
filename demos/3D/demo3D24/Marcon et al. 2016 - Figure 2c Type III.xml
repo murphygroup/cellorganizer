@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by BioNetGen 2.3.2  -->
+<sbml xmlns="http://www.sbml.org/sbml/level3" level="3" version="1">
+  <model id="Marcon et al. 2016 - Figure 2c Type III">
+    <ListOfParameters>
+      <Parameter id="N_A" type="Constant" value="6.0221409e+23"/>
+      <Parameter id="MATH_PI" type="Constant" value="3.1415927"/>
+      <Parameter id="eff_width" type="Constant" value="0.0038775"/>
+      <Parameter id="vol_CP" type="Constant" value="4000"/>
+      <Parameter id="vol_EC" type="Constant" value="8000"/>
+      <Parameter id="CP_vol_sphere_area" type="Constant" value="1218.5896"/>
+      <Parameter id="vol_PM" type="Constant" value="4.725081"/>
+      <Parameter id="vol_NU" type="Constant" value="400"/>
+      <Parameter id="NU_vol_sphere_area" type="Constant" value="262.53716"/>
+      <Parameter id="vol_NM" type="Constant" value="1.0179878"/>
+      <Parameter id="u_init_conc" type="Constant" value="1e-14"/>
+      <Parameter id="u_init_count" type="Constant" value="2.8455103e+10"/>
+      <Parameter id="v_init_conc" type="Constant" value="1e-14"/>
+      <Parameter id="v_init_count" type="Constant" value="2.8455103e+10"/>
+      <Parameter id="w_init_conc" type="Constant" value="1e-14"/>
+      <Parameter id="w_init_count" type="Constant" value="2.8455103e+10"/>
+      <Parameter id="k_uv" type="Constant" value="1"/>
+      <Parameter id="k_uw" type="Constant" value="1"/>
+      <Parameter id="k_vu" type="Constant" value="0.104"/>
+      <Parameter id="k_v" type="Constant" value="1"/>
+      <Parameter id="k_w" type="Constant" value="0.25"/>
+      <Parameter id="k_wv" type="Constant" value="0.5"/>
+      <Parameter id="_InitialConc1" type="Constant" value="1.4227552e+10"/>
+      <Parameter id="_InitialConc2" type="Constant" value="1.4227552e+10"/>
+    </ListOfParameters>
+    <ListOfMoleculeTypes>
+      <MoleculeType id="u">
+        <ListOfComponentTypes>
+          <ComponentType id="ps">
+            <ListOfAllowedStates>
+              <AllowedState id="d"/>
+              <AllowedState id="p"/>
+            </ListOfAllowedStates>
+          </ComponentType>
+        </ListOfComponentTypes>
+      </MoleculeType>
+      <MoleculeType id="v">
+        <ListOfComponentTypes>
+          <ComponentType id="ps">
+            <ListOfAllowedStates>
+              <AllowedState id="d"/>
+              <AllowedState id="p"/>
+            </ListOfAllowedStates>
+          </ComponentType>
+        </ListOfComponentTypes>
+      </MoleculeType>
+      <MoleculeType id="w">
+        <ListOfComponentTypes>
+          <ComponentType id="ps">
+            <ListOfAllowedStates>
+              <AllowedState id="d"/>
+              <AllowedState id="p"/>
+            </ListOfAllowedStates>
+          </ComponentType>
+        </ListOfComponentTypes>
+      </MoleculeType>
+    </ListOfMoleculeTypes>
+    <ListOfCompartments>
+      <compartment id="EC" spatialDimensions="3" size="8000"/>
+      <compartment id="PM" spatialDimensions="2" size="4.72508100756184" outside="EC"/>
+      <compartment id="CP" spatialDimensions="3" size="4e3" outside="PM"/>
+      <compartment id="NM" spatialDimensions="2" size="1.0179878435902" outside="CP"/>
+      <compartment id="NU" spatialDimensions="3" size="400" outside="NM"/>
+    </ListOfCompartments>
+    <ListOfSpecies>
+      <Species id="S1"  concentration="_InitialConc1" name="@PM::u(ps~d)" compartment="PM">
+        <ListOfMolecules>
+          <Molecule id="S1_M1" name="u" compartment="PM">
+            <ListOfComponents>
+              <Component id="S1_M1_C1" name="ps" state="d" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+      <Species id="S2"  concentration="_InitialConc2" name="@PM::u(ps~p)" compartment="PM">
+        <ListOfMolecules>
+          <Molecule id="S2_M1" name="u" compartment="PM">
+            <ListOfComponents>
+              <Component id="S2_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+      <Species id="S3"  concentration="v_init_count" name="@PM::v(ps~d)" compartment="PM">
+        <ListOfMolecules>
+          <Molecule id="S3_M1" name="v" compartment="PM">
+            <ListOfComponents>
+              <Component id="S3_M1_C1" name="ps" state="d" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+      <Species id="S4"  concentration="w_init_count" name="@PM::w(ps~d)" compartment="PM">
+        <ListOfMolecules>
+          <Molecule id="S4_M1" name="w" compartment="PM">
+            <ListOfComponents>
+              <Component id="S4_M1_C1" name="ps" state="d" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+      <Species id="S5"  concentration="0" name="@PM::v(ps~p)" compartment="PM">
+        <ListOfMolecules>
+          <Molecule id="S5_M1" name="v" compartment="PM">
+            <ListOfComponents>
+              <Component id="S5_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+      <Species id="S6"  concentration="0" name="@PM::w(ps~p)" compartment="PM">
+        <ListOfMolecules>
+          <Molecule id="S6_M1" name="w" compartment="PM">
+            <ListOfComponents>
+              <Component id="S6_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+    </ListOfSpecies>
+    <ListOfReactionRules>
+      <ReactionRule id="RR1" name="_R1" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR1_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR1_RP1_M1" name="u">
+                <ListOfComponents>
+                  <Component id="RR1_RP1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+          <ReactantPattern id="RR1_RP2">
+            <ListOfMolecules>
+              <Molecule id="RR1_RP2_M1" name="v">
+                <ListOfComponents>
+                  <Component id="RR1_RP2_M1_C1" name="ps" state="d" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR1_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR1_PP1_M1" name="u">
+                <ListOfComponents>
+                  <Component id="RR1_PP1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR1_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR1_PP2_M1" name="v">
+                <ListOfComponents>
+                  <Component id="RR1_PP2_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR1_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="k_uv"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR1_RP1_M1" targetID="RR1_PP1_M1"/>
+          <MapItem sourceID="RR1_RP1_M1_C1" targetID="RR1_PP1_M1_C1"/>
+          <MapItem sourceID="RR1_RP2_M1" targetID="RR1_PP2_M1"/>
+          <MapItem sourceID="RR1_RP2_M1_C1" targetID="RR1_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR1_RP2_M1_C1" finalState="p"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR2" name="_R2" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR2_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR2_RP1_M1" name="u">
+                <ListOfComponents>
+                  <Component id="RR2_RP1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+          <ReactantPattern id="RR2_RP2">
+            <ListOfMolecules>
+              <Molecule id="RR2_RP2_M1" name="w">
+                <ListOfComponents>
+                  <Component id="RR2_RP2_M1_C1" name="ps" state="d" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR2_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR2_PP1_M1" name="u">
+                <ListOfComponents>
+                  <Component id="RR2_PP1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR2_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR2_PP2_M1" name="w">
+                <ListOfComponents>
+                  <Component id="RR2_PP2_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR2_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="k_uw"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR2_RP1_M1" targetID="RR2_PP1_M1"/>
+          <MapItem sourceID="RR2_RP1_M1_C1" targetID="RR2_PP1_M1_C1"/>
+          <MapItem sourceID="RR2_RP2_M1" targetID="RR2_PP2_M1"/>
+          <MapItem sourceID="RR2_RP2_M1_C1" targetID="RR2_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR2_RP2_M1_C1" finalState="p"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR3" name="_R3" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR3_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR3_RP1_M1" name="v">
+                <ListOfComponents>
+                  <Component id="RR3_RP1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+          <ReactantPattern id="RR3_RP2">
+            <ListOfMolecules>
+              <Molecule id="RR3_RP2_M1" name="u">
+                <ListOfComponents>
+                  <Component id="RR3_RP2_M1_C1" name="ps" state="d" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR3_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR3_PP1_M1" name="v">
+                <ListOfComponents>
+                  <Component id="RR3_PP1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR3_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR3_PP2_M1" name="u">
+                <ListOfComponents>
+                  <Component id="RR3_PP2_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR3_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="k_vu"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR3_RP1_M1" targetID="RR3_PP1_M1"/>
+          <MapItem sourceID="RR3_RP1_M1_C1" targetID="RR3_PP1_M1_C1"/>
+          <MapItem sourceID="RR3_RP2_M1" targetID="RR3_PP2_M1"/>
+          <MapItem sourceID="RR3_RP2_M1_C1" targetID="RR3_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR3_RP2_M1_C1" finalState="p"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR4" name="_R4" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR4_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR4_RP1_M1" name="v">
+                <ListOfComponents>
+                  <Component id="RR4_RP1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR4_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR4_PP1_M1" name="v">
+                <ListOfComponents>
+                  <Component id="RR4_PP1_M1_C1" name="ps" state="d" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR4_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="k_v"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR4_RP1_M1" targetID="RR4_PP1_M1"/>
+          <MapItem sourceID="RR4_RP1_M1_C1" targetID="RR4_PP1_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR4_RP1_M1_C1" finalState="d"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR5" name="_R5" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR5_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR5_RP1_M1" name="w">
+                <ListOfComponents>
+                  <Component id="RR5_RP1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR5_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR5_PP1_M1" name="w">
+                <ListOfComponents>
+                  <Component id="RR5_PP1_M1_C1" name="ps" state="d" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR5_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="k_w"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR5_RP1_M1" targetID="RR5_PP1_M1"/>
+          <MapItem sourceID="RR5_RP1_M1_C1" targetID="RR5_PP1_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR5_RP1_M1_C1" finalState="d"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR6" name="_R6" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR6_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR6_RP1_M1" name="w">
+                <ListOfComponents>
+                  <Component id="RR6_RP1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+          <ReactantPattern id="RR6_RP2">
+            <ListOfMolecules>
+              <Molecule id="RR6_RP2_M1" name="v">
+                <ListOfComponents>
+                  <Component id="RR6_RP2_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR6_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR6_PP1_M1" name="w">
+                <ListOfComponents>
+                  <Component id="RR6_PP1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR6_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR6_PP2_M1" name="v">
+                <ListOfComponents>
+                  <Component id="RR6_PP2_M1_C1" name="ps" state="d" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR6_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="k_wv"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR6_RP1_M1" targetID="RR6_PP1_M1"/>
+          <MapItem sourceID="RR6_RP1_M1_C1" targetID="RR6_PP1_M1_C1"/>
+          <MapItem sourceID="RR6_RP2_M1" targetID="RR6_PP2_M1"/>
+          <MapItem sourceID="RR6_RP2_M1_C1" targetID="RR6_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR6_RP2_M1_C1" finalState="d"/>
+        </ListOfOperations>
+      </ReactionRule>
+    </ListOfReactionRules>
+    <ListOfObservables>
+      <Observable id="O1" name="u_total" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O1_P1">
+            <ListOfMolecules>
+              <Molecule id="O1_P1_M1" name="u"/>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O2" name="v_total" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O2_P1">
+            <ListOfMolecules>
+              <Molecule id="O2_P1_M1" name="v"/>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O3" name="w_total" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O3_P1">
+            <ListOfMolecules>
+              <Molecule id="O3_P1_M1" name="w"/>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O4" name="u_p" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O4_P1">
+            <ListOfMolecules>
+              <Molecule id="O4_P1_M1" name="u">
+                <ListOfComponents>
+                  <Component id="O4_P1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O5" name="v_p" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O5_P1">
+            <ListOfMolecules>
+              <Molecule id="O5_P1_M1" name="v">
+                <ListOfComponents>
+                  <Component id="O5_P1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O6" name="w_p" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O6_P1">
+            <ListOfMolecules>
+              <Molecule id="O6_P1_M1" name="w">
+                <ListOfComponents>
+                  <Component id="O6_P1_M1_C1" name="ps" state="p" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+    </ListOfObservables>
+    <ListOfFunctions>
+    </ListOfFunctions>
+  </model>
+</sbml>

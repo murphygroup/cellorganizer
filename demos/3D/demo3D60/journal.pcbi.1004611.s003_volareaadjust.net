@@ -1,0 +1,612 @@
+# Created by BioNetGen 2.4.0
+begin parameters
+  nEndo           5
+  vol_EC          1215.146638
+  vol_CP          411.435494
+  vol_NU          378.268712
+  vol_EN          6.790818
+  sa_PM           245.221928
+  sa_NM           94.540854
+  sa_EM           7.529536
+  eff_width       ((((37.5+39.5)+35.6)+42.5)/4)*1e-4
+  vol_PM          sa_PM*eff_width
+  vol_NM          sa_NM*eff_width
+  L0              1000
+  R0              200
+  TF0             200
+  DNA0            2
+  Im0             40
+  NP0             4
+  kp_LR           0.1
+  km_LR           1.0
+  kp_LL           0.1
+  km_LL           1.0
+  k_R_endo        1.0
+  k_recycle       0.1
+  k_R_transphos   1.0
+  k_R_dephos      0.1
+  kp_R_TF         0.1
+  km_R_TF         0.1
+  kp_R_TFp        0.1
+  km_R_TFp        10.0
+  k_TF_transphos  1.0
+  k_TF_dephos     1.0
+  kp_TF_TF        0.1
+  km_TF_TF        1.0
+  kp_TF_p1        0.1
+  km_TF_p1        1.0
+  k_transcribe    1.0
+  k_translate     1.0
+  k_mRNA_to_CP    1.0
+  k_mRNA_deg      1.0
+  k_P_deg         0.1
+  k_Im_bind_CP    0.1
+  k_Im_unbind_CP  0.1
+  k_Im_bind_NU    0.1
+  k_Im_unbind_NU  10.0
+  k_Im_enters_NP  0.1
+  k_Im_exits_NP   1.0
+  k_Im_cross_NP   1.0
+  kp_P1_p2        0.1
+  km_P1_p2        1.0
+end parameters
+begin compartments
+  EC 3 vol_EC
+  PM 2 sa_PM*eff_width EC
+  CP 3 vol_CP PM
+  NM 2 sa_NM*eff_width CP
+  NU 3 vol_NU NM
+  EM 2 sa_EM*eff_width CP
+  EN 3 vol_EN EM
+end compartments
+begin molecule types
+  DNA(p1,p2)         
+  Im(fg,cargo)       
+  L(r,d)             
+  NP(fg)             
+  P1(im,dna)         
+  P2()               
+  R(l,tf~Y~pY)       
+  Sink()             
+  TF(r,d~Y~pY,dna,im)
+  mRNA1()            
+  mRNA2()            
+end molecule types
+begin observables
+  Molecules Tot_L L()
+  Molecules Tot_R R()
+  Molecules Tot_TF TF()
+  Molecules Tot_DNA DNA()
+  Molecules Tot_mRNA1 mRNA1()
+  Molecules Tot_mRNA2 mRNA2()
+  Molecules Tot_P1 P1()
+  Molecules Tot_P2 P2()
+  Molecules Tot_NP NP()
+  Molecules Tot_Im Im()
+  Species L_Dimers_EC @EC::{MatchOnce}L().L()
+  Species L_Dimers_PM @PM::{MatchOnce}L().L()
+  Species L_Dimers_EN @EN::{MatchOnce}L().L()
+  Species L_Dimers_EM @EM::{MatchOnce}L().L()
+  Molecules L_Bound_PM @PM::L()
+  Molecules L_Bound_EM @EM::L()
+  Species R_Dimers_PM @PM::{MatchOnce}R().R()
+  Species R_Dimers_EM @EM::{MatchOnce}R().R()
+  Molecules Catalytic_R R(tf~pY!?)
+  Molecules Catalytic_TF R(tf~pY!1).TF(r!1)
+  Molecules Phos_TF TF(d~pY!?)
+  Species TF_Dimer_CP {MatchOnce}TF(d~pY!1)@CP.TF(d~pY!1)@CP
+  Species TF_Dimer_NU {MatchOnce}TF(d~pY!1)@NU.TF(d~pY!1)@NU
+  Species Bound_prom1 {MatchOnce}DNA(p1!+)
+  Species Bound_prom2 {MatchOnce}DNA(p2!+)
+  Species P1_NU {MatchOnce}P1()@NU
+  Species P1_CP {MatchOnce}P1()@CP
+  Species Im_NU {MatchOnce}Im()@NU
+  Species Im_CP {MatchOnce}Im()@CP
+  Species Im_Cargo_NP {MatchOnce}Im(fg!+,cargo!+)
+  Species P1_NU_free {MatchOnce}P1(im,dna)@NU
+  Species P1_NU_dna {MatchOnce}P1(im,dna!+)@NU
+  Species CountSink {MatchOnce}Sink()@CP
+end observables
+begin species
+  @EC::L(d,r) L0
+  @PM::R(l,tf~Y) R0
+  @CP::TF(d~Y,dna,im,r) TF0
+  @NU::DNA(p1,p2) DNA0
+  @CP::Im(cargo,fg) Im0
+  @NM::NP(fg) NP0
+  @CP::$Sink() 0
+  @PM::L(d,r!1)@EC.R(l!1,tf~Y) 0
+  @EC::L(d!1,r).L(d!1,r) 0
+  @NM::Im(cargo,fg!1)@CP.NP(fg!1) 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r)@EC.R(l!2,tf~Y) 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r!3)@EC.R(l!2,tf~Y).R(l!3,tf~Y) 0
+  @NM::Im(cargo,fg!1)@NU.NP(fg!1) 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r!3)@EN.R(l!2,tf~Y).R(l!3,tf~Y) 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r!3)@EC.R(l!2,tf~Y).R(l!3,tf~pY) 0
+  @NU::Im(cargo,fg) 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r)@EN.R(l!2,tf~Y) 0
+  @EM::R(l,tf~Y) 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r)@EC.R(l!2,tf~pY) 0
+  @PM::R(l,tf~pY) 0
+  @EM::L(d,r!1)@EN.R(l!1,tf~Y) 0
+  @PM::L(d,r!1)@EC.R(l!1,tf~pY) 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r!3)@EN.R(l!2,tf~Y).R(l!3,tf~pY) 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r!3)@EC.R(l!2,tf~pY).R(l!3,tf~pY) 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r!3)@EC.R(l!2,tf~Y).R(l!3,tf~pY!4).TF(d~Y,dna,im,r!4)@CP 0
+  @EN::L(d!1,r).L(d!1,r) 0
+  @EN::L(d,r) 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r)@EN.R(l!2,tf~pY) 0
+  @EM::R(l,tf~pY) 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r)@EC.R(l!2,tf~pY!3).TF(d~Y,dna,im,r!3)@CP 0
+  @PM::R(l,tf~pY!1).TF(d~Y,dna,im,r!1)@CP 0
+  @EM::L(d,r!1)@EN.R(l!1,tf~pY) 0
+  @PM::L(d,r!1)@EC.R(l!1,tf~pY!2).TF(d~Y,dna,im,r!2)@CP 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r!3)@EN.R(l!2,tf~pY).R(l!3,tf~pY) 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r!3)@EN.R(l!2,tf~Y).R(l!3,tf~pY!4).TF(d~Y,dna,im,r!4)@CP 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r!3)@EC.R(l!3,tf~pY!4).R(l!2,tf~pY).TF(d~Y,dna,im,r!4)@CP 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r!3)@EC.R(l!2,tf~pY!4).R(l!3,tf~pY!5).TF(d~Y,dna,im,r!4)@CP.TF(d~Y,dna,im,r!5)@CP 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r)@EN.R(l!2,tf~pY!3).TF(d~Y,dna,im,r!3)@CP 0
+  @EM::R(l,tf~pY!1).TF(d~Y,dna,im,r!1)@CP 0
+  @EM::L(d,r!1)@EN.R(l!1,tf~pY!2).TF(d~Y,dna,im,r!2)@CP 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r!3)@EN.R(l!3,tf~pY!4).R(l!2,tf~pY).TF(d~Y,dna,im,r!4)@CP 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r!3)@EN.R(l!2,tf~pY!4).R(l!3,tf~pY!5).TF(d~Y,dna,im,r!4)@CP.TF(d~Y,dna,im,r!5)@CP 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r!3)@EC.R(l!2,tf~pY!4).R(l!3,tf~pY!5).TF(d~Y,dna,im,r!4)@CP.TF(d~pY,dna,im,r!5)@CP 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r)@EC.R(l!2,tf~pY!3).TF(d~pY,dna,im,r!3)@CP 0
+  @PM::R(l,tf~pY!1).TF(d~pY,dna,im,r!1)@CP 0
+  @PM::L(d,r!1)@EC.R(l!1,tf~pY!2).TF(d~pY,dna,im,r!2)@CP 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r!3)@EN.R(l!2,tf~pY!4).R(l!3,tf~pY!5).TF(d~Y,dna,im,r!4)@CP.TF(d~pY,dna,im,r!5)@CP 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r!3)@EC.R(l!3,tf~pY!4).R(l!2,tf~pY).TF(d~pY,dna,im,r!4)@CP 0
+  @CP::TF(d~pY,dna,im,r) 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r!3)@EC.R(l!2,tf~pY!4).R(l!3,tf~pY!5).TF(d~pY,dna,im,r!4)@CP.TF(d~pY,dna,im,r!5)@CP 0
+  @PM::L(d!1,r!2)@EC.L(d!1,r!3)@EC.R(l!2,tf~Y).R(l!3,tf~pY!4).TF(d~pY,dna,im,r!4)@CP 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r)@EN.R(l!2,tf~pY!3).TF(d~pY,dna,im,r!3)@CP 0
+  @EM::R(l,tf~pY!1).TF(d~pY,dna,im,r!1)@CP 0
+  @EM::L(d,r!1)@EN.R(l!1,tf~pY!2).TF(d~pY,dna,im,r!2)@CP 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r!3)@EN.R(l!3,tf~pY!4).R(l!2,tf~pY).TF(d~pY,dna,im,r!4)@CP 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r!3)@EN.R(l!2,tf~pY!4).R(l!3,tf~pY!5).TF(d~pY,dna,im,r!4)@CP.TF(d~pY,dna,im,r!5)@CP 0
+  @EM::L(d!1,r!2)@EN.L(d!1,r!3)@EN.R(l!2,tf~Y).R(l!3,tf~pY!4).TF(d~pY,dna,im,r!4)@CP 0
+  @CP::TF(d~pY!1,dna,im,r).TF(d~pY!1,dna,im,r) 0
+  @CP::Im(cargo!1!2,fg).TF(d~pY!3,dna,im!1,r).TF(d~pY!3,dna,im!2,r) 0
+  @NM::Im(cargo!1!2,fg!3)@CP.NP(fg!3).TF(d~pY!4,dna,im!1,r)@CP.TF(d~pY!4,dna,im!2,r)@CP 0
+  @NM::Im(cargo!1!2,fg!3)@NU.NP(fg!3).TF(d~pY!4,dna,im!1,r)@NU.TF(d~pY!4,dna,im!2,r)@NU 0
+  @NU::TF(d~pY!1,dna,im,r).TF(d~pY!1,dna,im,r) 0
+  @NU::Im(cargo!1!2,fg).TF(d~pY!3,dna,im!1,r).TF(d~pY!3,dna,im!2,r) 0
+  @NU::TF(d~pY,dna,im,r) 0
+  @NU::DNA(p1!1!2,p2).TF(d~pY!3,dna!1,im,r).TF(d~pY!3,dna!2,im,r) 0
+  @NU::mRNA1() 0
+  @CP::mRNA1() 0
+  @CP::P1(dna,im) 0
+  @CP::Im(cargo!1,fg).P1(dna,im!1) 0
+  @NM::Im(cargo!1,fg!2)@CP.NP(fg!2).P1(dna,im!1)@CP 0
+  @NM::Im(cargo!1,fg!2)@NU.NP(fg!2).P1(dna,im!1)@NU 0
+  @NU::P1(dna,im) 0
+  @NU::Im(cargo!1,fg).P1(dna,im!1) 0
+  @NU::DNA(p1,p2!1).P1(dna!1,im) 0
+  @NU::DNA(p1!1!2,p2!3).P1(dna!3,im).TF(d~pY!4,dna!1,im,r).TF(d~pY!4,dna!2,im,r) 0
+  @NU::mRNA2() 0
+  @CP::mRNA2() 0
+  @CP::P2() 0
+end species
+begin reaction rules
+  Rule1:  L(r) + R(l) <-> L(r!1).R(l!1)  kp_LR, km_LR
+  Rule2:  L(d) + L(d) <-> L(d!1).L(d!1)  kp_LL, km_LL
+  Rule3:  @PM::R().R() -> @EM::R().R()  k_R_endo
+  Rule4:  @EM::R() -> @PM::R()  k_recycle
+  Rule5:  @EN::L() -> @EC::L()  k_recycle
+  Rule6:  R().R(tf~Y) -> R().R(tf~pY)  k_R_transphos
+  Rule7:  R(tf~pY) -> R(tf~Y)  k_R_dephos
+  Rule8:  R(tf~pY) + TF(d~Y,r) <-> R(tf~pY!1).TF(d~Y,r!1)  kp_R_TF, km_R_TF
+  Rule9:  R(tf~pY) + TF(d~pY,r) <-> R(tf~pY!1).TF(d~pY,r!1)  kp_R_TFp, km_R_TFp
+  Rule10:  TF().R().R().TF(d~Y) -> TF().R().R().TF(d~pY)  k_TF_transphos
+  Rule11:  TF(d~pY)@CP -> TF(d~Y)@CP  k_TF_dephos
+  Rule12:  TF(r,d~pY,dna) + TF(r,d~pY,dna) <-> TF(r,d~pY!1,dna).TF(r,d~pY!1,dna)  kp_TF_TF, km_TF_TF
+  Rule13:  TF(dna,im).TF(dna,im) + DNA(p1) <-> TF(dna!1,im).TF(dna!2,im).DNA(p1!1!2)  kp_TF_p1, km_TF_p1
+  Rule14:  DNA(p1!+) -> DNA(p1!+) + mRNA1()@NU  k_transcribe
+  Rule15:  DNA(p2!+) -> DNA(p2!+) + mRNA2()@NU  k_transcribe
+  Rule16:  mRNA1()@NU -> mRNA1()@CP  k_mRNA_to_CP
+  Rule17:  mRNA2()@NU -> mRNA2()@CP  k_mRNA_to_CP
+  Rule18:  mRNA1()@CP -> mRNA1()@CP + P1(im,dna)@CP  k_translate
+  Rule19:  mRNA2()@CP -> mRNA2()@CP + P2()@CP  k_translate
+  Rule20:  mRNA1() -> Sink()@CP  k_mRNA_deg DeleteMolecules
+  Rule21:  mRNA2() -> Sink()@CP  k_mRNA_deg DeleteMolecules
+  Rule22:  P1() -> Sink()@CP  k_P_deg DeleteMolecules
+  Rule23:  P2() -> Sink()@CP  k_P_deg DeleteMolecules
+  Rule24:  TF(im,dna,r).TF(im,dna,r) + Im(cargo)@CP <-> TF(im!1,dna,r).TF(im!2,dna,r).Im(cargo!1!2)@CP  k_Im_bind_CP, k_Im_unbind_CP
+  Rule25:  TF(im,dna,r).TF(im,dna,r) + Im(cargo)@NU <-> TF(im!1,dna,r).TF(im!2,dna,r).Im(cargo!1!2)@NU  k_Im_bind_NU, k_Im_unbind_NU
+  Rule26:  P1(im,dna) + Im(cargo)@CP <-> P1(im!1,dna).Im(cargo!1)@CP  k_Im_bind_CP, k_Im_unbind_CP
+  Rule27:  P1(im,dna) + Im(cargo)@NU <-> P1(im!1,dna).Im(cargo!1)@NU  k_Im_bind_NU, k_Im_unbind_NU
+  Rule28:  Im(fg) + NP(fg) <-> Im(fg!1).NP(fg!1)  k_Im_enters_NP, k_Im_exits_NP
+  Rule29:  Im(fg!1)@CP.NP(fg!1) <-> Im(fg!1)@NU.NP(fg!1)  k_Im_cross_NP, k_Im_cross_NP MoveConnected
+  Rule30:  P1(im,dna) + DNA(p2) <-> P1(im,dna!1).DNA(p2!1)  kp_P1_p2, km_P1_p2
+end reaction rules
+begin reactions
+    1 1,2 8 0.00082294595*kp_LR #Rule1 unit_conversion=1/vol_EC
+    2 1,1 9 0.00041147297*kp_LL #Rule2 unit_conversion=1/vol_EC
+    3 5,6 10 0.0024305147*k_Im_enters_NP #Rule28 unit_conversion=1/vol_CP
+    4 2,9 11 0.0016458919*kp_LR #Rule1 unit_conversion=1/vol_EC
+    5 8 1,2 km_LR #_reverse_Rule1
+    6 1,8 11 0.00082294595*kp_LL #Rule2 unit_conversion=1/vol_EC
+    7 8,8 12 0.52584639*kp_LL #Rule2 unit_conversion=1/(sa_PM*eff_width)
+    8 9 1,1 km_LL #_reverse_Rule2
+    9 10 5,6 k_Im_exits_NP #_reverse_Rule28
+   10 10 13 k_Im_cross_NP #Rule29
+   11 2,11 12 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+   12 11 2,9 km_LR #_reverse_Rule1
+   13 12 2,11 2*km_LR #_reverse_Rule1
+   14 11 1,8 km_LL #_reverse_Rule2
+   15 12 8,8 km_LL #_reverse_Rule2
+   16 12 14 k_R_endo #Rule3
+   17 12 15 2*k_R_transphos #Rule6
+   18 13 6,16 k_Im_exits_NP #_reverse_Rule28
+   19 13 10 k_Im_cross_NP #_reverse_Rule29
+   20 14 17,18 2*km_LR #_reverse_Rule1
+   21 15 2,19 km_LR #_reverse_Rule1
+   22 15 11,20 km_LR #_reverse_Rule1
+   23 14 21,21 km_LL #_reverse_Rule2
+   24 15 8,22 km_LL #_reverse_Rule2
+   25 15 23 k_R_endo #Rule3
+   26 14 12 k_recycle #Rule4
+   27 14 23 2*k_R_transphos #Rule6
+   28 15 24 k_R_transphos #Rule6
+   29 15 12 k_R_dephos #Rule7
+   30 3,15 25 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+   31 6,16 13 0.0026436234*k_Im_enters_NP #Rule28 unit_conversion=1/vol_NU
+   32 1,20 22 0.00082294595*kp_LR #Rule1 unit_conversion=1/vol_EC
+   33 9,20 19 0.0016458919*kp_LR #Rule1 unit_conversion=1/vol_EC
+   34 11,20 15 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+   35 17,18 14 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+   36 2,19 15 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+   37 19,20 24 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+   38 17 18,26 km_LR #_reverse_Rule1
+   39 19 9,20 km_LR #_reverse_Rule1
+   40 21 18,27 km_LR #_reverse_Rule1
+   41 22 1,20 km_LR #_reverse_Rule1
+   42 23 18,28 km_LR #_reverse_Rule1
+   43 23 17,29 km_LR #_reverse_Rule1
+   44 24 19,20 2*km_LR #_reverse_Rule1
+   45 25 2,30 km_LR #_reverse_Rule1
+   46 25 11,31 km_LR #_reverse_Rule1
+   47 1,22 19 0.00082294595*kp_LL #Rule2 unit_conversion=1/vol_EC
+   48 8,22 15 1.0516928*kp_LL #Rule2 unit_conversion=1/(sa_PM*eff_width)
+   49 21,21 14 17.125765*kp_LL #Rule2 unit_conversion=1/(sa_EM*eff_width)
+   50 22,22 24 0.52584639*kp_LL #Rule2 unit_conversion=1/(sa_PM*eff_width)
+   51 17 21,27 km_LL #_reverse_Rule2
+   52 19 1,22 km_LL #_reverse_Rule2
+   53 23 21,32 km_LL #_reverse_Rule2
+   54 24 22,22 km_LL #_reverse_Rule2
+   55 25 8,33 km_LL #_reverse_Rule2
+   56 24 34 k_R_endo #Rule3
+   57 25 35 k_R_endo #Rule3
+   58 17 11 k_recycle #Rule4
+   59 18 2 k_recycle #Rule4
+   60 21 8 k_recycle #Rule4
+   61 23 15 k_recycle #Rule4
+   62 23 34 k_R_transphos #Rule6
+   63 25 36 k_R_transphos #Rule6
+   64 19 11 k_R_dephos #Rule7
+   65 20 2 k_R_dephos #Rule7
+   66 22 8 k_R_dephos #Rule7
+   67 23 14 k_R_dephos #Rule7
+   68 24 15 2*k_R_dephos #Rule7
+   69 3,19 30 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+   70 3,20 31 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+   71 3,22 33 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+   72 3,23 35 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+   73 3,24 36 0.0048610293*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+   74 25 3,15 km_R_TF #_reverse_Rule8
+   75 1,31 33 0.00082294595*kp_LR #Rule1 unit_conversion=1/vol_EC
+   76 9,31 30 0.0016458919*kp_LR #Rule1 unit_conversion=1/vol_EC
+   77 11,31 25 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+   78 17,29 23 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+   79 19,31 36 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+   80 18,26 17 0.29451533*kp_LR #Rule1 unit_conversion=1/vol_EN
+   81 26,29 28 0.29451533*kp_LR #Rule1 unit_conversion=1/vol_EN
+   82 18,27 21 0.14725766*kp_LR #Rule1 unit_conversion=1/vol_EN
+   83 27,29 32 0.14725766*kp_LR #Rule1 unit_conversion=1/vol_EN
+   84 18,28 23 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+   85 28,29 34 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+   86 2,30 25 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+   87 20,30 36 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+   88 30,31 37 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+   89 28 26,29 km_LR #_reverse_Rule1
+   90 30 9,31 km_LR #_reverse_Rule1
+   91 32 27,29 km_LR #_reverse_Rule1
+   92 33 1,31 km_LR #_reverse_Rule1
+   93 34 28,29 2*km_LR #_reverse_Rule1
+   94 35 18,38 km_LR #_reverse_Rule1
+   95 35 17,39 km_LR #_reverse_Rule1
+   96 36 20,30 km_LR #_reverse_Rule1
+   97 36 19,31 km_LR #_reverse_Rule1
+   98 1,33 30 0.00082294595*kp_LL #Rule2 unit_conversion=1/vol_EC
+   99 8,33 25 1.0516928*kp_LL #Rule2 unit_conversion=1/(sa_PM*eff_width)
+  100 21,27 17 0.14725766*kp_LL #Rule2 unit_conversion=1/vol_EN
+  101 21,32 23 34.25153*kp_LL #Rule2 unit_conversion=1/(sa_EM*eff_width)
+  102 22,33 36 1.0516928*kp_LL #Rule2 unit_conversion=1/(sa_PM*eff_width)
+  103 27,27 26 0.073628832*kp_LL #Rule2 unit_conversion=1/vol_EN
+  104 27,32 28 0.14725766*kp_LL #Rule2 unit_conversion=1/vol_EN
+  105 32,32 34 17.125765*kp_LL #Rule2 unit_conversion=1/(sa_EM*eff_width)
+  106 33,33 37 0.52584639*kp_LL #Rule2 unit_conversion=1/(sa_PM*eff_width)
+  107 26 27,27 km_LL #_reverse_Rule2
+  108 28 27,32 km_LL #_reverse_Rule2
+  109 30 1,33 km_LL #_reverse_Rule2
+  110 34 32,32 km_LL #_reverse_Rule2
+  111 35 21,40 km_LL #_reverse_Rule2
+  112 36 22,33 km_LL #_reverse_Rule2
+  113 36 41 k_R_endo #Rule3
+  114 28 19 k_recycle #Rule4
+  115 29 20 k_recycle #Rule4
+  116 32 22 k_recycle #Rule4
+  117 34 24 k_recycle #Rule4
+  118 35 25 k_recycle #Rule4
+  119 26 9 k_recycle #Rule5
+  120 27 1 k_recycle #Rule5
+  121 35 41 k_R_transphos #Rule6
+  122 28 17 k_R_dephos #Rule7
+  123 29 18 k_R_dephos #Rule7
+  124 32 21 k_R_dephos #Rule7
+  125 34 23 2*k_R_dephos #Rule7
+  126 36 25 k_R_dephos #Rule7
+  127 3,28 38 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+  128 3,29 39 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+  129 3,32 40 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+  130 3,34 41 0.0048610293*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+  131 3,36 37 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+  132 30 3,19 km_R_TF #_reverse_Rule8
+  133 31 3,20 km_R_TF #_reverse_Rule8
+  134 33 3,22 km_R_TF #_reverse_Rule8
+  135 35 3,23 km_R_TF #_reverse_Rule8
+  136 36 3,24 km_R_TF #_reverse_Rule8
+  137 17,39 35 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  138 26,39 38 0.29451533*kp_LR #Rule1 unit_conversion=1/vol_EN
+  139 27,39 40 0.14725766*kp_LR #Rule1 unit_conversion=1/vol_EN
+  140 28,39 41 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  141 18,38 35 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  142 29,38 41 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  143 38,39 42 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  144 37 30,31 2*km_LR #_reverse_Rule1
+  145 38 26,39 km_LR #_reverse_Rule1
+  146 40 27,39 km_LR #_reverse_Rule1
+  147 41 29,38 km_LR #_reverse_Rule1
+  148 41 28,39 km_LR #_reverse_Rule1
+  149 21,40 35 34.25153*kp_LL #Rule2 unit_conversion=1/(sa_EM*eff_width)
+  150 27,40 38 0.14725766*kp_LL #Rule2 unit_conversion=1/vol_EN
+  151 32,40 41 34.25153*kp_LL #Rule2 unit_conversion=1/(sa_EM*eff_width)
+  152 40,40 42 17.125765*kp_LL #Rule2 unit_conversion=1/(sa_EM*eff_width)
+  153 37 33,33 km_LL #_reverse_Rule2
+  154 38 27,40 km_LL #_reverse_Rule2
+  155 41 32,40 km_LL #_reverse_Rule2
+  156 37 42 k_R_endo #Rule3
+  157 38 30 k_recycle #Rule4
+  158 39 31 k_recycle #Rule4
+  159 40 33 k_recycle #Rule4
+  160 41 36 k_recycle #Rule4
+  161 41 35 k_R_dephos #Rule7
+  162 3,41 42 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+  163 37 3,36 2*km_R_TF #_reverse_Rule8
+  164 38 3,28 km_R_TF #_reverse_Rule8
+  165 39 3,29 km_R_TF #_reverse_Rule8
+  166 40 3,32 km_R_TF #_reverse_Rule8
+  167 41 3,34 km_R_TF #_reverse_Rule8
+  168 37 43 2*k_TF_transphos #Rule10
+  169 42 38,39 2*km_LR #_reverse_Rule1
+  170 43 31,44 km_LR #_reverse_Rule1
+  171 43 30,45 km_LR #_reverse_Rule1
+  172 42 40,40 km_LL #_reverse_Rule2
+  173 43 33,46 km_LL #_reverse_Rule2
+  174 43 47 k_R_endo #Rule3
+  175 42 37 k_recycle #Rule4
+  176 42 3,41 2*km_R_TF #_reverse_Rule8
+  177 43 3,48 km_R_TF #_reverse_Rule8
+  178 43 36,49 km_R_TFp #_reverse_Rule9
+  179 42 47 2*k_TF_transphos #Rule10
+  180 43 50 k_TF_transphos #Rule10
+  181 43 37 k_TF_dephos #Rule11
+  182 1,45 46 0.00082294595*kp_LR #Rule1 unit_conversion=1/vol_EC
+  183 9,45 44 0.0016458919*kp_LR #Rule1 unit_conversion=1/vol_EC
+  184 11,45 51 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+  185 19,45 48 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+  186 30,45 43 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+  187 2,44 51 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+  188 20,44 48 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+  189 31,44 43 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+  190 44,45 50 1.0516928*kp_LR #Rule1 unit_conversion=1/(sa_PM*eff_width)
+  191 44 9,45 km_LR #_reverse_Rule1
+  192 46 1,45 km_LR #_reverse_Rule1
+  193 47 39,52 km_LR #_reverse_Rule1
+  194 47 38,53 km_LR #_reverse_Rule1
+  195 48 20,44 km_LR #_reverse_Rule1
+  196 48 19,45 km_LR #_reverse_Rule1
+  197 50 44,45 2*km_LR #_reverse_Rule1
+  198 1,46 44 0.00082294595*kp_LL #Rule2 unit_conversion=1/vol_EC
+  199 8,46 51 1.0516928*kp_LL #Rule2 unit_conversion=1/(sa_PM*eff_width)
+  200 22,46 48 1.0516928*kp_LL #Rule2 unit_conversion=1/(sa_PM*eff_width)
+  201 33,46 43 1.0516928*kp_LL #Rule2 unit_conversion=1/(sa_PM*eff_width)
+  202 46,46 50 0.52584639*kp_LL #Rule2 unit_conversion=1/(sa_PM*eff_width)
+  203 44 1,46 km_LL #_reverse_Rule2
+  204 47 40,54 km_LL #_reverse_Rule2
+  205 48 22,46 km_LL #_reverse_Rule2
+  206 50 46,46 km_LL #_reverse_Rule2
+  207 48 55 k_R_endo #Rule3
+  208 50 56 k_R_endo #Rule3
+  209 47 43 k_recycle #Rule4
+  210 48 51 k_R_dephos #Rule7
+  211 3,48 43 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+  212 47 3,55 km_R_TF #_reverse_Rule8
+  213 15,49 51 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  214 19,49 44 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  215 20,49 45 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  216 22,49 46 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  217 23,49 57 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  218 24,49 48 0.0048610293*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  219 28,49 52 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  220 29,49 53 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  221 32,49 54 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  222 34,49 55 0.0048610293*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  223 36,49 43 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  224 41,49 47 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  225 48,49 50 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  226 44 19,49 km_R_TFp #_reverse_Rule9
+  227 45 20,49 km_R_TFp #_reverse_Rule9
+  228 46 22,49 km_R_TFp #_reverse_Rule9
+  229 47 41,49 km_R_TFp #_reverse_Rule9
+  230 48 24,49 km_R_TFp #_reverse_Rule9
+  231 50 48,49 2*km_R_TFp #_reverse_Rule9
+  232 47 56 k_TF_transphos #Rule10
+  233 44 30 k_TF_dephos #Rule11
+  234 45 31 k_TF_dephos #Rule11
+  235 46 33 k_TF_dephos #Rule11
+  236 47 42 k_TF_dephos #Rule11
+  237 48 36 k_TF_dephos #Rule11
+  238 49 3 k_TF_dephos #Rule11
+  239 50 43 2*k_TF_dephos #Rule11
+  240 49,49 58 0.0012152573*kp_TF_TF #Rule12 unit_conversion=1/vol_CP
+  241 17,53 57 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  242 26,53 52 0.29451533*kp_LR #Rule1 unit_conversion=1/vol_EN
+  243 27,53 54 0.14725766*kp_LR #Rule1 unit_conversion=1/vol_EN
+  244 28,53 55 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  245 38,53 47 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  246 18,52 57 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  247 29,52 55 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  248 39,52 47 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  249 52,53 56 34.25153*kp_LR #Rule1 unit_conversion=1/(sa_EM*eff_width)
+  250 51 2,44 km_LR #_reverse_Rule1
+  251 51 11,45 km_LR #_reverse_Rule1
+  252 52 26,53 km_LR #_reverse_Rule1
+  253 54 27,53 km_LR #_reverse_Rule1
+  254 55 29,52 km_LR #_reverse_Rule1
+  255 55 28,53 km_LR #_reverse_Rule1
+  256 56 52,53 2*km_LR #_reverse_Rule1
+  257 57 18,52 km_LR #_reverse_Rule1
+  258 57 17,53 km_LR #_reverse_Rule1
+  259 21,54 57 34.25153*kp_LL #Rule2 unit_conversion=1/(sa_EM*eff_width)
+  260 27,54 52 0.14725766*kp_LL #Rule2 unit_conversion=1/vol_EN
+  261 32,54 55 34.25153*kp_LL #Rule2 unit_conversion=1/(sa_EM*eff_width)
+  262 40,54 47 34.25153*kp_LL #Rule2 unit_conversion=1/(sa_EM*eff_width)
+  263 54,54 56 17.125765*kp_LL #Rule2 unit_conversion=1/(sa_EM*eff_width)
+  264 51 8,46 km_LL #_reverse_Rule2
+  265 52 27,54 km_LL #_reverse_Rule2
+  266 55 32,54 km_LL #_reverse_Rule2
+  267 56 54,54 km_LL #_reverse_Rule2
+  268 57 21,54 km_LL #_reverse_Rule2
+  269 51 57 k_R_endo #Rule3
+  270 52 44 k_recycle #Rule4
+  271 53 45 k_recycle #Rule4
+  272 54 46 k_recycle #Rule4
+  273 55 48 k_recycle #Rule4
+  274 56 50 k_recycle #Rule4
+  275 57 51 k_recycle #Rule4
+  276 51 48 k_R_transphos #Rule6
+  277 57 55 k_R_transphos #Rule6
+  278 55 57 k_R_dephos #Rule7
+  279 3,55 47 0.0024305147*kp_R_TF #Rule8 unit_conversion=1/vol_CP
+  280 49,55 56 0.0024305147*kp_R_TFp #Rule9 unit_conversion=1/vol_CP
+  281 51 15,49 km_R_TFp #_reverse_Rule9
+  282 52 28,49 km_R_TFp #_reverse_Rule9
+  283 53 29,49 km_R_TFp #_reverse_Rule9
+  284 54 32,49 km_R_TFp #_reverse_Rule9
+  285 55 34,49 km_R_TFp #_reverse_Rule9
+  286 56 49,55 2*km_R_TFp #_reverse_Rule9
+  287 57 23,49 km_R_TFp #_reverse_Rule9
+  288 51 25 k_TF_dephos #Rule11
+  289 52 38 k_TF_dephos #Rule11
+  290 53 39 k_TF_dephos #Rule11
+  291 54 40 k_TF_dephos #Rule11
+  292 55 41 k_TF_dephos #Rule11
+  293 56 47 2*k_TF_dephos #Rule11
+  294 57 35 k_TF_dephos #Rule11
+  295 58 49,49 km_TF_TF #_reverse_Rule12
+  296 5,58 59 0.0024305147*k_Im_bind_CP #Rule24 unit_conversion=1/vol_CP
+  297 10,58 60 0.0024305147*k_Im_bind_CP #Rule24 unit_conversion=1/vol_CP
+  298 59 5,58 k_Im_unbind_CP #_reverse_Rule24
+  299 60 10,58 k_Im_unbind_CP #_reverse_Rule24
+  300 6,59 60 0.0024305147*k_Im_enters_NP #Rule28 unit_conversion=1/vol_CP
+  301 60 6,59 k_Im_exits_NP #_reverse_Rule28
+  302 60 61 k_Im_cross_NP #Rule29
+  303 61 13,62 k_Im_unbind_NU #_reverse_Rule25
+  304 61 6,63 k_Im_exits_NP #_reverse_Rule28
+  305 61 60 k_Im_cross_NP #_reverse_Rule29
+  306 62 64,64 km_TF_TF #_reverse_Rule12
+  307 4,62 65 0.0026436234*kp_TF_p1 #Rule13 unit_conversion=1/vol_NU
+  308 13,62 61 0.0026436234*k_Im_bind_NU #Rule25 unit_conversion=1/vol_NU
+  309 16,62 63 0.0026436234*k_Im_bind_NU #Rule25 unit_conversion=1/vol_NU
+  310 63 16,62 k_Im_unbind_NU #_reverse_Rule25
+  311 6,63 61 0.0026436234*k_Im_enters_NP #Rule28 unit_conversion=1/vol_NU
+  312 64,64 62 0.0013218117*kp_TF_TF #Rule12 unit_conversion=1/vol_NU
+  313 65 4,62 km_TF_p1 #_reverse_Rule13
+  314 65 65,66 k_transcribe #Rule14
+  315 66 67 k_mRNA_to_CP #Rule16
+  316 66 7 k_mRNA_deg #Rule20
+  317 67 67,68 k_translate #Rule18
+  318 67 7 k_mRNA_deg #Rule20
+  319 68 7 k_P_deg #Rule22
+  320 5,68 69 0.0024305147*k_Im_bind_CP #Rule26 unit_conversion=1/vol_CP
+  321 10,68 70 0.0024305147*k_Im_bind_CP #Rule26 unit_conversion=1/vol_CP
+  322 69 5,7 k_P_deg #Rule22
+  323 70 7,10 k_P_deg #Rule22
+  324 69 5,68 k_Im_unbind_CP #_reverse_Rule26
+  325 70 10,68 k_Im_unbind_CP #_reverse_Rule26
+  326 6,69 70 0.0024305147*k_Im_enters_NP #Rule28 unit_conversion=1/vol_CP
+  327 70 6,69 k_Im_exits_NP #_reverse_Rule28
+  328 70 71 k_Im_cross_NP #Rule29
+  329 71 7,13 k_P_deg #Rule22
+  330 71 13,72 k_Im_unbind_NU #_reverse_Rule27
+  331 71 6,73 k_Im_exits_NP #_reverse_Rule28
+  332 71 70 k_Im_cross_NP #_reverse_Rule29
+  333 72 7 k_P_deg #Rule22
+  334 73 7,16 k_P_deg #Rule22
+  335 13,72 71 0.0026436234*k_Im_bind_NU #Rule27 unit_conversion=1/vol_NU
+  336 16,72 73 0.0026436234*k_Im_bind_NU #Rule27 unit_conversion=1/vol_NU
+  337 73 16,72 k_Im_unbind_NU #_reverse_Rule27
+  338 6,73 71 0.0026436234*k_Im_enters_NP #Rule28 unit_conversion=1/vol_NU
+  339 4,72 74 0.0026436234*kp_P1_p2 #Rule30 unit_conversion=1/vol_NU
+  340 65,72 75 0.0026436234*kp_P1_p2 #Rule30 unit_conversion=1/vol_NU
+  341 62,74 75 0.0026436234*kp_TF_p1 #Rule13 unit_conversion=1/vol_NU
+  342 75 62,74 km_TF_p1 #_reverse_Rule13
+  343 75 66,75 k_transcribe #Rule14
+  344 74 74,76 k_transcribe #Rule15
+  345 75 75,76 k_transcribe #Rule15
+  346 74 4,7 k_P_deg #Rule22
+  347 75 7,65 k_P_deg #Rule22
+  348 74 4,72 km_P1_p2 #_reverse_Rule30
+  349 75 65,72 km_P1_p2 #_reverse_Rule30
+  350 76 77 k_mRNA_to_CP #Rule17
+  351 76 7 k_mRNA_deg #Rule21
+  352 77 77,78 k_translate #Rule19
+  353 77 7 k_mRNA_deg #Rule21
+  354 78 7 k_P_deg #Rule23
+end reactions
+begin groups
+    1 Tot_L                1,8,2*9,2*11,2*12,2*14,2*15,2*17,2*19,21,22,2*23,2*24,2*25,2*26,27,2*28,2*30,32,33,2*34,2*35,2*36,2*37,2*38,40,2*41,2*42,2*43,2*44,46,2*47,2*48,2*50,2*51,2*52,54,2*55,2*56,2*57
+    2 Tot_R                2,8,11,2*12,2*14,2*15,17,18,19,20,21,22,2*23,2*24,2*25,28,29,30,31,32,33,2*34,2*35,2*36,2*37,38,39,40,2*41,2*42,2*43,44,45,46,2*47,2*48,2*50,2*51,52,53,54,2*55,2*56,2*57
+    3 Tot_TF               3,25,30,31,33,35,36,2*37,38,39,40,41,2*42,2*43,44,45,46,2*47,48,49,2*50,51,52,53,54,55,2*56,57,2*58,2*59,2*60,2*61,2*62,2*63,64,2*65,2*75
+    4 Tot_DNA              4,65,74,75
+    5 Tot_mRNA1            66,67
+    6 Tot_mRNA2            76,77
+    7 Tot_P1               68,69,70,71,72,73,74,75
+    8 Tot_P2               78
+    9 Tot_NP               6,10,13,60,61,70,71
+   10 Tot_Im               5,10,13,16,59,60,61,63,69,70,71,73
+   11 L_Dimers_EC          9
+   12 L_Dimers_PM          11,12,15,19,24,25,30,36,37,43,44,48,50,51
+   13 L_Dimers_EN          26
+   14 L_Dimers_EM          14,17,23,28,34,35,38,41,42,47,52,55,56,57
+   15 L_Bound_PM           8,2*11,2*12,2*15,2*19,22,2*24,2*25,2*30,33,2*36,2*37,2*43,2*44,46,2*48,2*50,2*51
+   16 L_Bound_EM           2*14,2*17,21,2*23,2*28,32,2*34,2*35,2*38,40,2*41,2*42,2*47,2*52,54,2*55,2*56,2*57
+   17 R_Dimers_PM          12,15,24,25,36,37,43,48,50,51
+   18 R_Dimers_EM          14,23,34,35,41,42,47,55,56,57
+   19 Catalytic_R          15,19,20,22,23,2*24,25,28,29,30,31,32,33,2*34,35,2*36,2*37,38,39,40,2*41,2*42,2*43,44,45,46,2*47,2*48,2*50,51,52,53,54,2*55,2*56,57
+   20 Catalytic_TF         25,30,31,33,35,36,2*37,38,39,40,41,2*42,2*43,44,45,46,2*47,48,2*50,51,52,53,54,55,2*56,57
+   21 Phos_TF              43,44,45,46,47,48,49,2*50,51,52,53,54,55,2*56,57,2*58,2*59,2*60,2*61,2*62,2*63,64,2*65,2*75
+   22 TF_Dimer_CP          58,59,60
+   23 TF_Dimer_NU          61,62,63,65,75
+   24 Bound_prom1          65,75
+   25 Bound_prom2          74,75
+   26 P1_NU                71,72,73,74,75
+   27 P1_CP                68,69,70
+   28 Im_NU                13,16,61,63,71,73
+   29 Im_CP                5,10,59,60,69,70
+   30 Im_Cargo_NP          60,61,70,71
+   31 P1_NU_free           72
+   32 P1_NU_dna            74,75
+   33 CountSink            7
+end groups
