@@ -320,13 +320,17 @@ if param.includeprot
 %SPHARM_OBJ_MODEL COMPARISON
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if strcmpi(models{1}.proteinModel.type,'spharm_obj')
-%         header2html(fileID, 'Spharm Model Comparison'); 
-%         total_variation= ppm_total_variation(models);
-%         text2html(fileID, ['Total_Variation=''%s'';\n', total_variation]); 
         
         models_ShapeModel{1} = models{1}.proteinModel.spharm_obj_model.cellShapeModel;
         models_ShapeModel{2} = models{2}.proteinModel.spharm_obj_model.cellShapeModel;
-        compare_shape_space_spharm_obj(models_ShapeModel,fileID,param);
+        consolidated_model=compare_shape_space_spharm_obj(models_ShapeModel,fileID,param);
+        header2html(fileID, 'Spharm Model Comparison');
+        total_variation=consolidated_model.total_variation;
+        text2html(fileID, ['Total_Variation=''%s'';\n', total_variation]);
+        %spatial model comparision
+        models_SpatialModel{1}=models{1}.proteinModel.spharm_obj_model.spatial;
+        models_SpatialModel{2}=models{2}.proteinModel.spharm_obj_model.spatial;
+        compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
     end
 end
 

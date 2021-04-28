@@ -33,6 +33,7 @@ function model2info_v2( model, fileID, options )
 % 2020/10/16 R. F. Murphy added printout of Hausdorff distances for
 %                       SPHARM-RPDM models
 % 2021/03/05 R.F. Murphy modified to use new name for hd values
+% 2021/04/24 R.F. Murphy merged in Serena's show_spatial_distribution
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MODEL.NAME %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 header2html( fileID, 'Model name');
@@ -225,6 +226,10 @@ if is_spharm_model( model )
     close all
     
     movefile( '*.png', './html' );
+    
+    %Spatial Distribution
+    show_spatial_distribution(model.spatial,fileID)
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% IS TCell MODEL? %%%%%%%%%%%%%%%%%%%%%%%%%%%%

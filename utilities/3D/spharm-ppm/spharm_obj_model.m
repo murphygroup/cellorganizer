@@ -2,6 +2,7 @@ function model = spharm_obj_model(options)
 % 1/26/2021 R.F. Murphy - save normalized nuclear distances into model
 % (only for objects that were successfully parameterized)
 % 3/2/2021 R.F. Murphy - remove unused ppm code
+% 4/24/2021 R.F. Murphy - merge in Serena's changes
 
     options_spharm = options.options_spharm;
     spharm_obj_dir = [pwd filesep 'spharm_input'];
@@ -32,6 +33,7 @@ normdists = [];
 anglestheta = [];
 anglesphi = [];
 mappos_x = [];
+distcodes=[];
 paramfiles = ml_ls([paramdir filesep '*.mat']);
 for i=1:length(paramfiles)
     pp = load(paramfiles{i});
@@ -40,10 +42,14 @@ for i=1:length(paramfiles)
     normdists = [normdists; pp.prot.seg.normdists];
     anglestheta = [anglestheta; pp.prot.seg.angles.theta];
     anglesphi = [anglesphi; pp.prot.seg.angles.phi];
-    mappos_x = [mappos_x; pp.prot.seg.mappos_x];    
+    mappos_x = [mappos_x; pp.prot.seg.mappos_x];
+    distcodes=[distcodes;pp.prot.seg.distcodes];
 end
 spatial.normdists = normdists(isdone)';
 spatial.anglestheta = anglestheta(isdone)';
 spatial.anglesphi = anglesphi(isdone)';
 spatial.mappos_x = mappos_x(isdone,:);
+spatial.distcodes=distcodes(isdone,:);
+beta=ml_logreg(spatial.mappos_x(:,2:6),spatial.distcodes(:,3));
+spatial.beta=beta;
 end

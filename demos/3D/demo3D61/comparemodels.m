@@ -1,0 +1,3 @@
+options = struct('verbose',true,'includenuclear',true, ...
+    'includecell',true,'includeprot',true,'hd_threshold',10);
+slml2report('images1to5/model.mat','images11to15/model.mat',options);

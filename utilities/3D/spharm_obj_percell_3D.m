@@ -6,6 +6,8 @@ function cellparam = spharm_obj_percell_3D(imdna_path,imcell_path,improt_path,im
 % 1/27/2021 R.F. Murphy - also save normdists and angles; don't suppress
 %                           objects with zero distcodes
 % 2/1/2021 R.F. Murphy - mask protein image before object finding
+% 4/24/2021 R.F. Murphy - merge in Serena's fixes for cell and nuclear
+% segmentation and normdists
 
 min_obj_size = options.min_obj_size;
 max_obj_size = options.max_obj_size;
@@ -58,8 +60,19 @@ beta = [];
 options = ml_initparam(options, struct('use_geodesic_distance', false));
 
 
-nucEdge = bwperim(seg.nuc,18);
-cellEdge = bwperim(seg.cell,18);
+%Serena 03/21
+se = strel('line', 3,5);
+seg.cell=imfill(seg.cell,'holes');
+cellerode = imerode(seg.cell, se);
+cellEdge = logical(abs(imsubtract(cellerode, seg.cell)));
+cellEdge=imfill(cellEdge,'holes');
+
+seg.nuc=imfill(seg.nuc,'holes');
+nucerode=imerode(seg.nuc,se);
+nucEdge= logical(abs(imsubtract(nucerode, seg.nuc)));
+
+%nucEdge = bwperim(seg.nuc,18);
+%cellEdge = bwperim(seg.cell,18);
 obj_center_image = zeros(size(cellEdge));
             
 for p=1:size(centers)
@@ -79,7 +92,16 @@ disp('Find normalized coordinates for positions of objects');
 %distcodes(nullidx,:)=[];
 %angles.theta(nullidx,:)=[];
 %angles.phi(nullidx,:)=[];
-normdists = distcodes(:,1)./sum(abs(distcodes(:,1:2)),2);
+%normdists = distcodes(:,1)./sum(abs(distcodes(:,1:2)),2);
+
+for i=1:length(distcodes)
+    %Serena 03/21
+    if and(distcodes(i,1)==0,distcodes(i,2)==0)
+        normdists(i,1)=0;
+        continue;
+    end
+    normdists(i,1)=distcodes(i,1)/sum(abs(distcodes(i,1:2)),2);
+end
 
 disp('Mapping positions')
 x = ml_mappos([normdists angles.theta angles.phi]);

@@ -59,6 +59,8 @@ for i = 1:5
     options.labels{length(options.labels)+1} = 'LAMP2';
     options.masks{i} = [directory filesep 'LAM_cell' num2str(i) '_mask_t1.tif'];
 end
+disp(dna_paths)
+pause
 
 %set the dimensionality
 dimensionality = '3D';
