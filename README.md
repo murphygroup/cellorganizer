@@ -1,7 +1,6 @@
 CellOrganizer
 -------------
-
-For generating 3D images, using a computer with at least 2 GB of memory is recommended.
+For generating 3D images, using a computer with at least 4GB of memory, 8Gb is recommended.
 
 I. Installation
 ---------------
