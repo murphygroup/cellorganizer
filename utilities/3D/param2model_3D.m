@@ -31,7 +31,7 @@ function model = param2model_3D( cell_params, options )
 % May 25, 2016 I. Cao-Berg Included reference to model class and type
 % Sep 17, 2018 Xiongtao Ruan Add 3D SPHARM-RPDM model
 
-options.if_skip_cell_nuclear_model=1;
+% options.if_skip_cell_nuclear_model=1;
 if (isfield( options, 'nucleus') && ...
         isfield( options.nucleus, 'type') && ...
         strcmpi(options.nucleus.type, 'diffeomorphic')) || ...
@@ -143,6 +143,7 @@ elseif isrpdm
 %     model.spharm_obj_model = spharm_obj_model(options);
 elseif isfield( options, 'if_skip_cell_nuclear_model' ) && options.if_skip_cell_nuclear_model
     disp('Skip creation of cell/nuclear model');
+    model = {};
 else
     if isfield(options, 'nucleus')
         nuc_model_save = [options.paramdir filesep 'nuc.mat'];
