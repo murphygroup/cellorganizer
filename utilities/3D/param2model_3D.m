@@ -74,117 +74,119 @@ else
 end
 
 %%Cell and Nuclear Shape Model
-if isdiffeomorphic
-    components = {};
-    c = 1;
-    if (isfield( options, 'cell') && ...
-            isfield( options.cell, 'type') && ...
-            strcmpi(options.cell.type, 'diffeomorphic'))
-        components{c} = 'cell';
-        c = c+1;
-    end
-
-    if (isfield( options, 'nucleus') && ...
-            isfield( options.nucleus, 'type') && ...
-            strcmpi(options.nucleus.type, 'diffeomorphic'))
-        components{c} = 'nuc';
-        c = c+1;
-    end
-
-    options_img = struct('components', {components}, 'format', 'indexed');
-    options.imfunc = @(x) param2img(cell_params{x}, options_img);
-
-    model.cellShapeModel = train_diffeomorphic_model(options);
-    model.nuclearShapeModel = model.cellShapeModel;
-elseif isrpdm
-    components = {};
-    if (isfield( options, 'cell')   && isfield( options.cell, 'type')    && strcmpi(options.cell.type, 'spharm_rpdm'))
-        components{end + 1} = 'cell';
-    end
-    if (isfield( options, 'nucleus') && isfield( options.nucleus, 'type') && strcmpi(options.nucleus.type, 'spharm_rpdm'))
-        components{end + 1} = 'nuc';
-    end
-    options.components = components;
-
-    model.cellShapeModel = train_spharm_rpdm_model(cell_params, options);
-
-    if ismember( options.train.flag, {'nuclear', 'framework', 'all'} )
-    	model.nuclearShapeModel = model.cellShapeModel;
-    	model.nuclearShapeModel.class = options.nucleus.class;
-    	model.nuclearShapeModel.type = options.nucleus.type;
-    	model.nuclearShapeModel.resolution = options.model.resolution;
-
-	if isempty( model.nuclearShapeModel.name )
-    		model.nuclearShapeModel.name = 'UNSET';
-   	end
-
-    	model.nuclearShapeModel.id = options.nucleus.id;
-	if isempty( model.nuclearShapeModel.id )
-    		model.nuclearShapeModel.id = uuidgen();
-    	end
-    end
-
-    if ismember( options.train.flag, {'cell', 'framework', 'all'} )
-    	model.cellShapeModel.class = options.cell.class;
-    	model.cellShapeModel.type = options.cell.type;
-    	model.cellShapeModel.resolution = options.model.resolution;
-
-	if isempty( model.cellShapeModel.name )
-        	model.cellShapeModel.name = 'UNSET';
+if ismember( options.train.flag, {'cell','nuclear', 'framework', 'all'} )
+    if isdiffeomorphic
+        components = {};
+        c = 1;
+        if (isfield( options, 'cell') && ...
+                isfield( options.cell, 'type') && ...
+                strcmpi(options.cell.type, 'diffeomorphic'))
+            components{c} = 'cell';
+            c = c+1;
         end
 
-        model.cellShapeModel.id = options.cell.id;
-        if isempty( model.cellShapeModel.id )
-                model.cellShapeModel.id = uuidgen();
+        if (isfield( options, 'nucleus') && ...
+                isfield( options.nucleus, 'type') && ...
+                strcmpi(options.nucleus.type, 'diffeomorphic'))
+            components{c} = 'nuc';
+            c = c+1;
         end
-    end
-% elseif isfield(options, 'model') && isfield(options.model, 'name') && strcmp(options.model.name,'spharm_obj')
-%     disp('generating spharm obj model');
-%     model.spharm_obj_model = spharm_obj_model(options);
-elseif isfield( options, 'if_skip_cell_nuclear_model' ) && options.if_skip_cell_nuclear_model
-    disp('Skip creation of cell/nuclear model');
-    model = {};
-else
-    if isfield(options, 'nucleus')
-        nuc_model_save = [options.paramdir filesep 'nuc.mat'];
-        if ~exist(nuc_model_save, 'file')
-            switch options.nucleus.type
-                case 'cylindrical_surface'
-                    nuclear_model = param2cylsurf(cell_params, options);
-                otherwise
-                    warning(['Unsupported cell model type ' options.nucleus.type '. Returning empty model.'])
-                    nuclear_model = [];
+
+        options_img = struct('components', {components}, 'format', 'indexed');
+        options.imfunc = @(x) param2img(cell_params{x}, options_img);
+
+        model.cellShapeModel = train_diffeomorphic_model(options);
+        model.nuclearShapeModel = model.cellShapeModel;
+    elseif isrpdm
+        components = {};
+        if (isfield( options, 'cell')   && isfield( options.cell, 'type')    && strcmpi(options.cell.type, 'spharm_rpdm'))
+            components{end + 1} = 'cell';
+        end
+        if (isfield( options, 'nucleus') && isfield( options.nucleus, 'type') && strcmpi(options.nucleus.type, 'spharm_rpdm'))
+            components{end + 1} = 'nuc';
+        end
+        options.components = components;
+
+        model.cellShapeModel = train_spharm_rpdm_model(cell_params, options);
+
+        if ismember( options.train.flag, {'nuclear', 'framework', 'all'} )
+            model.nuclearShapeModel = model.cellShapeModel;
+            model.nuclearShapeModel.class = options.nucleus.class;
+            model.nuclearShapeModel.type = options.nucleus.type;
+            model.nuclearShapeModel.resolution = options.model.resolution;
+
+        if isempty( model.nuclearShapeModel.name )
+                model.nuclearShapeModel.name = 'UNSET';
+        end
+
+            model.nuclearShapeModel.id = options.nucleus.id;
+        if isempty( model.nuclearShapeModel.id )
+                model.nuclearShapeModel.id = uuidgen();
             end
-            save(nuc_model_save, 'nuclear_model')
-        else
-            load(nuc_model_save)
         end
 
-        model.nuclearShapeModel = nuclear_model;
-        model.nuclearShapeModel.class = options.nucleus.class;
-        model.nuclearShapeModel.type = options.nucleus.type;
-        model.nuclearShapeModel.resolution = cell_param.options.model.resolution;
-    end
+        if ismember( options.train.flag, {'cell', 'framework', 'all'} )
+            model.cellShapeModel.class = options.cell.class;
+            model.cellShapeModel.type = options.cell.type;
+            model.cellShapeModel.resolution = options.model.resolution;
 
-    if isfield(options, 'cell')
-        cell_model_save = [options.paramdir filesep 'cell.mat'];
-        if ~exist(cell_model_save, 'file')
-            switch options.cell.type
-                case 'ratio'
-                    cell_model = param2cell_ratio_model(cell_params, options);
-                otherwise
-                    warning(['Unsupported cell model type ' options.cell.type '. Returning empty model.'])
-                    cell_model = [];
+        if isempty( model.cellShapeModel.name )
+                model.cellShapeModel.name = 'UNSET';
             end
 
-            save(cell_model_save, 'cell_model')
-        else
-            load(cell_model_save)
+            model.cellShapeModel.id = options.cell.id;
+            if isempty( model.cellShapeModel.id )
+                    model.cellShapeModel.id = uuidgen();
+            end
         end
-        model.cellShapeModel = cell_model;
-        model.cellShapeModel.class = options.cell.class;
-        model.cellShapeModel.type = options.cell.type;
-        model.cellShapeModel.resolution = cell_param.options.model.resolution;
+    % elseif isfield(options, 'model') && isfield(options.model, 'name') && strcmp(options.model.name,'spharm_obj')
+    %     disp('generating spharm obj model');
+    %     model.spharm_obj_model = spharm_obj_model(options);
+    elseif isfield( options, 'if_skip_cell_nuclear_model' ) && options.if_skip_cell_nuclear_model
+        disp('Skip creation of cell/nuclear model');
+        model = {};
+    else
+        if isfield(options, 'nucleus')
+            nuc_model_save = [options.paramdir filesep 'nuc.mat'];
+            if ~exist(nuc_model_save, 'file')
+                switch options.nucleus.type
+                    case 'cylindrical_surface'
+                        nuclear_model = param2cylsurf(cell_params, options);
+                    otherwise
+                        warning(['Unsupported cell model type ' options.nucleus.type '. Returning empty model.'])
+                        nuclear_model = [];
+                end
+                save(nuc_model_save, 'nuclear_model')
+            else
+                load(nuc_model_save)
+            end
+
+            model.nuclearShapeModel = nuclear_model;
+            model.nuclearShapeModel.class = options.nucleus.class;
+            model.nuclearShapeModel.type = options.nucleus.type;
+            model.nuclearShapeModel.resolution = cell_param.options.model.resolution;
+        end
+
+        if isfield(options, 'cell')
+            cell_model_save = [options.paramdir filesep 'cell.mat'];
+            if ~exist(cell_model_save, 'file')
+                switch options.cell.type
+                    case 'ratio'
+                        cell_model = param2cell_ratio_model(cell_params, options);
+                    otherwise
+                        warning(['Unsupported cell model type ' options.cell.type '. Returning empty model.'])
+                        cell_model = [];
+                end
+
+                save(cell_model_save, 'cell_model')
+            else
+                load(cell_model_save)
+            end
+            model.cellShapeModel = cell_model;
+            model.cellShapeModel.class = options.cell.class;
+            model.cellShapeModel.type = options.cell.type;
+            model.cellShapeModel.resolution = cell_param.options.model.resolution;
+        end
     end
 end
 

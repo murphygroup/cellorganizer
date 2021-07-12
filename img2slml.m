@@ -467,7 +467,7 @@ for i = 1:(length(arr))
     %Check if given array has delimiter
     if length(strsplit(arr{1},':')) > 1
         ch_num     = [ch_num split{2}];
-        if length(strsplit(arr{1},':')) > 1
+        if length(strsplit(arr{1},':')) > 2
             time_num   = [time_num split{3}];
         end
     end

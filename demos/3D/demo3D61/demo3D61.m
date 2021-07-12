@@ -52,7 +52,7 @@ disp( 'The estimated running time is approximately 90 minutes. Please wait.' );
 
 directory = '../../../images/HeLa/3D/processed';
 cell_paths = {}; dna_paths = {}; prot_paths = {}; options.labels = {};
-for i = 1:5
+for i = 1:3
     dna_paths{i} = [directory filesep 'LAM_cell' num2str(i) '_ch0_t1.tif'];
     cell_paths{i} = [directory filesep 'LAM_cell' num2str(i) '_ch1_t1.tif'];
     prot_paths{i} = [directory filesep 'LAM_cell' num2str(i) '_ch2_t1.tif'];
@@ -122,7 +122,7 @@ options.train.flag = 'protein';
 options.protein.class = 'vesicle';
 options.protein.type = 'spharm_obj'; % new type for vesicle
 options.model.id = uuidgen();
-options.model.name = 'LAMP2spharm_obj';
+options.model.name = 'spharm_obj';
 options.model.resolution = resolution;
 %options.downsampling = [4,4,1];
 options.downsampling = [1,1,1]; %this is for the initial input images
@@ -132,7 +132,7 @@ options.max_obj_size = 400;
 options.local_thresholding_sigma = 5;
 options.object_detection_thresPerc = 0.1;
 %options.masks = mask_paths;
-%options.if_skip_cell_nuclear_model = true;
+% options.if_skip_cell_nuclear_model = true;
 options.if_skip_cell_nuclear_model = false;
 
 tic; answer = img2slml(dimensionality, dna_paths, cell_paths, prot_paths , options ); toc,

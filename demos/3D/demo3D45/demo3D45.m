@@ -45,7 +45,7 @@ function answer = demo3D45(options)
 if ~isdeployed()
   current_path = which(mfilename);
   [current_path, filename, extension] = fileparts( current_path );
-  get_murphylab_image_collections( true );
+%   get_murphylab_image_collections( true );
   cd(current_path);
 end
 
@@ -99,7 +99,7 @@ pattern = 'framework';
 % cell = [imageDirectory filesep 'TfR*cell*ch1*.tif'];
 % options.masks = [imageDirectory filesep 'TfR*mask*.tif'];
 
-directory = '../../../images/HeLa/3D/ometiff_with_rois';
+directory = '../../../images/ometiff_with_rois';
 if ~exist( directory )
     answer = false;
     warning(['Folder ' directory ' does not exist. Exiting demo.']);
