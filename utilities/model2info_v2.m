@@ -227,9 +227,8 @@ if is_spharm_model( model )
     
     movefile( '*.png', './html' );
     
-    %turned off causing errors in workshop notebooks - ted zhang 07/12/21
     %Spatial Distribution
-%     show_spatial_distribution(model.spatial,fileID)
+    show_spatial_distribution(model.spatial,fileID)
 
 end
 
