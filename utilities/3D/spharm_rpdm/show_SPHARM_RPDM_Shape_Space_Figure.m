@@ -79,13 +79,14 @@ if latent_dims < max(plot_dims)
     error('At least one of chosen latent dimensions [ %s ] is larger than the latent dimension of the model %d. Please reset param.plot_dims ', num2str(plot_dims), latent_dims);
 end
 
-%keepinds = ~any(isnan(train_score),2);
-keepinds = ~(any(isnan(train_score),2) | (model.hausdorff_distances>param.hd_threshold)');
+% this was causing crashes to module2B for workshop - ted zhang 07/12/21
+% keepinds = ~any(isnan(train_score),2);
+% keepinds = ~(any(isnan(train_score),2) | (model.hausdorff_distances>param.hd_threshold)');
 %     labels = labels(keepinds);
-if strcmp(model.rpdm_model_type,'joint')
-    keepinds = keepinds(:,1) & keepinds(:,2);
-end    
-cellnums = cellnums(keepinds);
+% if strcmp(model.rpdm_model_type,'joint')
+%     keepinds = keepinds(:,1) & keepinds(:,2);
+% end    
+% cellnums = cellnums(keepinds);
 %     embed_pos = model.positions(keepinds,:);
 
 [ulabels, ~, labelinds ] = unique(labels);
