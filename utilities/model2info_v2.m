@@ -228,7 +228,9 @@ if is_spharm_model( model )
     movefile( '*.png', './html' );
     
     %Spatial Distribution
-    show_spatial_distribution(model.spatial,fileID)
+    if isfield(model, 'spatial')
+        show_spatial_distribution(model.spatial,fileID)
+    end
 
 end
 

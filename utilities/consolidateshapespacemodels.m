@@ -26,7 +26,9 @@ consolidated_model.numimgs1=model1.numimgs;
 consolidated_model.numimgs2=model2.numimgs;
 consolidated_model.numimgs=model1.numimgs+model2.numimgs;
 consolidated_model.all_spharm_descriptors=cat(3,spharm1,spharm2);
-consolidated_model.hausdorff_distances=horzcat(model1.hausdorff_distances,model2.hausdorff_distances);
+if isfield(model1, 'hausdorff_distances') && isfield(model2, 'hausdorff_distances')
+    consolidated_model.hausdorff_distances=horzcat(model1.hausdorff_distances,model2.hausdorff_distances);
+end
 if ismember(model1.components,model2.components)
     consolidated_model.components=model2.components;
 else
