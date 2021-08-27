@@ -331,6 +331,7 @@ if param.includeprot
         models_SpatialModel{1}=models{1}.proteinModel.spharm_obj_model.spatial;
         models_SpatialModel{2}=models{2}.proteinModel.spharm_obj_model.spatial;
         compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
+        clique_percolation(models_SpatialModel,fileID, options);
     end
 end
 
