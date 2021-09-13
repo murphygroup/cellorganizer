@@ -33,7 +33,7 @@ spharm_dir = [pwd filesep 'spharm_input']; % save all the objects as 3D tif file
 [status, msg, msgID] = mkdir(ppm_dir);
 [status, msg, msgID] = mkdir(spharm_dir);
 save_spharm_obj(obj_img,min_obj_size,cellName) % save all the objects into 3D tif files
-% save ometiff files for ppm
+% save ometiff files for objects
 % generate puncta image for image:
 
 %Serena - 08/20
