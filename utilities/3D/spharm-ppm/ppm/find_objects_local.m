@@ -1,4 +1,4 @@
-function [puncta_img,centers] = find_objects_local(img,flag,min_obj_size, ...
+function [puncta_img,numPixels,centers] = find_objects_local(img,flag,min_obj_size, ...
     max_obj_size, sigma, thresPerc )
 
 % Copyright (C) 2020 Murphy Lab
@@ -35,17 +35,24 @@ for i=1:size(img,3)
     %         background = imgaussfilt(img(:,:,i),sigma);
     BW_pre(:,:,i) = img(:,:,i)-imgaussfilt(img(:,:,i),sigma);
 end
+%Paul 05/21
+BW_pre=imgaussfilt(BW_pre,1);
 thres = thresPerc*max(max(BW_pre));
 BW = BW_pre>thres;
 objs = bwconncomp(BW);
 if objs.NumObjects > 0
+        %region_props switches the x and y coordinates
         centers_all = struct2cell(regionprops(objs,'Centroid'));
         centers_all = cellfun(@int16,centers_all,'UniformOutput',false);
+        temp=centers_all;
+        for i=1:length(centers_all)
+            centers_all{1,i}(1)=temp{1,i}(2);centers_all{1,i}(2)=temp{1,i}(1);
+        end
         numPixels = cellfun(@numel,objs.PixelIdxList);
         idx=find(and(numPixels>min_obj_size,numPixels<max_obj_size));
         keep = zeros(size(idx));
         for j=1:length(idx)
-            [xx,yy,zz]=ind2sub(size(img),objs.PixelIdxList{j});
+            [xx,yy,zz]=ind2sub(size(img),objs.PixelIdxList{idx(j)});
             xwidth = max(xx)-min(xx);
             ywidth = max(yy)-min(yy);
             zwidth = max(zz)-min(zz);
@@ -53,10 +60,22 @@ if objs.NumObjects > 0
         end
         idx = idx(find(keep));
         centers=centers_all(idx);
+        %keep_centers=find_largest_obj_center(centers,idx,numPixels);
         for j=1:length(idx)
             puncta_img(objs.PixelIdxList{idx(j)}) = 1;
         end
-end    
+        for j=1:length(idx)
+            puncta_img(objs.PixelIdxList{idx(j)}) = 1;
+        end
+        numPixels_mod=zeros(1,length(idx));
+        for i=1:length(idx)
+            numPixels_mod(i)=numPixels(idx(i));
+        end
+        
+        
+        
+end
+
 disp(['Object finding complete. Number of objects found is ' ...
-        num2str(length(centers)) '.']);
+num2str(length(idx)) '.']);
 end%find_objects_local
