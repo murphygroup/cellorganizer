@@ -76,8 +76,6 @@ if objs.NumObjects > 0
         
 end
 
-
-
-%    disp(['Objects finding complete. Number of objects found is ' ...
-%        num2str(bwconncomp(puncta_img,4).NumObjects) '.']);
+disp(['Object finding complete. Number of objects found is ' ...
+num2str(length(idx)) '.']);
 end%find_objects_local
