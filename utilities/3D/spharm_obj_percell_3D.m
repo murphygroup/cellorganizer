@@ -38,6 +38,7 @@ save_spharm_obj(obj_img,min_obj_size,cellName) % save all the objects into 3D ti
 
 %Serena - 08/20
 %cellparam.seg.keep_centers=keep_centers;
+cellparam.seg.obj_img=obj_img;
 cellparam.seg.centers=centers;
 cellparam.seg.sizes=numPixels;
 % 1/27/21 RFM this code not needed because calculated below including angles
