@@ -33,17 +33,28 @@ function [m_x, cost_mat, is_success] = EqualAreaParametricMeshNewtonMethod(verti
 % if not use box constrained admm
 % 05/03/2018 use stricter criterion for bast_largr_diff 
 % 09/21/2018 check matlab version to decide whether to use lsminnorm or not
-% 10/16/2020 R.F.Murphy disable MaxIter increase and add to verbose output
-% 10/22/2020 R.F.Murphy initialize m_x_best_bu
-% 12/4/2020 R.F. Murphy disable singular matrix warnings
-% 2/1/2021 R.F. Murphy fix error when number of iter is less than 21
+% 
+% ------------------------------------------------------------------------
+% Modifications June 2021 by Khaled Khairy: khaled.khairy@stjude.org
+% St. Jude Children's Research Hospital
+% Comments in code: Search for "KK"
+% Specific modifications:
+% 
+% - Speed up of Jacobian calculation ~ 5x
+%       * Jacobian pattern is precalculated in a first step and then used
+%         afterwards
+%       * Call to calc_area_jacobian_sphere has been fully vectorized
+%         Calls modified function "calc_area_jacobian_sphereKK.m"
+%
+% - Speed up of linesearch calculation ~ 5x
+%       * Precalculating quantities for neighbor counts 3-6
+%       * Vectorization of for loop in 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 
-warning('off','MATLAB:singularMatrix')
-warning('off','MATLAB:nearlySingularMatrix')
-
+debug = false;
+verbose = false;
 % Initialize parameter
-default_par.verbose = false;
-default_par.debug = false;
 default_par.max_active = 500;
 default_par.print_itn  = -2;
 % default_par.delta      = 3e-7;
@@ -74,8 +85,6 @@ if nargin < 4
 end
 par = process_options_structure(default_par, par);
 
-verbose = par.verbose;
-debug = par.debug;
 jacobi_cond_tol = par.jacobi_cond_tol;
 lsq_bound = par.lsq_bound;
 
@@ -94,6 +103,61 @@ nvert = size(vertices, 1);
 nface = size(faces, 1);
 % compute ordered neighbors of all vertices. 
 [neighbors, ~, face_ids] = compute_neigbhors(faces, 1);
+
+%% KK: use neighbors to pre-calculate quantities for linesearch
+
+% % KK: generate set of indices into m_x shaped to vectorize sum
+% % this is possible because the mesh topology is constant
+% % Since we have either three four five or six vertices we will have to do this
+% % separately
+% 
+% % determine which neighbors{ix} are three and which are four or five vertices
+nvert = size(neighbors, 1);
+indx6 = zeros(nvert,1, 'logical');
+indx5 = zeros(nvert,1, 'logical');
+indx4 = zeros(nvert,1, 'logical');
+indx3 = zeros(nvert,1, 'logical');
+%numindx = zeros(nvert,1);
+for ix = 1:nvert
+%     numindx(ix) = numel(neighbors{ix});    %disp(numindx(ix);
+    indx6(ix) = numel(neighbors{ix})==6;    
+    indx5(ix) = numel(neighbors{ix})==5;
+    indx4(ix) = numel(neighbors{ix})==4;
+    indx3(ix) = numel(neighbors{ix})==3;
+end
+mxind6 = zeros(6,3, sum(indx6)); % store indices for "six" vertices
+mxind5 = zeros(5,3, sum(indx5)); % store indices for "five" vertices
+mxind4 = zeros(4,3, sum(indx4)); % store indices for "four" vertices
+mxind3 = zeros(3,3, sum(indx3)); % store indices for "three" vertices
+% mxind  = zeros(nvert,3);
+count6 = 1;
+count5 = 1;
+count4 = 1;
+count3 = 1;
+for ix = 1:nvert
+    if indx3(ix)
+        n_indmx = reshape([neighbors{ix}'; neighbors{ix}'+nvert; neighbors{ix}' + 2*nvert], [3 3]);
+        mxind3(:,:,count3) = n_indmx;
+        count3 = count3 + 1;
+    elseif indx4(ix)
+        n_indmx = reshape([neighbors{ix}'; neighbors{ix}'+nvert; neighbors{ix}' + 2*nvert], [4 3]);
+        mxind4(:,:,count4) = n_indmx;
+        count4 = count4 + 1;
+    elseif indx5(ix)
+        n_indmx = reshape([neighbors{ix}'; neighbors{ix}'+nvert; neighbors{ix}' + 2*nvert], [5 3]);
+        mxind5(:,:,count5) = n_indmx;
+        count5 = count5 + 1;
+    else
+        n_indmx = reshape([neighbors{ix}'; neighbors{ix}'+nvert; neighbors{ix}' + 2*nvert], [6 3]);
+        mxind6(:,:,count6) = n_indmx;
+        count6 = count6 + 1; 
+    end
+end
+nb_order = [find(indx3); find(indx4); find(indx5); find(indx6)];
+% % mxind3, mxind4, mxind5 and mxind6 store indices into m_x
+% % to get the sum we can use for example: xx = [squeeze([sum(m_x(mxind3),1)])]';
+%%
+
 total_nb_num = sum(cellfun(@numel, neighbors));
 
 % initialization method
@@ -115,14 +179,12 @@ inequal_mat = reshape(constr_ineq', [], 1);
 
 MaxIter = par.max_iter;
 % may change MaxIter if nvert is very large
-% 10/12/2020 R.F. Murphy disabled this increase
-%MaxIter = max(MaxIter, ceil(nvert / 50));
+MaxIter = max(MaxIter, ceil(nvert / 50));
 best_largr = 100000;
 largr_last = best_largr;
 best_largr_bu = best_largr;
 best_largr_diff = 10;
 m_x_best = m_x;
-m_x_best_bu = m_x;
 cost_mat = zeros(MaxIter, 3);
 obj_val = 1000000;
 lambda_t_c_hat = 1e5;
@@ -134,17 +196,22 @@ ill_dist = 5;
 % set up optimization options for lsqlin
 % optm_options = optimoptions('lsqlin','Algorithm', 'trust-region-reflective', 'Display','none', 'FunctionTolerance', 1e-8);
 
+% KK: Call once to generate index matrix cmx_ind
+[jacobi_mat, is_jacobi_ill, cmx_ind] = calc_jacob_matrix_func_2(vertices, faces, m_x, active, n_active, c_hat, J_sines_func, par);
+
+    
 % iterate to update
-if verbose
-    fprintf("In EqualAreaParametricMeshNewtonMethod, MaxIter=%f\n",MaxIter);
-    fprintf("Iter,nwtnstep,actkeep,gamma,ngradZ,csqrsum,cost,ineghigh,largrdiff\n");
-end
+
 for iter = 1 : MaxIter
-    tic;
-    if verbose fprintf(" %3d", iter); end
+    %tic;
+    %%% KK: visualize parameterization progress
+    %figure(1);cla;patch('Vertices', m_x, 'Faces', faces,'FaceColor', 'r','EdgeColor','k','FaceAlpha',1);axis equal;drawnow;
+
+    
+    if verbose, fprintf(" %3d", iter);   end
     
     % jacobi_mat_1 = calc_jacob_matrix_func_1(vertices, faces, neighbors, face_ids, m_x, c_hat, active, par);
-    [jacobi_mat, is_jacobi_ill] = calc_jacob_matrix_func_2(vertices, faces, m_x, active, n_active, c_hat, J_sines_func, par);
+    [jacobi_mat, is_jacobi_ill] = calc_jacob_matrix_func_2(vertices, faces, m_x, active, n_active, c_hat, J_sines_func, par, cmx_ind);
     % I_sparse = speye(size(jacobi_mat, 1));
     if is_jacobi_ill || is_ill_ever || abs(lambda_t_c_hat) > 100
         if sprank(jacobi_mat) < size(jacobi_mat, 1) || condest(jacobi_mat * jacobi_mat') > jacobi_cond_tol
@@ -188,7 +255,7 @@ for iter = 1 : MaxIter
         act_keep = act;
     end
     
-    if verbose fprintf(" %6.0e %6d", newtonStep, act_keep); end
+    if verbose, fprintf(" %6.0e %6d", newtonStep, act_keep);end
     m_x = spher_step(newtonStep, m_x, m_dx);
     c_hat_temp = c_hat;
     c_hat = c_hat_l;
@@ -198,7 +265,7 @@ for iter = 1 : MaxIter
     grad = calc_gradient_func(m_x, neighbors);
     grad = reshape(grad', [], 1);
 
-    [jacobi_mat, is_jacobi_ill] = calc_jacob_matrix_func_2(vertices, faces, m_x, active, n_active, c_hat, J_sines_func, par);
+    [jacobi_mat, is_jacobi_ill] = calc_jacob_matrix_func_2(vertices, faces, m_x, active, n_active, c_hat, J_sines_func, par, cmx_ind);
     % jacobi_mat_1 = calc_jacob_matrix_func_1(vertices, faces, neighbors, face_ids, m_x, c_hat, active, par);    
     if is_jacobi_ill || is_ill_ever || abs(lambda_t_c_hat) > 100
         if sprank(jacobi_mat) < size(jacobi_mat, 1) || condest(jacobi_mat * jacobi_mat') > jacobi_cond_tol
@@ -228,13 +295,7 @@ for iter = 1 : MaxIter
 		% lb = -100 * ones(size(jacobi_mat, 1), 1);
 		% m_lambda = lsqlin(jacobi_mat', grad, [], [], [], [], lb, ub, [], optm_options);
     else
-%        warning('');
         m_lambda = (jacobi_mat * jacobi_mat') \ (jacobi_mat * grad);
-%        [warnMsg,warnID] = lastwarn;
-%        if ~isempty(warnMsg)
-%            disp(warnID)
-%            disp(warnMsg)
-%        end
     end        
     if max(abs(m_lambda)) > 1e5
         is_ill_ever = true;
@@ -250,7 +311,7 @@ for iter = 1 : MaxIter
 
     if inactivated > 0
         [c_hat, active, activity, n_active, flag] = activate(act_keep, m_x_try, faces, c_hat, activity, active, n_active, "in_out");
-%        toc;
+        toc;
         continue;   
     end
 
@@ -269,10 +330,19 @@ for iter = 1 : MaxIter
     gamma = numerator / denominator;
     hCG = reshape(gCG, 3, [])' + gamma * hCG;
     m_dx = hCG;
-    if verbose fprintf(" %6.3f %8.1e", gamma, sqrt(norm2gradZ)); end
+    if verbose, fprintf(" %6.3f %8.1e", gamma, sqrt(norm2gradZ));end
 
-    [m_alpha_step, c_sqr_sum, activated, c_hat, c_hat_l, c_hat_r, active, activity, n_active, min_ineq, m_x, m_x_try, m_rho, largr, obj_val, lambda_t_c_hat] = line_search(m_alpha_step, faces, neighbors, total_nb_num, m_x, m_dx, m_lambda, m_rho, active, activity, n_active, c_hat, c_hat_l, c_hat_r, ineq_high, obj_val, par);
-    [c_hat, active, activity, n_active, flag] = activate(act_keep, m_x_try, faces, c_hat, activity, active, n_active, "newton");
+    [m_alpha_step, c_sqr_sum, activated, c_hat, c_hat_l, c_hat_r, active,...
+        activity, n_active, min_ineq, m_x, m_x_try, m_rho, largr, obj_val,...
+        lambda_t_c_hat] = ...
+        line_search(m_alpha_step, faces, neighbors, total_nb_num, m_x, ...
+        m_dx, m_lambda, m_rho, active, activity, n_active, c_hat, c_hat_l,...
+        c_hat_r, ineq_high, obj_val, par, mxind3, mxind4, mxind5, mxind6, nb_order);
+    
+    [c_hat, active, activity, n_active, flag] = ...
+        activate(act_keep, m_x_try, faces, c_hat, activity, active,...
+        n_active, "newton");
+    
     % activated = activated + flag;
     
     % if activated == 0
@@ -288,9 +358,7 @@ for iter = 1 : MaxIter
     cost_mat(iter, :) = [largr, obj_val, cost];
     largr_diff = largr - largr_last;
     largr_last = largr;
-    if verbose
-        fprintf(" %10.3e %10.3e %10.3e %10.3e\n", sqrt(c_sqr_sum), cost, ineq_high, largr_diff);
-    end
+    if verbose, fprintf(" %10.3e %10.3e %10.3e %10.3e\n", sqrt(c_sqr_sum), cost, ineq_high, largr_diff);end
     % only use the best largr and also not consider random flucturation.
     if largr > 0 && largr < best_largr        
         if abs(largr_diff) < 1e-1
@@ -303,21 +371,12 @@ for iter = 1 : MaxIter
         end
     end
     % 06/25/2018 add check of previous iteration for cost 
-    if iter > 2
-        if (...
-        (cost_mat(iter -1, 3) < (10 * par.cost_tol) && cost < par.cost_tol)...
-        ||...
-        (largr > 0 && ...
-        abs(cost_mat(iter-1, 1) - cost_mat(iter-2, 1)) < (10 * par.largr_tol) &&...
-        abs(largr_diff) < par.largr_tol)...
-        )
-            cost_mat(iter + 1 : end, :) = [];
-            m_x_best = m_x;
-            if verbose fprintf("\nexiting with acceptable cost"); end
-            break;
-        end
+    if iter > 2 && ((cost_mat(iter -1, 3) < 10 * par.cost_tol && cost < par.cost_tol) || (largr > 0 && abs(cost_mat(iter-1, 1) - cost_mat(iter-2, 1)) < 10 * par.largr_tol && abs(largr_diff) < par.largr_tol))
+        cost_mat(iter + 1 : end, :) = [];
+        m_x_best = m_x;
+        break;      
     end
-%    toc;
+%     toc;
 
     if debug && rem(iter, 1000) == 0
         save('workspace.mat')
@@ -336,22 +395,15 @@ else
     m_x = m_x_best;
 end
 % 05/05/2018 use largargian seq as a criterion
-%if sum(abs(cost_mat(end-20:end, 1) - cost_mat(end, 1)) < 1e-4) < 14
-% check if enough iterations gave small enough change in cost_mat
-if size(cost_mat,1) > 20
-    last20 = abs(cost_mat(end-20:end,1) - cost_mat(end,1));
-    last20notnan = find(~isnan(last20));
-    if sum(last20(last20notnan)<1e-4) < 14
-        is_success = false;
-        m_x = m_x_best_bu;
-    else
-        m_x = m_x_best;
-    end
+if sum(abs(cost_mat(end-20:end, 1) - cost_mat(end, 1)) < 1e-4) < 14
+    is_success = false;
+    m_x = m_x_best_bu;    
+else
     m_x = m_x_best;
 end
     
 
-disp('Optimization complete!');
+if verbose, disp('Optimization complete!'); end
 
 if debug
     save('workspace.mat')
@@ -360,15 +412,22 @@ end
 end
 
 
-function [obj] = goal_func(m_x, neighbors, total_nb_num)
+function [obj] = goal_func(m_x, neighbors, total_nb_num, ...
+                           mxind3, mxind4, mxind5, mxind6, nb_order)
 
-nvert = size(m_x, 1);
-nbsum_vec = zeros(nvert, 3);
-for i = 1 : nvert
-    nbsum_vec(i, :) = sum(m_x(neighbors{i}, :));    
-end
-% obj = sum(m_x .* nbsum_vec, 2);
-% obj = 0.5 * sum(cellfun(@numel, neighbors) - obj(:));
+% KK: This is a slow loop. Now uses precalculated quantities                       
+% nvert = size(m_x, 1);
+% nbsum_vec = zeros(nvert, 3);
+% for i = 1 : nvert
+%     nbsum_vec(i, :) = sum(m_x(neighbors{i}, :));    
+% end
+
+%%% KK: generate vectorized nbsum_vec and restore original row order of nbsum_vec
+nbsum_vec = [nb_order [squeeze(sum(m_x(mxind3),1))'; squeeze([sum(m_x(mxind4),1)])'; squeeze(sum(m_x(mxind5),1))'; squeeze(sum(m_x(mxind6),1))']];
+nbsum_vec = sortrows(nbsum_vec);
+nbsum_vec = nbsum_vec(:, 2:4);
+
+
 obj = 0.5 * (total_nb_num - sum((m_x(:) .* nbsum_vec(:))));
 
 end
@@ -389,7 +448,8 @@ grad = sum(m_x .* nbsum_vec , 2) .* m_x - nbsum_vec;
 end
 
 
-function [A, is_A_ill] = calc_jacob_matrix_func_2(vertices, faces, m_x, active, n_active, c_hat, J_sines_func, param)
+function [A, is_A_ill, cmx_indx] = ...
+    calc_jacob_matrix_func_2(vertices, faces, m_x, active, n_active, c_hat, J_sines_func, param, cmx_indx)
 % calculate Jacobian of the system using analytic solution from symbolic
 % computing, which is much faster than finite difference
 % sometimes there are numerical error, which cause very large values or NaN
@@ -423,13 +483,42 @@ counter = 1;
 n_num = 12;
 m_x = m_x';
 
+%%% KK: inspect
+% m = surface_mesh(m_x, faces);plot(m);
+%% KK: Generate a jacobian pattern and parallelize or vectorize the Jacobian calculation in the loop
+
+% KK: get indices into m_x by preparing cmx_indx if not provided
+if nargin<9 || isempty(cmx_indx)
+    cmx_indx = zeros(3,4,nface);  % store indices into m_x
+    for ix = 1 : nface
+        cur_face = faces(ix, :);
+        cmx_indx(:,:,ix) = (cur_face - 1) * 3 + (1:3)';
+    end
+end
+
+% KK: generate an updated cmx for current configuration
+cmx = m_x(cmx_indx);
+% KK: calculate J_area vectorized
+J_area_vec = calc_area_jacobian_sphere_(cmx);
+
+% KK: Loop over faces as before, but without area jacobian calculation each
+% time
+
 for i = 1 : nface
     cur_face = faces(i, :);
     col_elm_ind = (cur_face - 1) * 3 + (1:3)'; 
     col_elm_ind = col_elm_ind(:);
     cmx = m_x(:, cur_face);
-    % J_area = J_area_func(cmx(1, 1), cmx(1, 2), cmx(1, 3), cmx(1, 4), cmx(2, 1), cmx(2, 2), cmx(2, 3), cmx(2, 4), cmx(3, 1), cmx(3, 2), cmx(3, 3), cmx(3, 4));
-    J_area = calc_area_jacobian_sphere(cmx(1, 1), cmx(1, 2), cmx(1, 3), cmx(1, 4), cmx(2, 1), cmx(2, 2), cmx(2, 3), cmx(2, 4), cmx(3, 1), cmx(3, 2), cmx(3, 3), cmx(3, 4));
+    
+    % KK: Prepared J_area_vec by vectrization of calc_area_jacobian_sphere
+    J_area = J_area_vec(:,:,i);
+    
+    %%%% KK: Very slow to call once for every face for every iteration ---
+    %%%% use vectorized version instead of below
+    % J_area = calc_area_jacobian_sphere(cmx(1, 1), cmx(1, 2), cmx(1, 3), cmx(1, 4), cmx(2, 1), cmx(2, 2), cmx(2, 3), cmx(2, 4), cmx(3, 1), cmx(3, 2), cmx(3, 3), cmx(3, 4));
+
+    
+    
     % sometime when c_hat changes, the area may changes a lot, which makes
     % jacobian NaN, to avoid it, we use finite difference to compute the
     % jacobian for this face
@@ -474,7 +563,7 @@ for i = 1 : nface
         end   
     end  
 end
-
+%%
 % put pairs values to the matrix
 index_val_mat = index_val_mat(1 : counter-1, :);
 A = sparse(index_val_mat(:, 1), index_val_mat(:, 2), index_val_mat(:, 3), nface + n_active,  nvert * 3);
@@ -484,13 +573,12 @@ end
 
 
 function [c_hat, active, activity, n_active, flag] = activate(act, m_x_try, faces, c_hat, activity, active, n_active, info)
-verbose = false;
 no_activation = -1;
 flag = 0;
 if act == no_activation
     return;
 end
-if verbose fprintf("\n]]] %s : constraint %d -> level %d ", info, act, activity(act) + 1); end
+fprintf("\n]]] %s : constraint %d -> level %d ", info, act, activity(act) + 1);
 activity(act) = activity(act) + 1;
 if activity(act) ~= 3
     return;
@@ -510,24 +598,19 @@ active = [active(1 : i - 1), act, active(i:end)];
 c_hat = [c_hat(1 : nface - 1 + i - 1); one_inequality(m_x_try, faces, act); c_hat(nface - 1 + i : end)];
 n_active = n_active + 1;
 
-if verbose
-    fprintf(">>> %s activates constraint %d (pos %d); now active: %d\n                                                 ",  ...
+fprintf(">>> %s activates constraint %d (pos %d); now active: %d\n                                                 ",  ...
     info, act, i, n_active);
-end
+
 flag = 1;
     
-warning('on','MATLAB:singularMatrix')
-warning('on','MATLAB:nearlySingularMatrix')
-
 end
 
 
 function [c_hat, flag, activity, active, n_active] = inactivate(nface, c_hat, activity, active, n_active, pos)
-verbose = false;
+
 flag = 0;
-if verbose 
-    fprintf('\n[[[ constraint %d -> level %d ;          ', active(pos), activity(active(pos)) - 1);
-end
+fprintf('\n[[[ constraint %d -> level %d ;          ', active(pos), activity(active(pos)) - 1);
+
 activity(active(pos)) = activity(active(pos)) - 1;
 if activity(active(pos)) ~= 3
     return;
@@ -535,9 +618,8 @@ end
 
 activity(active(pos)) = 2;
 n_active = n_active - 1;
-if verbose
-    fprintf('<<< inactivate constraint %d at position %d; now active: %d\n', active(pos), pos, n_active);
-end
+fprintf('<<< inactivate constraint %d at position %d; now active: %d\n', active(pos), pos, n_active);
+
 c_hat(nface - 1 + pos) = [];
 active(pos) = [];
 flag = 1;
@@ -545,7 +627,12 @@ flag = 1;
 end
 
 
-function [fullStep, c_sqr_sum, flag, c_hat, c_hat_l, c_hat_r, active, activity, n_active, min_ineq, m_x, m_x_try, m_rho, f_m, obj_val, lambda_t_c_hat] = line_search(fullStep, faces, neighbors, total_nb_num, m_x, m_dx, m_lambda, m_rho, active, activity, n_active, c_hat, c_hat_l, c_hat_r, ineq_high, obj_val_old, param)
+function [fullStep, c_sqr_sum, flag, c_hat, c_hat_l, c_hat_r, active, ...
+    activity, n_active, min_ineq, m_x, m_x_try, m_rho, f_m, obj_val, ...
+    lambda_t_c_hat] = ...
+    line_search(fullStep, faces, neighbors, total_nb_num, m_x, m_dx, ...
+    m_lambda, m_rho, active, activity, n_active, c_hat, c_hat_l, c_hat_r,...
+    ineq_high, obj_val_old, param, mxind3, mxind4, mxind5, mxind6, nb_order)
 % adaptive Step size based on the status of convergence. 
 verbose = false;
 m = 0;
@@ -556,7 +643,13 @@ act_keep_l = no_activation;
 act_keep_r = no_activation;
 c_sqr_sum = 0;
 
-[f_m, act_m, bad_m, c_sqr_sum, c_hat, min_ineq, m_x_try, obj_val] = aug_lagrangian(m, c_hat, faces, neighbors, total_nb_num, m_x, m_dx, m_lambda, m_rho, active, n_active, ineq_high, param);
+
+% KK: aug_lagrangian is a limiting step
+[f_m, act_m, bad_m, c_sqr_sum, c_hat, min_ineq, m_x_try, obj_val] = ...
+    aug_lagrangian(m, c_hat, faces, neighbors, total_nb_num, m_x, m_dx, ...
+    m_lambda, m_rho, active, n_active, ineq_high, param, mxind3, mxind4, mxind5, mxind6, nb_order);
+
+
 obj_diff = abs(obj_val_old - obj_val);
 if obj_diff > 1e-2
     step_factor = 0.6;
@@ -573,8 +666,15 @@ end
 stepSize = param.step_large;
 for i = 1 : 100
     step = fullStep * stepSize;
-    [f_l, act_l, bad_l, c2s_l, c_hat_l, min_ineq, m_x_try] = aug_lagrangian(m - step, c_hat_l, faces, neighbors, total_nb_num, m_x, m_dx, m_lambda, m_rho, active, n_active, ineq_high, param);
-    [f_r, act_r, bad_r, c2s_r, c_hat_r, min_ineq, m_x_try] = aug_lagrangian(m + step, c_hat_r, faces, neighbors, total_nb_num, m_x, m_dx, m_lambda, m_rho, active, n_active, ineq_high, param);
+    [f_l, act_l, bad_l, c2s_l, c_hat_l, min_ineq, m_x_try] = ...
+        aug_lagrangian(m - step, c_hat_l, faces, neighbors, total_nb_num,...
+        m_x, m_dx, m_lambda, m_rho, active, n_active, ineq_high, ...
+        param, mxind3, mxind4, mxind5, mxind6, nb_order);
+    
+    [f_r, act_r, bad_r, c2s_r, c_hat_r, min_ineq, m_x_try] = ...
+        aug_lagrangian(m + step, c_hat_r, faces, neighbors, ...
+        total_nb_num, m_x, m_dx, m_lambda, m_rho, active, n_active,...
+        ineq_high, param, mxind3, mxind4, mxind5, mxind6, nb_order);
     viol_l = act_l ~= no_activation || bad_l > param.constr_tol;
     viol_r = act_r ~= no_activation || bad_r > param.constr_tol;
     
@@ -593,7 +693,11 @@ for i = 1 : 100
     end
 end
 
-[f_m, act_m, dum_bad, c_sqr_sum, c_hat, min_ineq, m_x_try, obj_val, lambda_t_c_hat] = aug_lagrangian(m, c_hat, faces, neighbors, total_nb_num, m_x, m_dx, m_lambda, m_rho, active, n_active, ineq_high, param);
+[f_m, act_m, dum_bad, c_sqr_sum, c_hat, min_ineq, m_x_try, obj_val,...
+    lambda_t_c_hat] = ...
+    aug_lagrangian(m, c_hat, faces, neighbors, ...
+    total_nb_num, m_x, m_dx, m_lambda, m_rho, active, ...
+    n_active, ineq_high, param, mxind3, mxind4, mxind5, mxind6, nb_order);
 if f_m == 0
     flag_test = 1;
 end
@@ -605,7 +709,7 @@ if m~= 0.0
     m_rho = m_rho * (param.constr_tol * param.c1rho / (param.constr_tol * param.c0rho - bad_m) + param.c2rho) + param.rho_limit;
 end
 
-if verbose fprintf(" %6.0e %10.6f %8.1e %8.1e", bad_m, f_m, m_rho,  m); end
+if verbose, fprintf(" %6.0e %10.6f %8.1e %8.1e", bad_m, f_m, m_rho,  m);end
 
 [c_hat, active, activity, n_active, flag_l] = activate(act_keep_l, m_x_try, faces, c_hat, activity, active, n_active, "left");
 [c_hat, active, activity, n_active, flag_r] = activate(act_keep_r, m_x_try, faces, c_hat, activity, active, n_active, "right");
@@ -624,7 +728,8 @@ flag = 0;
 end
 
 
-function [c_hat_try, constr_ineq, badness, min_ineq, m_x_try, act] = step_and_check(faces, step, m_x, m_dx, active, n_active, c_hat, ineq_high)
+function [c_hat_try, constr_ineq, badness, min_ineq, m_x_try, act] = ...
+    step_and_check(faces, step, m_x, m_dx, active, n_active, c_hat, ineq_high)
 
 m_x_try = spher_step(step, m_x, m_dx);
 [c_hat_try, constr_ineq] = constraints(m_x_try, faces);
@@ -637,20 +742,28 @@ nface = size(faces, 1);
 end
 
 
-function [lagr, activate_, badness, c_sqr_sum, c_hat_try, min_ineq, m_x_try, obj_val, lambda_t_c_hat] = aug_lagrangian(step, c_hat, faces, neighbors, total_nb_num, m_x, m_dx, m_lambda, m_rho, active, n_active, ineq_high, param)
+function [lagr, activate_, badness, c_sqr_sum, c_hat_try, min_ineq,...
+    m_x_try, obj_val, lambda_t_c_hat] = ...
+    aug_lagrangian(step, c_hat, faces, neighbors, total_nb_num, m_x, m_dx,...
+    m_lambda, m_rho, active, n_active, ineq_high, ...
+    param, mxind3, mxind4, mxind5, mxind6, nb_order)
 no_activation = -1;
 nface = size(faces, 1);
 
-[c_hat_try, ~, badness, min_ineq, m_x_try, activate_] = step_and_check(faces, step, m_x, m_dx, active, n_active, c_hat, ineq_high);
+[c_hat_try, ~, badness, min_ineq, m_x_try, activate_] = ...
+    step_and_check(faces, step, m_x, m_dx, active, n_active, ...
+    c_hat, ineq_high);
 if(activate_ ~= no_activation)
     c_sqr_sum = 0;
     lagr = 0;
     lambda_t_c_hat = -m_lambda' * c_hat_try;
-    obj_val = goal_func(m_x_try, neighbors, total_nb_num);
+    obj_val = goal_func(m_x_try, neighbors, total_nb_num, ...
+        mxind3, mxind4, mxind5, mxind6,  nb_order);
     return;
 end
 
-obj_val = goal_func(m_x_try, neighbors, total_nb_num);
+obj_val = goal_func(m_x_try, neighbors, total_nb_num, mxind3, mxind4, mxind5, mxind6, nb_order);
+
 lambda_t_c_hat = -m_lambda' * c_hat_try;
 lagr = obj_val + lambda_t_c_hat;
 c_hat_try_eq = c_hat_try(1 : nface - 1);
