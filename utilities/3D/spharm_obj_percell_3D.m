@@ -9,8 +9,8 @@ function cellparam = spharm_obj_percell_3D(imdna_path,imcell_path,improt_path,im
 
 min_obj_size = options.min_obj_size;
 max_obj_size = options.max_obj_size;
-sigma = options.options_ppm.sigma;
-thresPerc = options.options_ppm.thresPerc;
+sigma = options.local_thresholding_sigma;
+thresPerc = options.object_detection_thresPerc;
 s = options.protein_image_path;
 t = split(s,'/');
 %hard code for now
