@@ -60,7 +60,6 @@ for i = 1:3
     options.masks{i} = [directory filesep 'LAM_cell' num2str(i) '_mask_t1.tif'];
 end
 disp(dna_paths)
-pause
 
 %set the dimensionality
 dimensionality = '3D';

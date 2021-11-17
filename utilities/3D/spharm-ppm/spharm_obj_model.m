@@ -19,7 +19,7 @@ function model = spharm_obj_model(options)
     toc,
     
     t = load([options_spharm.model.filename(1:end-3) 'mat']);
-    t.model.cellShapeModel.numimgs
+%   t.model.cellShapeModel.numimgs
     t.model.spatial = get_obj_coordinates(param_save_dir, ...
         t.model.cellShapeModel.parameterization_successful);
     model.spharm_obj_model = t.model;

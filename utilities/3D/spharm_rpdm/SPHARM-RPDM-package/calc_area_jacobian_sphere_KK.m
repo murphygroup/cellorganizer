@@ -1,4 +1,4 @@
-function J_area_sph = calc_area_jacobian_sphere(x) 
+function J_area_sph = calc_area_jacobian_sphere_KK(x) 
 % was:
 %(x11,x12,x13,x14,x21,x22,x23,x24,x31,x32,x33,x34)
 %CALC_AREA_JACOBIAN_SPHERE

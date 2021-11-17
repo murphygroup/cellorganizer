@@ -1,4 +1,5 @@
-function [ output_args ] = compare_shape_space_spharm_obj( models,fileID,options )
+
+function [ consolidated_model ] = compare_shape_space_spharm_obj( models,fileID,options )
 
  consolidated_model=consolidateshapespacemodels(models{1},models{2});
 
