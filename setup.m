@@ -66,7 +66,7 @@ if ~is_it_compatible_with_cellorganizer()
     end
 end
 
-version = '2.9.2';
+version = '2.9.3';
 versionURL = 'http://murphylab.web.cmu.edu/software/CellOrganizer/version';
 
 try

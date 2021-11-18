@@ -256,18 +256,22 @@ ill_dist = 5;
 
 % iterate to update
 large = 900000000;
-       
+
+%check plot flag for KK
+if ~isfield(par, 'plot_flag_nm')
+    par.plot_flag_nm = 0;
+end
 for iter = 1 : MaxIter
-%     if par.plot_flag >= 2
-%         %% KK: visualize parameterization progress
-%         clf;set(gcf,'renderer','opengl','color','k', 'InvertHardCopy', 'off');
-%         patch('Vertices', m_x, 'Faces', faces,'FaceColor', 'b', 'EdgeColor','k');
-%         %mv = surface_mesh(m_x, faces);plot(mv);
-%         axis equal;axis off;
-%         view(60, 38);axis tight;
-%         title([num2str(iter) ': Parameterization optimization run'], 'Color', 'w');
-%         drawnow;
-%     end
+    if par.plot_flag_nm == 1
+        %% KK: visualize parameterization progress
+        clf;set(gcf,'renderer','opengl','color','k', 'InvertHardCopy', 'off');
+        patch('Vertices', m_x, 'Faces', faces,'FaceColor', 'b', 'EdgeColor','k');
+        %mv = surface_mesh(m_x, faces);plot(mv);
+        axis equal;axis off;
+        view(60, 38);axis tight;
+        title([num2str(iter) ': Parameterization optimization run'], 'Color', 'w');
+        drawnow;
+    end
     m_x_out =  m_x;
     if verbose, fprintf(" %3d", iter);   end
     
