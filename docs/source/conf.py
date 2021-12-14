@@ -73,7 +73,7 @@ copyright = u'2007-2020, Murphy Lab at Carnegie Mellon University'
 # The short X.Y version.
 version = '2.9'
 # The full version, including alpha/beta/rc tags.
-release = '2.9.0'
+release = '2.9.3'
 
 #def setup(app):
 #  app.add_directive('exec', ExecDirective)
@@ -135,10 +135,10 @@ html_theme_options = {'responsive':True,
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'CellOrganizer v2.9.0 documentation'
+html_title = 'CellOrganizer v2.9.3 documentation'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
-html_short_title = 'CellOrganizer v2.9.0'
+html_short_title = 'CellOrganizer v2.9.3'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -289,7 +289,7 @@ texinfo_documents = [
 epub_title = u'CellOrganizer'
 epub_author = u'Murphy Group'
 epub_publisher = u'Murphy Group'
-epub_copyright = u'2007-2020, Murphy Group'
+epub_copyright = u'2007-2021, Murphy Group'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'CellOrganizer'
