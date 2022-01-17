@@ -1,0 +1,7 @@
+DEFINE_REACTIONS
+{
+  prey, @ Catalytic, -> prey, + prey, [1.29e+06] : prey_birth
+  predator -> NULL [13] : predator_death
+  predator + prey -> predator + predator [5.5e+09] : predation
+}
+

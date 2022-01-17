@@ -65,6 +65,7 @@ function param = synthesis( param )
     %these are optional parameters that are generally hidden from users
     param = ml_initparam( param, struct( ...
         'overwrite_synthetic_instances', true, ...
+        'clean_synthetic_instances', true, ...
         'numberOfSynthesizedImages', 1, ...
         'targetDirectory', pwd, ...
         'compression', 'none', ...
@@ -165,15 +166,27 @@ function param = synthesis( param )
     end
 
     if isfield(param, 'VCML')
-        param_VCML_fieldnames = fieldnames(param.VCML);
-        for i = 1:length(param_VCML_fieldnames)
-            param_VCML_fieldname = param_VCML_fieldnames{i};
-            if isfield(param.VCML, param_VCML_fieldname)
-                param.output.VCML.(param_VCML_fieldname) = param.VCML.(param_VCML_fieldname);
-            end
+        if ~isfield( param.output, 'VCML' )
+            param.output.VCML = struct();
         end
+        param.output.VCML = ml_initparam( param.output.VCML, param.VCML);
         param = rmfield(param, 'VCML');
     end
+    if isfield(param.output, 'writeVCML')
+        param.output.VCML.writeVCML = param.output.writeVCML;
+    end
+
+    if ~isfield( param.output, 'MCellMDL' )
+        param.output.MCellMDL = struct();
+    end
+    if isfield(param, 'MCellMDL')
+        param.output.MCellMDL = ml_initparam( param.output.MCellMDL, param.MCellMDL);
+        param = rmfield(param, 'MCellMDL');
+    end
+    if isfield(param.output, 'writeMCellMDL')
+        param.output.MCellMDL.writeMCellMDL = param.output.writeMCellMDL;
+    end
+    
     if isfield(param, 'NET')
         if isfield(param.NET, 'filename')
             param.output.NET.filename = param.NET.filename;
@@ -181,8 +194,8 @@ function param = synthesis( param )
         if isfield(param.NET, 'translations')
             param.output.NET.translations = param.NET.translations;
         end
-        if isfield(param.NET, 'units.length')
-            param.output.NET.units.length = param.NET.units.length;
+        if ~isfield( param.output, 'NET' )
+            param.output.NET = struct();
         end
         if isfield(param.NET, 'units.concentration')
             param.output.NET.units.concentration = param.NET.units.concentration;
@@ -193,6 +206,8 @@ function param = synthesis( param )
         if isfield(param.NET, 'effectiveWidth')
             param.output.NET.effectiveWidth = param.NET.effectiveWidth;
         end
+        param.output.NET = ml_initparam( param.output.NET, param.NET);
+        param = rmfield(param, 'NET');
     end
 
     %%%% Default Output Options %%%%%
@@ -217,14 +232,34 @@ function param = synthesis( param )
     % output.VCML.writeVCML                         (optional) boolean flag specifying whether to write out VCML files for use with Virtual Cell. Default is false.
     % output.VCML.input_filename                    (optional) string specifying Virtual Cell VCML file with biochemistry which will be combined with generated geometry in output file. Default is empty string.
     % output.VCML.downsampling                      (optional) downsampling fraction for the creation of object files (1 means no downsampling, 1/5 means 1/5 the size). Default is 1.
-    % output.VCML.addTranslocationIntermediates     (optional) boolean flag specifying whether to create intermediate species and reactions for reactions involving non-adjacent translocations, which are valid in cBNGL but not Virtual Cell. Default is true.
+    % output.VCML.add_translocation_intermediates   (optional) boolean flag specifying whether to create intermediate species and reactions for reactions involving non-adjacent translocations, which are valid in cBNGL but not Virtual Cell. Default is true.
     % output.VCML.translations                      (optional) N x 2 cell array of strings (first column) to be replaced by other strings (second column).
-    % output.VCML.defaultDiffusionCoefficient       (optional) double specifying diffusion coefficient in meters squared per second. Default is 1.0958e-11.
+    % output.VCML.default_diffusion_coefficient     (optional) double specifying diffusion coefficient in meters squared per second. Default is 1.0958e-11.
     % output.VCML.NET.filename                      (optional) string specifying BioNetGen network file to include in VCML files for use with Virtual Cell. Default is empty string.
     % output.VCML.NET.units.concentration           (optional) string specifying concentration units in NET file. Default is 'uM'.
     % output.VCML.NET.units.length                  (optional) string specifying length units in NET file. Default is 'um'.
     % output.VCML.NET.units.time                    (optional) string specifying time units in NET file. Default is 's'.
     % output.VCML.NET.effectiveWidth                (optional) double specifying surface thickness in meters. Default is 3.8775e-9.
+    % output.VCML.NET.useImageAdjacency             (optional) boolean specifying whether to derive compartment adjacency from the synthetic image. Can break Virtual Cell compatibility due to inclusion of BioNetGen representation of translocation between non-adjacent compartments. Default is true.
+    % output.VCML.num_simulations                   (optional) number of simulations in VCML file.
+    % output.VCML.delete_input_simulations          (optional) boolean specifying whether to delete simulations in VCML file or to modify them using `output.VCML.end_time`, etc. Default is false (behavior changed since version 2.9.0).
+    % output.MCellMDL.writeMCellMDL                 (optional) boolean flag specifying whether to write out MCellMDL files for use with MCell. Default is false.
+    % output.MCellMDL.downsampling                  (optional) downsampling fraction for the creation of object files (1 means no downsampling, 1/5 means 1/5 the size). Default is 1.
+    % output.MCellMDL.addTranslocationIntermediates (optional) boolean flag specifying whether to create intermediate species and reactions for reactions involving non-adjacent translocations, which are valid in cBNGL but not MCell. Default is true.
+    % output.MCellMDL.numSimulations                (optional) number of simulations in MCellMDL file.
+    % output.MCellMDL.translations                  (optional) N x 2 cell array of strings (first column) to be replaced by other strings (second column).
+    % output.MCellMDL.defaultDiffusionCoefficient   (optional) double specifying diffusion coefficient in meters squared per second. Default is 1.0958e-11.
+    % output.MCellMDL.input_filename_pattern        (optional) string specifying pattern matching a set of MCell MDL files to be combined with generated MDL files. This should be empty or `[path][prefix].*.mdl`. If not empty, CellOrganizer will only generate the geometry file and will copy the other files matching the pattern to the output directory, and it is the user's responsibility to ensure compatibility between the input and CellOrganizer's output. Default is `''`.
+    % output.NET.filename                           (optional) string specifying BioNetGen network file to include in VCML or MCell MDL files for use with Virtual Cell or MCell MDL files for MCell. Default is `''`. Only one of `output.MCellMDL.input_filename_pattern` and `output.NET.filename` can be non-empty.
+    % output.NET.units.concentration                (optional) string specifying concentration units in NET file. Default is 'uM'.
+    % output.NET.units.length                       (optional) string specifying length units in NET file. Default is 'um'.
+    % output.NET.units.time                         (optional) string specifying time units in NET file. Default is 's'.
+    % output.NET.translations                       (optional) N x 2 cell array of strings (first column) to be replaced by other strings (second column).
+    % output.NET.effective_width                    (optional) double specifying surface thickness in meters. Default is 3.8775e-9.
+    % % output.NET.use_image_adjacency              (optional) boolean specifying whether to derive compartment adjacency from the synthetic image. Can break Virtual Cell compatibility due to inclusion of BioNetGen representation of translocation between non-adjacent compartments. Default is true.
+    % output.NET.downsampling                       (optional) downsampling fraction for the creation of object files (1 means no downsampling, 1/5 means 1/5 the size). Default is 1.
+    % output.NET.add_translocation_intermediates    (optional) boolean flag specifying whether to create intermediate species and reactions for reactions involving non-adjacent translocations, which are valid in cBNGL but not Virtual Cell. Default is true.
+    % output.NET.default_diffusion_coefficient      (optional) double specifying diffusion coefficient in meters squared per second. Default is 1.0958e-11.
     % output.OMETIFF                                (optional) boolean flag specifying whether to write out an (.ome.tif) OME TIFF. Default is false.
     
     % From Luby-Phelps 2000, "Cytoarchitecture and physical properties of cytoplasm: volume, viscosity, diffusion, intracellular surface area," Table I, column "Cytoplasmic D (μm2/sec)," excluding entries containing only upper bounds and taking the average of the bounds of entries containing ranges:
@@ -257,23 +292,40 @@ function param = synthesis( param )
     output_defaults.VCML.writeVCML = false;
     output_defaults.VCML.input_filename = '';
     output_defaults.VCML.downsampling = 1;
-    output_defaults.VCML.addTranslocationIntermediates = true;
+    output_defaults.VCML.add_translocation_intermediates = true;
+    output_defaults.VCML.objects_always_present = true;
     output_defaults.VCML.translations = cell(0, 2);
-    output_defaults.VCML.endTime = 20;
-    output_defaults.VCML.defaultTimeStep = 0.05;
-    output_defaults.VCML.minTimeStep = 0.0;
-    output_defaults.VCML.maxTimeStep = 0.1;
-    output_defaults.VCML.outputTimeStep = 0.5;
-    output_defaults.VCML.absoluteError = 1e-9;
-    output_defaults.VCML.relativeError = 1e-7;
-    output_defaults.VCML.defaultDiffusionCoefficient = unit_convert('um2.s-1', 'm2.s-1', default_diffusion_coefficient);
+    output_defaults.VCML.default_diffusion_coefficient = unit_convert('um2.s-1', 'm2.s-1', default_diffusion_coefficient);
+    output_defaults.VCML.num_simulations = 1;
+    output_defaults.VCML.delete_input_simulations = false;
+    output_defaults.VCML.end_time = 20;
+    output_defaults.VCML.default_time_step = 0.05;
+    output_defaults.VCML.min_time_step = 0.0;
+    output_defaults.VCML.max_time_step = 0.1;
+    output_defaults.VCML.output_time_step = 0.5;
+    output_defaults.VCML.absolute_tolerance = 1e-9;
+    output_defaults.VCML.relative_tolerance = 1e-7;
+    output_defaults.MCellMDL = output_defaults.VCML;
+    output_defaults.MCellMDL = rmfield(output_defaults.MCellMDL, {'writeVCML', 'min_time_step'});
+    output_defaults.MCellMDL.writeMCellMDL = false;
+    output_defaults.MCellMDL.interaction_radius = nan;
+    output_defaults.MCellMDL.max_real_time = '1:0:0:0';
+    output_defaults.MCellMDL.use_reaction_rate_hack = false;
+    output_defaults.MCellMDL.input_filename_pattern = '';
     output_defaults.NET.filename = '';
     output_defaults.NET.units = struct();
     output_defaults.NET.units.concentration = 'uM';
     output_defaults.NET.units.length = 'um';
     output_defaults.NET.units.time = 's';
+    output_defaults.NET.translations = cell(0, 2);
     % From Mitra et al. 2004, "Modulation of the bilayer thickness of exocytic pathway membranes by membrane proteins rather than cholesterol," using values from abstract
     output_defaults.NET.effectiveWidth = unit_convert('angstrom', 'm', (37.5+39.5+35.6+42.5) / 4);
+    output_defaults.NET.effective_width = unit_convert('angstrom', 'm', (37.5+39.5+35.6+42.5) / 4);
+    % output_defaults.NET.use_image_adjacency = true;
+    output_defaults.NET.downsampling = 1;
+    output_defaults.NET.add_translocation_intermediates = true;
+    % From Luby-Phelps 2000, "Cytoarchitecture and physical properties of cytoplasm: volume, viscosity, diffusion, intracellular surface area," Table I, column "Cytoplasmic D (�m2/sec)," excluding entries containing only upper bounds and taking the average of the bounds of entries containing ranges:
+    output_defaults.NET.default_diffusion_coefficient = unit_convert('um2.s-1', 'm2.s-1', (0.9 + 6.9 + 43 + 27 + 5.9 + 1.7 + 6.8 + (7+11)/2 + 13.5 + (6+11)/2 + 6.7 + 1.6) / 12);
     output_defaults.OMETIFF = false;
 
     if ~isfield( param, 'output' )

@@ -1,0 +1,10 @@
+DEFINE_REACTIONS
+{
+  mind_adp -> mind_atp [k1]
+  mind_atp, @ PM' -> mind_m, [k2]
+  mind_atp, + mind_m, -> mind_m, + mind_m, [k3]
+  mind_atp, + minde_m, -> mind_m, + minde_m, [k3]
+  mine, + mind_m, -> minde_m, [k4]
+  minde_m, -> mind_adp, + mine, [k5]
+}
+

@@ -1,0 +1,51 @@
+INCLUDE_FILE = "lotvol5r3surfcatal.parameters.mdl"
+
+ITERATIONS = 6000
+TIME_STEP = 0.000111111
+VACANCY_SEARCH_DISTANCE = 10
+
+INCLUDE_FILE = "lotvol5r3surfcatal.initialization.mdl"
+
+PARTITION_X = [[0.283169060945511 TO 29.8163146972656 STEP 1.5]]
+PARTITION_Y = [[1.00018215179443 TO 20.3932132720947 STEP 1.5]]
+PARTITION_Z = [[-0.0245693195611238 TO 3.29855155944824 STEP 1.5]]
+
+INCLUDE_FILE = "lotvol5r3surfcatal.molecules.mdl"
+
+INCLUDE_FILE = "lotvol5r3surfcatal.surface_classes.mdl"
+
+INCLUDE_FILE = "lotvol5r3surfcatal.reactions.mdl"
+
+INCLUDE_FILE = "lotvol5r3surfcatal.geometry.mdl"
+
+INCLUDE_FILE = "lotvol5r3surfcatal.mod_surf_regions.mdl"
+
+INSTANTIATE Scene OBJECT
+{
+  CP OBJECT CP {}
+  NU OBJECT NU {}
+  /* EN OBJECT EN {} */
+  prey_rel RELEASE_SITE
+  {
+   /* SHAPE = Scene.CP[ALL] - (Scene.NU[ALL] + Scene.EN[ALL]) */
+   SHAPE = Scene.CP[ALL] - (Scene.NU[ALL])
+   MOLECULE = prey
+   NUMBER_TO_RELEASE = 1000
+   RELEASE_PROBABILITY = 1
+  }
+  predator_rel RELEASE_SITE
+  {
+   /* // SHAPE = Scene.CP[ALL] - (Scene.NU[ALL] + Scene.EN[ALL]) */
+   SHAPE = Scene.CP[ALL] - (Scene.NU[ALL])
+   MOLECULE = predator
+   NUMBER_TO_RELEASE = 1000
+   RELEASE_PROBABILITY = 1
+  }
+}
+
+sprintf(seed,"%05g",SEED)
+
+INCLUDE_FILE = "lotvol5r3surfcatal.viz_output.mdl"
+
+INCLUDE_FILE = "lotvol5r3surfcatal.rxn_output.mdl"
+

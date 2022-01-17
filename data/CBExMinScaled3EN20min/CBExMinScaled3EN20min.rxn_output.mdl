@@ -1,0 +1,10 @@
+REACTION_DATA_OUTPUT
+{
+  STEP=plot_step/dt
+  {COUNT[mind_adp,WORLD]}=> "./react_data/seed_" & seed & "/mind_adp.World.dat"
+  {COUNT[mind_atp,WORLD]}=> "./react_data/seed_" & seed & "/mind_atp.World.dat"
+  {COUNT[mind_m,WORLD]}=> "./react_data/seed_" & seed & "/mind_m.World.dat"
+  {COUNT[minde_m,WORLD]}=> "./react_data/seed_" & seed & "/minde_m.World.dat"
+  {COUNT[mine,WORLD]}=> "./react_data/seed_" & seed & "/mine.World.dat"
+}
+

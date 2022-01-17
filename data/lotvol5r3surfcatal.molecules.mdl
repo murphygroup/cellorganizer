@@ -1,0 +1,12 @@
+DEFINE_MOLECULES
+{
+  prey
+  {
+    DIFFUSION_CONSTANT_3D = 1.8e-06
+  }
+  predator
+  {
+    DIFFUSION_CONSTANT_3D = 1.8e-06
+  }
+}
+

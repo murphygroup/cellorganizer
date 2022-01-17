@@ -1,0 +1,8 @@
+/* DEFINE PARAMETERS */
+spatial_scale = 0.300000011920929    /* P1 Description  */
+time_step = 0.000111111105070449    /* P2 Description  */
+iterations = 6000    /* P3 Description  */
+n_initial_mol = 1000    /* P4 Description  */
+n_frames = 500    /* P5 Description  */
+iterations_frames_scale = 5    /* P6 Description  */
+

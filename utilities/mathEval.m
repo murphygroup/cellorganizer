@@ -6,15 +6,21 @@ function value = mathEval(expression, variables_map, options)
 % ------
 % expression    = string containing an arithmetic expression
 % variables_map = optional containers.Map from identifier strings to expression strings
-% options       = optional struct containing the following optional fields (default values in parentheses):
-%     identifier_pattern ('[a-zA-Z_][a-zA-Z0-9_]*')
-%     expression_max_length (1e4)
-%     return_double (true)
+% options       = optional struct containing the following optional fields (default values in parentheses) in addition to fields used by mathTokenize:
+%     return_type ('double_or_char')
 %     verbose (false)
 % 
 % Outputs
 % -------
 % value = double value of expression
+
+% Tests
+% -----
+% assert(mathEval('2 * 3') == 6)
+% assert(mathEval('a * b', containers.Map({'a', 'b'}, {'1 + 1', '1 + 1 + 1'})) == 6)
+% assert(mathEval('a * b', containers.Map({'a', 'b'}, {'1 + 1', '1 + 1 + 1'}), struct('return_type', 'DimensionedExpression')) == 6)
+% assert(mathEval('a * b', containers.Map({'a', 'b'}, {DimensionedExpression(2, 'm'), DimensionedExpression(3, 's-1')}), struct('return_type', 'DimensionedExpression')) == DimensionedExpression(6, 'm.s-1'))
+% assert(mathEval('a * b', containers.Map({'a', 'b', 'c', 'd'}, {DimensionedExpression('c + d', 'm'), DimensionedExpression(3, 's-1'), DimensionedExpression(1, 'm'), DimensionedExpression(1, 'm')}), struct('return_type', 'DimensionedExpression')) == DimensionedExpression(6, 'm.s-1'))
 
 
 % Copyright (C) 2019 Taraz Buck
@@ -37,8 +43,10 @@ function value = mathEval(expression, variables_map, options)
 % 2019-01-01 Taraz Buck: Created.
 
 
-if nargin < 2
+if nargin < 2 || isempty(variables_map)
     variables_map = containers.Map('KeyType', 'char', 'ValueType', 'char');
+elseif ~isa(variables_map, 'containers.Map')
+    error('CellOrganizer:mathEval', 'variables_map must be containers.Map or empty');
 end
 
 if nargin < 3
@@ -47,11 +55,7 @@ end
 
 % Process options
 default_options = struct();
-% Variable name
-default_options.identifier_pattern = '[a-zA-Z_][a-zA-Z0-9_]*';
-% Maximum length of transformed expression before throwing an error (protect against recursive variable expressions)
-default_options.expression_max_length = 1e4;
-default_options.return_double = true;
+default_options.return_type = 'double_or_char';
 default_options.verbose = false;
 
 if ~exist('options', 'var')
@@ -61,101 +65,172 @@ else
 end
 
 % Postprocess options
-identifier_pattern = ['(?:',options.identifier_pattern,')'];
 
-
-ws = '(?:[ \t]+)';
-wsopt = '(?:[ \t]*)';
-
-operators_patterns = {};
-operators_patterns{end+1} = '+';
-operators_patterns{end+1} = '\-';
-operators_patterns{end+1} = '*';
-operators_patterns{end+1} = '/';
-operators_patterns{end+1} = '\^';
-
-operators_pattern = ['[',cell2mat(reshape(operators_patterns, 1, [])),']'];
-
-function x = isolatePattern(x)
-    x = ['(?<=',operators_pattern,wsopt,'|\(',wsopt,'|^)',x,'(?=',wsopt,operators_pattern,'|',wsopt,'\)|$)'];
+if isa(expression, 'DimensionedExpression')
+    original_expression = expression;
+    expression = expression.value;
 end
 
-% int_pattern = '(?:[0-9]+)';
-% TODO: Edit this to match an authoritative grammar
-float_pattern = ['(?:[\-\+]?(?:(?:(?:(?<![0-9.])[0-9][0-9]*(?![0-9.])|[0-9]+\.[0-9]*(?![0-9])|(?<![0-9])[0-9]*\.[0-9]+)(?:[eE][\-\+]?[0-9]+)?)|[iI][nN][fF]|[nN][aA][nN]))'];
-% Test: regexp('5 5. .5 0.5 15 15. .15 15.15 -5 -5. -.5 -0.5 -15 -15. -.15 -15.15 5e3 5.e3 .5e3 0.5e3 15e3 15.e3 .15e3 15.15e3 +5e-3 +5.e-3 +.5e-3 +0.5e-3 +15e-3 +15.e-3 +.15e-3 +15.15e-3 inf Inf INF nan NaN NAN', '(?:[\-\+]?(?:(?:(?:(?<![0-9.])[0-9][0-9]*(?![0-9.])|[0-9]+\.[0-9]*(?![0-9])|(?<![0-9])[0-9]*\.[0-9]+)(?:[eE][\-\+]?[0-9]+)?)|[iI][nN][fF]|[nN][aA][nN]))', 'match')
-float_pattern = isolatePattern(float_pattern);
-
-% identifier_or_float_pattern = ['(?:',identifier_pattern,'|',float_pattern,')'];
-
-% variable_pattern = ['(?<variable_name>(?<=[+\-*/]',wsopt,'|\(',wsopt,'|^)',identifier_pattern,'(?=',wsopt,'[+\-*/]|',wsopt,'\)|$))'];
-% variable_pattern = ['(?<variable_name>(?<=',operators_pattern,wsopt,'|\(',wsopt,'|^)',identifier_pattern,'(?=',wsopt,operators_pattern,'|',wsopt,'\)|$))'];
-variable_pattern = ['(?<variable_name>',isolatePattern(identifier_pattern),')'];
-
-% Process first to last
-token_types_info = struct('type', {}, 'pattern', {});
-token_types_info(end+1) = struct('type', 'lparen', 'pattern', '\(');
-token_types_info(end+1) = struct('type', 'rparen', 'pattern', '\)');
-token_types_info(end+1) = struct('type', 'float', 'pattern', float_pattern);
-token_types_info(end+1) = struct('type', 'power', 'pattern', '\^');
-token_types_info(end+1) = struct('type', 'divide', 'pattern', '/');
-token_types_info(end+1) = struct('type', 'times', 'pattern', '\*');
-token_types_info(end+1) = struct('type', 'minus', 'pattern', '\-');
-token_types_info(end+1) = struct('type', 'plus', 'pattern', '\+');
-token_types_info(end+1) = struct('type', 'variable', 'pattern', variable_pattern);
-
+%{
+if strcmp(options.return_type, 'DimensionedExpression')
+    variables_map2 = containers.Map('KeyType', 'char', 'ValueType', 'any');
+    variables_map_keys = variables_map.keys();
+    for i = 1:length(variables_map)
+        variables_map_key = variables_map_keys{i};
+        variable = variables_map(variables_map_key);
+        if ischar(variable)
+            if isStringNumeric(variable)
+                variable = str2double(variable);
+            else
+                variable = DimensionedExpression(variable);
+            end
+        end
+        variables_map2(variables_map_key) = variable;
+    end
+    variables_map = variables_map2;
+    if options.verbose
+        for i = 1:length(variables_map)
+            variables_map_key = variables_map_keys{i};
+            variable = variables_map(variables_map_key);
+            fprintf('*** mathEval\n');
+            fprintf('***     %s = %s\n', variables_map_key, char(variable));
+        end
+    end
+    for i = 1:length(variables_map2)
+        variables_map_key = variables_map_keys{i};
+        variable = variables_map2(variables_map_key);
+        if isa(variable, 'DimensionedExpression')
+            variable_variables = variable.getVariables();
+            can_evaluate = true;
+            for j = 1:length(variable_variables)
+                if ~variables_map2.isKey(variable_variables{j})
+                    can_evaluate = false;
+                    break;
+                end
+            end
+            can_evaluate = can_evaluate && ~isStringNumeric(variable.value);
+            if can_evaluate
+                variables_map2.remove(variables_map_key);
+                variable = mathEval(variable, variables_map2, options);
+                variables_map2(variables_map_key) = variable;
+            end
+        end
+    end
+    variables_map = variables_map2;
+end
+%}
 
 function x = isStringNumeric(x)
     x = ~isnan(str2double(x));
 end
 
-function x = num2str_double(x)
-    x = num2str(x, 18);
+function x = valueToTokenValue(x)
+    if options.verbose
+        fprintf('    valueToTokenValue\n')
+        fprintf('    class(x) = %s\n', class(x));
+        x
+    end
+    switch options.return_type
+        case {'double_or_char', 'double', 'char'}
+            if ischar(x)
+                if isStringNumeric(x)
+                    x = str2double(x);
+                else
+                    if variables_map.isKey(x)
+                        x = variables_map(x);
+                        %{
+                        x_units = x.units_manager;
+                        x = mathEval(x, variables_map, setfield(options, 'return_type', 'DimensionedExpression'));
+                        x = DimensionedExpression(x);
+                        % x = DimensionedExpression(x, x_units);
+                        %}
+                    end
+                end
+            end
+        case 'DimensionedExpression'
+            if variables_map.isKey(x)
+                x = variables_map(x);
+                %{
+                x_units = x.units_manager;
+                x = mathEval(x, variables_map, setfield(options, 'return_type', 'DimensionedExpression'));
+                x = DimensionedExpression(x);
+                % x = DimensionedExpression(x, x_units);
+                %}
+            end
+            x = DimensionedExpression(x);
+        %{
+        case 'char'
+            x = x;
+        %}
+    end
+    if options.verbose
+        fprintf('    class(x) = %s\n', class(x));
+    end
+end
+
+function x = valueToReturnValue(x)
+    switch options.return_type
+        case {'double_or_char', 'double', 'char'}
+            if isa(x, 'DimensionedExpression')
+                if ~x.isDimensionless()
+                    error('Return value is not dimensionless');
+                end
+                x = x.value;
+            end
+    end
+    switch options.return_type
+        case {'double_or_char', 'double'}
+            if ischar(x) && isStringNumeric(x)
+                x = str2double(x);
+            end
+        case 'DimensionedExpression'
+            if variables_map.isKey(x)
+                x = variables_map(x);
+                %{
+                x_units = x.units_manager;
+                x = mathEval(x, variables_map, setfield(options, 'return_type', 'DimensionedExpression'));
+                x = DimensionedExpression(x);
+                % x = DimensionedExpression(x, x_units);
+                %}
+            end
+            x = DimensionedExpression(x);
+        case 'char'
+            if isnumeric(x)
+                x = double2str(x);
+            end
+    end
+end
+
+function x = valueToString(x)
+    switch class(x)
+        case 'double'
+            x = double2str(x);
+        case 'DimensionedExpression'
+            x = char(x);
+        case 'char'
+            x = x;
+    end
+end
+
+
+function expressionTokensDisplay(given_expression_tokens)
+    given_expression_tokens2 = given_expression_tokens;
+    for i = 1:length(given_expression_tokens2)
+        if isa(given_expression_tokens2(i).token, 'DimensionedExpression')
+            given_expression_tokens2(i).token = char(given_expression_tokens2(i).token);
+        end
+    end
+    given_expression_tokens_cell = [fieldnames(given_expression_tokens2)'; squeeze(struct2cell(given_expression_tokens2))'];
+    fprintf('    expressionTokensDisplay:\n');
+    disp(given_expression_tokens_cell);
 end
 
 
 % Tokenize
 
-expression_tokens = struct('type', {}, 'token', {});
-expression_unprocessed_portion = expression;
-expression_length_processed = 0;
-while length(expression_unprocessed_portion) > 0
-    token_found = false;
-    for i = 1:length(token_types_info)
-        token_type_info = token_types_info(i);
-        token_type = token_type_info.type;
-        token_pattern = ['^', token_type_info.pattern];
-        tokens = regexp(expression_unprocessed_portion, token_pattern, 'match');
-        if length(tokens) == 0
-            continue;
-        end
-        token = tokens{1};
-        expression_tokens(end+1) = struct('type', token_type, 'token', token);
-        expression_length_processed = expression_length_processed + length(token);
-        if expression_length_processed > options.expression_max_length
-            error('expression cannot be fully evaluated: transformed expression too long');
-        end
-        expression_unprocessed_portion = expression_unprocessed_portion(length(token)+1:end);
-        
-        if strcmp(token_type, 'variable')
-            if ~variables_map.isKey(token)
-                error('expression cannot be fully evaluated: unknown variable ''%s''', token);
-            end
-            expression_unprocessed_portion = [variables_map(token), expression_unprocessed_portion];
-            expression_tokens = expression_tokens(1:end-1);
-        end
-        token_found = true;
-        break;
-    end
-    if ~token_found
-        error('expression cannot be fully evaluated: unrecognized token beginning with ''%s''', expression_unprocessed_portion(1:10));
-    end
-end
-
+expression_tokens = mathTokenize(expression, variables_map, options);
 if options.verbose
-    expression_tokens_cell = [fieldnames(expression_tokens)'; squeeze(struct2cell(expression_tokens))'];
-    fprintf('    expression =\n'); disp(expression)
-    fprintf('    expression_tokens_cell =\n'); disp(expression_tokens_cell)
+    expressionTokensDisplay(expression_tokens);
 end
 
 
@@ -231,15 +306,20 @@ while length(expression_tokens) > 1
                 next_expression_token_token = next_expression_token.token;
                 
                 if is_binary
-                    if ~strcmp(expression_token_token, token_string_operator_token) || ~strcmp(previous_expression_token_type, 'float') || ~strcmp(next_expression_token_type, 'float')
+                    if ~strcmp(expression_token_token, token_string_operator_token) || ~any(strcmp(previous_expression_token_type, {'float', 'variable'})) || ~any(strcmp(next_expression_token_type, {'float', 'variable'}))
                         j_values_reduced = j_values_reduced(2:end);
                         continue;
                     end
-                    if ischar(previous_expression_token_token)
-                        previous_expression_token_token = str2double(previous_expression_token_token);
-                    end
-                    if ischar(next_expression_token_token)
-                        next_expression_token_token = str2double(next_expression_token_token);
+                    % if ischar(previous_expression_token_token)
+                        previous_expression_token_token = valueToTokenValue(previous_expression_token_token);
+                    % end
+                    % if ischar(next_expression_token_token)
+                        next_expression_token_token = valueToTokenValue(next_expression_token_token);
+                    % end
+                    if options.verbose
+                        fprintf('    previous_expression_token_token = %s\n', valueToString(previous_expression_token_token));
+                        fprintf('    next_expression_token_token = %s\n', valueToString(next_expression_token_token));
+                        fprintf('    token_string_operator_function result = %s\n', valueToString(token_string_operator_function(previous_expression_token_token, next_expression_token_token)));
                     end
                     expression_token = struct('type', 'float', 'token', token_string_operator_function(previous_expression_token_token, next_expression_token_token));
                     
@@ -249,7 +329,7 @@ while length(expression_tokens) > 1
                         continue;
                     end
                     if ischar(expression_token_token)
-                        expression_token_token = str2double(expression_token_token);
+                        expression_token_token = valueToTokenValue(expression_token_token);
                     end
                     % expression_token = struct('type', 'float', 'token', expression_token_token);
                 end
@@ -262,9 +342,7 @@ while length(expression_tokens) > 1
             end
             % error('Unfinished');
             if options.verbose
-                % ['type', 'token'; {expression_tokens.type}', {expression_tokens.token}']
-                expression_tokens_cell = [fieldnames(expression_tokens)'; squeeze(struct2cell(expression_tokens))'];
-                fprintf('    expression_tokens_cell =\n'); disp(expression_tokens_cell)
+                expressionTokensDisplay(expression_tokens);
             end
         else
             error('Unfinished');
@@ -272,30 +350,16 @@ while length(expression_tokens) > 1
     end
     
     if previous_n_expression_tokens == length(expression_tokens)
-        error('expression cannot be fully evaluated: no more token strings can be evaluated');
+        % error('expression cannot be fully evaluated: no more token strings can be evaluated');
+        break
     end
 end
 
 
-if length(expression_tokens) ~= 1
-    error('expression cannot be fully evaluated: final token string has length other than one');
-end
-if ~strcmp(expression_tokens.type, 'float')
-    error('expression cannot be fully evaluated: final token is not of type ''float''');
-end
+% Create final expression string:
+expression = [expression_tokens(:).token];
 
-expression = expression_tokens.token;
-is_expression_numeric_string = ischar(expression) && isStringNumeric(expression);
-if ~isfloat(expression) && ~is_expression_numeric_string
-    error('expression cannot be fully evaluated: final transformed expression not numeric');
-end
-
-value = expression;
-if options.return_double && is_expression_numeric_string
-    value = str2double(value);
-elseif ~options.return_double
-    value = num2str(value);
-end
+value = valueToReturnValue(expression);
 
 
 end

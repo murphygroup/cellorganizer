@@ -1,0 +1,1999 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This biomodel was generated in VCML Version Rel_Version_7.2.0_build_39-->
+<vcml xmlns="http://sourceforge.net/projects/vcell/vcml" Version="Rel_Version_7.2.0_build_39">
+    <BioModel Name="SarmaGhosh2012SBMLS1nGeomDefaultUnits">
+        <Model Name="unnamed">
+            <ModelParameters>
+                <Parameter Name="k13" Role="user defined" Unit="s-1">0.022</Parameter>
+                <Parameter Name="k14" Role="user defined" Unit="s-1">0.0078</Parameter>
+                <Parameter Name="V12" Role="user defined" Unit="nmol.s-1">29.24</Parameter>
+                <Parameter Name="K12" Role="user defined" Unit="nmol.ml-1">169.0</Parameter>
+                <Parameter Name="n12" Role="user defined" Unit="1">3.97</Parameter>
+                <Parameter Name="k15" Role="user defined" Unit="s-1">0.0012</Parameter>
+                <Parameter Name="k16f" Role="user defined" Unit="s-1">22.56</Parameter>
+                <Parameter Name="k16b" Role="user defined" Unit="s-1">15.4</Parameter>
+                <Parameter Name="k18" Role="user defined" Unit="s-1">2.5E-4</Parameter>
+                <Parameter Name="k17" Role="user defined" Unit="s-1">2.5E-4</Parameter>
+                <Parameter Name="k11b" Role="user defined" Unit="s-1">2.86</Parameter>
+                <Parameter Name="k11f" Role="user defined" Unit="s-1">10.34</Parameter>
+                <Parameter Name="k21" Role="user defined" Unit="s-1">0.68</Parameter>
+                <Parameter Name="K21" Role="user defined" Unit="nmol.ml-1">10300.0</Parameter>
+                <Parameter Name="K22" Role="user defined" Unit="nmol.ml-1">87.0</Parameter>
+                <Parameter Name="k22" Role="user defined" Unit="s-1">0.31</Parameter>
+                <Parameter Name="k19f" Role="user defined" Unit="s-1">10.34</Parameter>
+                <Parameter Name="k19b" Role="user defined" Unit="s-1">2.86</Parameter>
+                <Parameter Name="K10" Role="user defined" Unit="nmol.ml-1">200.0</Parameter>
+                <Parameter Name="k10" Role="user defined" Unit="s-1">0.1</Parameter>
+                <Parameter Name="K9" Role="user defined" Unit="nmol.ml-1">200.0</Parameter>
+                <Parameter Name="k9" Role="user defined" Unit="s-1">0.1</Parameter>
+                <Parameter Name="K8" Role="user defined" Unit="nmol.ml-1">20.0</Parameter>
+                <Parameter Name="k8" Role="user defined" Unit="s-1">0.1</Parameter>
+                <Parameter Name="K7" Role="user defined" Unit="nmol.ml-1">20.0</Parameter>
+                <Parameter Name="k7" Role="user defined" Unit="s-1">0.1</Parameter>
+                <Parameter Name="K5" Role="user defined" Unit="nmol.ml-1">200.0</Parameter>
+                <Parameter Name="k5" Role="user defined" Unit="s-1">0.1</Parameter>
+                <Parameter Name="K4" Role="user defined" Unit="nmol.ml-1">20.0</Parameter>
+                <Parameter Name="k4" Role="user defined" Unit="s-1">0.1</Parameter>
+                <Parameter Name="A" Role="user defined" Unit="1">10.0</Parameter>
+                <Parameter Name="Ka" Role="user defined" Unit="nmol.ml-1">500.0</Parameter>
+                <Parameter Name="K6" Role="user defined" Unit="nmol.ml-1">200.0</Parameter>
+                <Parameter Name="k6" Role="user defined" Unit="s-1">0.1</Parameter>
+                <Parameter Name="K3" Role="user defined" Unit="nmol.ml-1">20.0</Parameter>
+                <Parameter Name="k3" Role="user defined" Unit="s-1">0.1</Parameter>
+                <Parameter Name="KI" Role="user defined" Unit="nmol.ml-1">9.0</Parameter>
+                <Parameter Name="K1" Role="user defined" Unit="nmol.ml-1">20.0</Parameter>
+                <Parameter Name="Sig" Role="user defined" Unit="nmol.ml-1.s-1">2.5</Parameter>
+                <Parameter Name="K2" Role="user defined" Unit="nmol.ml-1">200.0</Parameter>
+                <Parameter Name="k2" Role="user defined" Unit="s-1">0.025</Parameter>
+                <Parameter Name="k20b" Role="user defined" Unit="s-1">2.86</Parameter>
+                <Parameter Name="k20f" Role="user defined" Unit="s-1">10.34</Parameter>
+                <Parameter Name="eff_width" Role="user defined" Unit="m">3.8775E-9</Parameter>
+                <Parameter Name="ml_to_m3" Role="user defined" Unit="m3.ml-1">1.0E-6</Parameter>
+                <Parameter Name="uni_vol_to_surf" Role="user defined" Unit="ml.m-2">(1.6666666666666665 * uni_vol_to_surf_scale)</Parameter>
+                <Parameter Name="diff_scale" Role="user defined" Unit="1">1.0</Parameter>
+                <Parameter Name="uni_vol_to_surf_scale" Role="user defined" Unit="1">1.0</Parameter>
+            </ModelParameters>
+            <Compound Name="species_0">
+                <Annotation>species_0</Annotation>
+            </Compound>
+            <Compound Name="species_1">
+                <Annotation>species_1</Annotation>
+            </Compound>
+            <Compound Name="species_2">
+                <Annotation>species_2</Annotation>
+            </Compound>
+            <Compound Name="species_3">
+                <Annotation>species_3</Annotation>
+            </Compound>
+            <Compound Name="species_4">
+                <Annotation>species_4</Annotation>
+            </Compound>
+            <Compound Name="species_5">
+                <Annotation>species_5</Annotation>
+            </Compound>
+            <Compound Name="species_6">
+                <Annotation>species_6</Annotation>
+            </Compound>
+            <Compound Name="species_7">
+                <Annotation>species_7</Annotation>
+            </Compound>
+            <Compound Name="species_8">
+                <Annotation>species_8</Annotation>
+            </Compound>
+            <Compound Name="species_9">
+                <Annotation>species_9</Annotation>
+            </Compound>
+            <Compound Name="species_10">
+                <Annotation>species_10</Annotation>
+            </Compound>
+            <Compound Name="species_11">
+                <Annotation>species_11</Annotation>
+            </Compound>
+            <Compound Name="species_12">
+                <Annotation>species_12</Annotation>
+            </Compound>
+            <Compound Name="species_13">
+                <Annotation>species_13</Annotation>
+            </Compound>
+            <Compound Name="species_14">
+                <Annotation>species_14</Annotation>
+            </Compound>
+            <Compound Name="species_16">
+                <Annotation>species_16</Annotation>
+            </Compound>
+            <Compound Name="species_17">
+                <Annotation>species_17</Annotation>
+            </Compound>
+            <Compound Name="species_18">
+                <Annotation>species_18</Annotation>
+            </Compound>
+            <Feature Name="EC" KeyValue="171444038" />
+            <Feature Name="NU" KeyValue="171444040" />
+            <Feature Name="CP" KeyValue="171444042" />
+            <Membrane MembraneVoltage="Voltage_NM" Name="NM" KeyValue="171444044" />
+            <Membrane MembraneVoltage="Voltage_PM" Name="PM" KeyValue="171444046" />
+            <LocalizedCompound Name="M3K" SbmlName="MKKK" CompoundRef="species_0" Structure="CP" OverrideName="true" KeyValue="171444048" />
+            <LocalizedCompound Name="M3K_P" SbmlName="MKKK_P" CompoundRef="species_1" Structure="CP" OverrideName="true" KeyValue="171444049" />
+            <LocalizedCompound Name="M2K" SbmlName="MKK" CompoundRef="species_2" Structure="CP" OverrideName="true" KeyValue="171444050" />
+            <LocalizedCompound Name="M2K_P" SbmlName="MKK_P" CompoundRef="species_3" Structure="CP" OverrideName="true" KeyValue="171444051" />
+            <LocalizedCompound Name="M2K_PP" SbmlName="MKK_PP" CompoundRef="species_4" Structure="CP" OverrideName="true" KeyValue="171444052" />
+            <LocalizedCompound Name="MK" SbmlName="M" CompoundRef="species_5" Structure="CP" OverrideName="true" KeyValue="171444053" />
+            <LocalizedCompound Name="MK_P" SbmlName="M_P" CompoundRef="species_6" Structure="CP" OverrideName="true" KeyValue="171444054" />
+            <LocalizedCompound Name="MK_PP" SbmlName="M_PP" CompoundRef="species_7" Structure="CP" OverrideName="true" KeyValue="171444055" />
+            <LocalizedCompound Name="P1" SbmlName="P1" CompoundRef="species_8" Structure="CP" OverrideName="true" KeyValue="171444056" />
+            <LocalizedCompound Name="P2" SbmlName="P2" CompoundRef="species_9" Structure="CP" OverrideName="true" KeyValue="171444057" />
+            <LocalizedCompound Name="P3" SbmlName="P3" CompoundRef="species_10" Structure="CP" OverrideName="true" KeyValue="171444058" />
+            <LocalizedCompound Name="MK_PP_N" SbmlName="M_PP_n" CompoundRef="species_11" Structure="NU" OverrideName="true" KeyValue="171444059" />
+            <LocalizedCompound Name="PreP3mRNA" SbmlName="PreP3_mRNA" CompoundRef="species_12" Structure="NU" OverrideName="true" KeyValue="171444060" />
+            <LocalizedCompound Name="P3mRNA" SbmlName="P3mRNA" CompoundRef="species_13" Structure="CP" OverrideName="true" KeyValue="171444061" />
+            <LocalizedCompound Name="P3_C" SbmlName="P3_c" CompoundRef="species_14" Structure="CP" OverrideName="true" KeyValue="171444062" />
+            <LocalizedCompound Name="MK_N" SbmlName="M_n" CompoundRef="species_16" Structure="NU" OverrideName="true" KeyValue="171444063" />
+            <LocalizedCompound Name="MK_P_N" SbmlName="M_P_n" CompoundRef="species_17" Structure="NU" OverrideName="true" KeyValue="171444064" />
+            <LocalizedCompound Name="P3_N" SbmlName="P3_n" CompoundRef="species_18" Structure="NU" OverrideName="true" KeyValue="171444065" />
+            <SimpleReaction Structure="CP" Name="reaction_0" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444066" SbmlName="1">
+                <Reactant LocalizedCompoundRef="M3K" Stoichiometry="1" KeyValue="171444067" />
+                <Product LocalizedCompoundRef="M3K_P" Stoichiometry="1" KeyValue="171444068" />
+                <Modifier LocalizedCompoundRef="MK_PP" KeyValue="171444069" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(Sig * M3K / K1 / ((1.0 + (M3K / K1)) * (1.0 + (MK_PP / KI))))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_1" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444070" SbmlName="3">
+                <Reactant LocalizedCompoundRef="M2K" Stoichiometry="1" KeyValue="171444071" />
+                <Product LocalizedCompoundRef="M2K_P" Stoichiometry="1" KeyValue="171444072" />
+                <Modifier LocalizedCompoundRef="MK_PP" KeyValue="171444073" />
+                <Modifier LocalizedCompoundRef="M3K_P" KeyValue="171444074" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k3 * M3K_P * M2K * (1.0 + (A * MK_PP / Ka)) / K3 / (1.0 + (M2K / K3) + (M2K_P / K3)) / (1.0 + (MK_PP / Ka)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_2" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444075" SbmlName="4">
+                <Reactant LocalizedCompoundRef="M2K_P" Stoichiometry="1" KeyValue="171444076" />
+                <Product LocalizedCompoundRef="M2K_PP" Stoichiometry="1" KeyValue="171444077" />
+                <Modifier LocalizedCompoundRef="MK_PP" KeyValue="171444080" />
+                <Modifier LocalizedCompoundRef="M3K_P" KeyValue="171444078" />
+                <Modifier LocalizedCompoundRef="M2K" KeyValue="171444079" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k4 * M3K_P * M2K_P * (1.0 + (A * MK_PP / Ka)) / K4 / (1.0 + (M2K_P / K4) + (M2K / K4)) / (1.0 + (MK_PP / Ka)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_3" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444081" SbmlName="7">
+                <Reactant LocalizedCompoundRef="MK" Stoichiometry="1" KeyValue="171444082" />
+                <Product LocalizedCompoundRef="MK_P" Stoichiometry="1" KeyValue="171444083" />
+                <Modifier LocalizedCompoundRef="M2K_PP" KeyValue="171444084" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k7 * M2K_PP * MK / K7 / (1.0 + (MK / K7) + (MK_P / K7)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_4" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444085" SbmlName="8">
+                <Reactant LocalizedCompoundRef="MK_P" Stoichiometry="1" KeyValue="171444086" />
+                <Product LocalizedCompoundRef="MK_PP" Stoichiometry="1" KeyValue="171444087" />
+                <Modifier LocalizedCompoundRef="M2K_PP" KeyValue="171444088" />
+                <Modifier LocalizedCompoundRef="MK" KeyValue="171444089" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k8 * M2K_PP * MK_P / K8 / (1.0 + (MK / K8) + (MK_P / K8)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_5" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444090" SbmlName="2">
+                <Reactant LocalizedCompoundRef="M3K_P" Stoichiometry="1" KeyValue="171444091" />
+                <Product LocalizedCompoundRef="M3K" Stoichiometry="1" KeyValue="171444092" />
+                <Modifier LocalizedCompoundRef="P1" KeyValue="171444093" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k2 * P1 * M3K_P / K2 / (1.0 + (M3K_P / K2)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_6" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444094" SbmlName="5">
+                <Reactant LocalizedCompoundRef="M2K_PP" Stoichiometry="1" KeyValue="171444095" />
+                <Product LocalizedCompoundRef="M2K_P" Stoichiometry="1" KeyValue="171444096" />
+                <Modifier LocalizedCompoundRef="P2" KeyValue="171444097" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k5 * P2 * M2K_PP / K5 / (1.0 + (M2K_PP / K5) + (M2K_P / K5)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_7" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444098" SbmlName="6">
+                <Reactant LocalizedCompoundRef="M2K_P" Stoichiometry="1" KeyValue="171444099" />
+                <Product LocalizedCompoundRef="M2K" Stoichiometry="1" KeyValue="171444100" />
+                <Modifier LocalizedCompoundRef="P2" KeyValue="171444101" />
+                <Modifier LocalizedCompoundRef="M2K_PP" KeyValue="171444102" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k6 * P2 * M2K_P / K6 / (1.0 + (M2K_PP / K6) + (M2K_P / K6)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_8" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444103" SbmlName="9">
+                <Reactant LocalizedCompoundRef="MK_PP" Stoichiometry="1" KeyValue="171444104" />
+                <Product LocalizedCompoundRef="MK_P" Stoichiometry="1" KeyValue="171444105" />
+                <Modifier LocalizedCompoundRef="P3" KeyValue="171444106" />
+                <Modifier LocalizedCompoundRef="MK" KeyValue="171444107" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k9 * P3 * MK_PP / K9 / (1.0 + (MK_PP / K9) + (MK_P / K9)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_9" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444108" SbmlName="10">
+                <Reactant LocalizedCompoundRef="MK_P" Stoichiometry="1" KeyValue="171444109" />
+                <Product LocalizedCompoundRef="MK" Stoichiometry="1" KeyValue="171444110" />
+                <Modifier LocalizedCompoundRef="P3" KeyValue="171444111" />
+                <Modifier LocalizedCompoundRef="MK_PP" KeyValue="171444112" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k10 * P3 * MK_P / K10 / (1.0 + (MK_PP / K10) + (MK_P / K10)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="NM" Name="reaction_10" Reversible="true" FluxOption="MolecularOnly" KeyValue="171444113" SbmlName="11">
+                <Reactant LocalizedCompoundRef="MK_PP" Stoichiometry="1" KeyValue="171444114" />
+                <Product LocalizedCompoundRef="MK_PP_N" Stoichiometry="1" KeyValue="171444115" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">(602.214179 * ((k11f * uni_vol_to_surf * MK_PP) - (k11b * uni_vol_to_surf * MK_PP_N)))</Parameter>
+                    <Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+                    <Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="NU" Name="reaction_11" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444116" SbmlName="12">
+                <Product LocalizedCompoundRef="PreP3mRNA" Stoichiometry="1" KeyValue="171444117" />
+                <Modifier LocalizedCompoundRef="MK_PP_N" KeyValue="171444118" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(V12 * pow(MK_PP_N,n12) / (pow(K12,n12) + pow(MK_PP_N,n12)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="NM" Name="reaction_12" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444119" SbmlName="13">
+                <Reactant LocalizedCompoundRef="PreP3mRNA" Stoichiometry="1" KeyValue="171444120" />
+                <Product LocalizedCompoundRef="P3mRNA" Stoichiometry="1" KeyValue="171444121" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">(602.214179 * k13 * uni_vol_to_surf * PreP3mRNA)</Parameter>
+                    <Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+                    <Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_13" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444122" SbmlName="14">
+                <Reactant LocalizedCompoundRef="P3mRNA" Stoichiometry="1" KeyValue="171444123" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k14 * P3mRNA)</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_14" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444124" SbmlName="15">
+                <Product LocalizedCompoundRef="P3_C" Stoichiometry="1" KeyValue="171444125" />
+                <Modifier LocalizedCompoundRef="P3mRNA" KeyValue="171444126" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k15 * P3mRNA)</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="CP" Name="reaction_15" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444127" SbmlName="17">
+                <Reactant LocalizedCompoundRef="P3_C" Stoichiometry="1" KeyValue="171444128" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k17 * P3_C)</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="NM" Name="reaction_16" Reversible="true" FluxOption="MolecularOnly" KeyValue="171444129" SbmlName="19">
+                <Reactant LocalizedCompoundRef="MK" Stoichiometry="1" KeyValue="171444130" />
+                <Product LocalizedCompoundRef="MK_N" Stoichiometry="1" KeyValue="171444131" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">(602.214179 * ((k19f * uni_vol_to_surf * MK) - (k19b * uni_vol_to_surf * MK_N)))</Parameter>
+                    <Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+                    <Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="NM" Name="reaction_17" Reversible="true" FluxOption="MolecularOnly" KeyValue="171444132" SbmlName="20">
+                <Reactant LocalizedCompoundRef="MK_P" Stoichiometry="1" KeyValue="171444133" />
+                <Product LocalizedCompoundRef="MK_P_N" Stoichiometry="1" KeyValue="171444134" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">(602.214179 * ((k20f * uni_vol_to_surf * MK_P) - (k20b * uni_vol_to_surf * MK_P_N)))</Parameter>
+                    <Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+                    <Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="NM" Name="reaction_18" Reversible="true" FluxOption="MolecularOnly" KeyValue="171444135" SbmlName="16">
+                <Reactant LocalizedCompoundRef="P3_C" Stoichiometry="1" KeyValue="171444136" />
+                <Product LocalizedCompoundRef="P3_N" Stoichiometry="1" KeyValue="171444137" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">(602.214179 * ((k16f * uni_vol_to_surf * P3_C) - (k16b * uni_vol_to_surf * P3_N)))</Parameter>
+                    <Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+                    <Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="NU" Name="reaction_19" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444138" SbmlName="21">
+                <Reactant LocalizedCompoundRef="MK_PP_N" Stoichiometry="1" KeyValue="171444139" />
+                <Product LocalizedCompoundRef="MK_P_N" Stoichiometry="1" KeyValue="171444140" />
+                <Modifier LocalizedCompoundRef="P3_N" KeyValue="171444141" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k21 * P3_N * MK_PP_N / K21 / (1.0 + (MK_PP_N / K21) + (MK_P_N / K22)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="NU" Name="reaction_20" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444142" SbmlName="22">
+                <Reactant LocalizedCompoundRef="MK_P_N" Stoichiometry="1" KeyValue="171444143" />
+                <Product LocalizedCompoundRef="MK_N" Stoichiometry="1" KeyValue="171444144" />
+                <Modifier LocalizedCompoundRef="P3_N" KeyValue="171444145" />
+                <Modifier LocalizedCompoundRef="MK_PP_N" KeyValue="171444146" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k22 * P3_N * MK_P_N / K22 / (1.0 + (MK_P_N / K22) + (MK_PP_N / K21)))</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <SimpleReaction Structure="NU" Name="reaction_21" Reversible="false" FluxOption="MolecularOnly" KeyValue="171444147" SbmlName="18">
+                <Reactant LocalizedCompoundRef="P3_N" Stoichiometry="1" KeyValue="171444148" />
+                <Kinetics KineticsType="GeneralKinetics">
+                    <Parameter Name="J" Role="reaction rate" Unit="uM.s-1">(k18 * P3_N)</Parameter>
+                </Kinetics>
+            </SimpleReaction>
+            <Diagram Name="c1" Structure="EC">
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_19" LocationX="111" LocationY="136" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M3K" LocationX="78" LocationY="217" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_20" LocationX="77" LocationY="82" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_1" LocationX="133" LocationY="153" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P2" LocationX="90" LocationY="34" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="PreP3mRNA" LocationX="95" LocationY="224" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_8" LocationX="209" LocationY="145" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_21" LocationX="123" LocationY="40" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3" LocationX="226" LocationY="184" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3_N" LocationX="127" LocationY="74" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_2" LocationX="157" LocationY="125" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_15" LocationX="331" LocationY="129" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK" LocationX="255" LocationY="75" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_N" LocationX="51" LocationY="38" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_18" LocationX="44" LocationY="83" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_12" LocationX="46" LocationY="231" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_16" LocationX="42" LocationY="39" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P1" LocationX="14" LocationY="163" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3mRNA" LocationX="293" LocationY="217" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_PP_N" LocationX="53" LocationY="163" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_0" LocationX="122" LocationY="213" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_17" LocationX="44" LocationY="115" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_5" LocationX="45" LocationY="191" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K" LocationX="100" LocationY="120" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_P" LocationX="246" LocationY="113" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_6" LocationX="130" LocationY="36" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_13" LocationX="331" LocationY="223" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M3K_P" LocationX="90" LocationY="169" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_9" LocationX="253" LocationY="159" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K_P" LocationX="131" LocationY="85" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_P_N" LocationX="75" LocationY="119" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_4" LocationX="205" LocationY="92" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K_PP" LocationX="171" LocationY="51" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_14" LocationX="314" LocationY="179" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_11" LocationX="64" LocationY="217" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_PP" LocationX="191" LocationY="183" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_7" LocationX="97" LocationY="75" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3_C" LocationX="293" LocationY="135" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_10" LocationX="44" LocationY="194" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_3" LocationX="224" LocationY="52" />
+            </Diagram>
+            <Diagram Name="m1" Structure="PM">
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_19" LocationX="111" LocationY="136" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M3K" LocationX="78" LocationY="217" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_20" LocationX="77" LocationY="82" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_1" LocationX="133" LocationY="153" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P2" LocationX="90" LocationY="34" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="PreP3mRNA" LocationX="95" LocationY="224" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_8" LocationX="209" LocationY="145" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_21" LocationX="123" LocationY="40" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3" LocationX="226" LocationY="184" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3_N" LocationX="127" LocationY="74" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_2" LocationX="157" LocationY="125" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_15" LocationX="331" LocationY="129" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK" LocationX="255" LocationY="75" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_N" LocationX="51" LocationY="38" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_18" LocationX="44" LocationY="83" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_12" LocationX="46" LocationY="231" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_16" LocationX="42" LocationY="39" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P1" LocationX="14" LocationY="163" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3mRNA" LocationX="293" LocationY="217" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_PP_N" LocationX="53" LocationY="163" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_0" LocationX="122" LocationY="213" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_17" LocationX="44" LocationY="115" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_5" LocationX="45" LocationY="191" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K" LocationX="100" LocationY="120" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_P" LocationX="246" LocationY="113" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_6" LocationX="130" LocationY="36" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_13" LocationX="331" LocationY="223" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M3K_P" LocationX="90" LocationY="169" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_9" LocationX="253" LocationY="159" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K_P" LocationX="131" LocationY="85" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_P_N" LocationX="75" LocationY="119" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_4" LocationX="205" LocationY="92" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K_PP" LocationX="171" LocationY="51" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_14" LocationX="314" LocationY="179" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_11" LocationX="64" LocationY="217" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_PP" LocationX="191" LocationY="183" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_7" LocationX="97" LocationY="75" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3_C" LocationX="293" LocationY="135" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_10" LocationX="44" LocationY="194" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_3" LocationX="224" LocationY="52" />
+            </Diagram>
+            <Diagram Name="compartment_0" Structure="CP">
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_19" LocationX="111" LocationY="136" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M3K" LocationX="78" LocationY="217" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_20" LocationX="77" LocationY="82" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_1" LocationX="133" LocationY="153" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P2" LocationX="90" LocationY="34" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="PreP3mRNA" LocationX="95" LocationY="224" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_8" LocationX="209" LocationY="145" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_21" LocationX="123" LocationY="40" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3" LocationX="226" LocationY="184" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3_N" LocationX="127" LocationY="74" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_2" LocationX="157" LocationY="125" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_15" LocationX="331" LocationY="129" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK" LocationX="255" LocationY="75" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_N" LocationX="51" LocationY="38" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_18" LocationX="44" LocationY="83" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_12" LocationX="46" LocationY="231" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_16" LocationX="42" LocationY="39" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P1" LocationX="14" LocationY="163" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3mRNA" LocationX="293" LocationY="217" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_PP_N" LocationX="53" LocationY="163" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_0" LocationX="122" LocationY="213" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_17" LocationX="44" LocationY="115" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_5" LocationX="45" LocationY="191" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K" LocationX="100" LocationY="120" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_P" LocationX="246" LocationY="113" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_6" LocationX="130" LocationY="36" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_13" LocationX="331" LocationY="223" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M3K_P" LocationX="90" LocationY="169" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_9" LocationX="253" LocationY="159" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K_P" LocationX="131" LocationY="85" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_P_N" LocationX="75" LocationY="119" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_4" LocationX="205" LocationY="92" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K_PP" LocationX="171" LocationY="51" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_14" LocationX="314" LocationY="179" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_11" LocationX="64" LocationY="217" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_PP" LocationX="191" LocationY="183" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_7" LocationX="97" LocationY="75" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3_C" LocationX="293" LocationY="135" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_10" LocationX="44" LocationY="194" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_3" LocationX="224" LocationY="52" />
+            </Diagram>
+            <Diagram Name="m0" Structure="NM">
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_19" LocationX="111" LocationY="136" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M3K" LocationX="78" LocationY="217" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_20" LocationX="77" LocationY="82" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_1" LocationX="133" LocationY="153" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P2" LocationX="90" LocationY="34" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="PreP3mRNA" LocationX="95" LocationY="224" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_8" LocationX="209" LocationY="145" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_21" LocationX="123" LocationY="40" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3" LocationX="226" LocationY="184" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3_N" LocationX="127" LocationY="74" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_2" LocationX="157" LocationY="125" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_15" LocationX="331" LocationY="129" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK" LocationX="255" LocationY="75" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_N" LocationX="51" LocationY="38" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_18" LocationX="44" LocationY="83" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_12" LocationX="46" LocationY="231" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_16" LocationX="42" LocationY="39" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P1" LocationX="14" LocationY="163" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3mRNA" LocationX="293" LocationY="217" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_PP_N" LocationX="53" LocationY="163" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_0" LocationX="122" LocationY="213" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_17" LocationX="44" LocationY="115" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_5" LocationX="45" LocationY="191" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K" LocationX="100" LocationY="120" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_P" LocationX="246" LocationY="113" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_6" LocationX="130" LocationY="36" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_13" LocationX="331" LocationY="223" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M3K_P" LocationX="90" LocationY="169" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_9" LocationX="253" LocationY="159" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K_P" LocationX="131" LocationY="85" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_P_N" LocationX="75" LocationY="119" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_4" LocationX="205" LocationY="92" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K_PP" LocationX="171" LocationY="51" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_14" LocationX="314" LocationY="179" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_11" LocationX="64" LocationY="217" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_PP" LocationX="191" LocationY="183" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_7" LocationX="97" LocationY="75" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3_C" LocationX="293" LocationY="135" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_10" LocationX="44" LocationY="194" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_3" LocationX="224" LocationY="52" />
+            </Diagram>
+            <Diagram Name="c0" Structure="NU">
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_19" LocationX="111" LocationY="136" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M3K" LocationX="78" LocationY="217" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_20" LocationX="77" LocationY="82" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_1" LocationX="133" LocationY="153" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P2" LocationX="90" LocationY="34" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="PreP3mRNA" LocationX="95" LocationY="224" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_8" LocationX="209" LocationY="145" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_21" LocationX="123" LocationY="40" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3" LocationX="226" LocationY="184" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3_N" LocationX="127" LocationY="74" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_2" LocationX="157" LocationY="125" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_15" LocationX="331" LocationY="129" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK" LocationX="255" LocationY="75" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_N" LocationX="51" LocationY="38" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_18" LocationX="44" LocationY="83" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_12" LocationX="46" LocationY="231" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_16" LocationX="42" LocationY="39" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P1" LocationX="14" LocationY="163" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3mRNA" LocationX="293" LocationY="217" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_PP_N" LocationX="53" LocationY="163" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_0" LocationX="122" LocationY="213" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_17" LocationX="44" LocationY="115" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_5" LocationX="45" LocationY="191" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K" LocationX="100" LocationY="120" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_P" LocationX="246" LocationY="113" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_6" LocationX="130" LocationY="36" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_13" LocationX="331" LocationY="223" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M3K_P" LocationX="90" LocationY="169" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_9" LocationX="253" LocationY="159" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K_P" LocationX="131" LocationY="85" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_P_N" LocationX="75" LocationY="119" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_4" LocationX="205" LocationY="92" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="M2K_PP" LocationX="171" LocationY="51" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_14" LocationX="314" LocationY="179" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_11" LocationX="64" LocationY="217" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="MK_PP" LocationX="191" LocationY="183" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_7" LocationX="97" LocationY="75" />
+                <LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="P3_C" LocationX="293" LocationY="135" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_10" LocationX="44" LocationY="194" />
+                <SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="reaction_3" LocationX="224" LocationY="52" />
+            </Diagram>
+            <ModelUnitSystem VolumeSubstanceUnit="uM.um3" MembraneSubstanceUnit="molecules" LumpedReactionSubstanceUnit="molecules" VolumeUnit="um3" AreaUnit="um2" LengthUnit="um" TimeUnit="s" />
+        </Model>
+        <SimulationSpec Name="Spatial" Stochastic="false" UseConcentration="true" RuleBased="false" MassConservationModelReduction="false" InsufficientIterations="false" InsufficientMaxMolecules="false" CharacteristicSize="0.19999999999999998">
+            <NetworkConstraints RbmMaxIteration="3" RbmMaxMoleculesPerSpecies="10" RbmSpeciesLimit="800" RbmReactionsLimit="2500" />
+            <Geometry Name="geom" Dimension="3">
+                <Annotation>NoName</Annotation>
+                <Extent X="37.4" Y="27.4" Z="4.0" />
+                <Origin X="0.0" Y="0.0" Z="0.0" />
+                <Image Name="img">
+                    <Annotation>NoName</Annotation>
+                    <ImageData X="187" Y="137" Z="20" CompressedSize="8078">789CEDDDED56DB4A0C46E145B9FF7B3E8B0385D89EB1E743D22B95BDFF74D126CE6313D224C4A3B73722222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222A29CBD1F526B667A2F4B7F6FA4368DD592D7D0F7E449F59FAA063535FEF110E7C53FDF39B2DA07EFD109F147CE132C95FD8439BBAED434F6FBC3D8BB93A4E08FCBEFBF17821A86D6CFEDD99FC1DE3FA2F7FEFB3B5A448D9FBFE954F2DEFF98B9EDAFB77B92746059EC875B3D397AAC1CF4E3AD9E1D5D5202FAF1561B8E2EE9F592127BE3189F15D7479FEE767CADAD5B6CD00F17B95CFAEA0C3FECCD7BF695DE79E46C6C290ADEBABF762F73BCF8C5DFF96604D0AFF2E3DFDF156F7FB9D157EA79A7460AB69F6FA3F7FD7F151EB5677C98BD436F3CC05F0FEEF93A67BBBF7C92FE7DC1EB954E7611FD78C77DF9A2BF9958FB0176625CF6A3F53AE4AABF6CD8937E52F5EF239D27C6872FDF5A5F79D1CF3775233F1CDAC62E5EE88EF633E370B37D79E7BDD406DDCF7E3E8057E0794767E9110FEE2FB773BDD9CF2F8E9E36FDFAA81A233F1EB3C6BF777DE77F6B7C239CE9CDD744DD43FBF58F97CBB5B7E92C3F1EF7C6BF9FB49D0D9DAE16446FD85BF7861CF6EFED1F6FA841385CE596DEFD793713FF6CFDB00F6F377F7F14F6A8E71F0073F97B53DB7D667023EFED8BCB7FAB07FA89D4A64FC97B3F2666F231FAF19B7EEF3D425B7B6322EFD15FBFF8B9C2557EDD8F87572A76F219FAE99A6D5DEF76C2E8AF5FB409174717767FB575FBDBE140378F665F7E6368EDB4E163FCFBF17EF1DE96B79FBF8FC8EFEE3DFBF4BBD715AD2F5AF22BA6BF8723BB3D4AEF3F80B5BFBA4376E4876B58DA7BB2FB2FBBC85E1EF4F613BCDED7AD0DCCE8ADE49D27868DA3D5BBB52BEF423B6ECB4ADEA637E4C38FD90DDBC33F9BD14F7B71BDDCF9C2977F54D19B377E436901EEECD7ADEDD17FC0B737DD92DFD2AFD778F9DA927EB9E50EA5456F7D713ECCE75DB1A15F9F4435E5E747B7EBDE34F7AD772C6CE89743D27DB6F8B82FE747A8EB2D58FDA45EB67C2F6F7DCFEF77AE775D53FAE9E96FFB7FA9874D5CF7E7FA0CE3BA33FBF4CED1697DD5DDC4F16F2F97687D69696F5B1B5F5EB772FA9BCB8DEC599FEDCD5B6B7E79DEC865ABC1F6E68D75F6EBE9CE7FFD2B5B7BF365448F7E793C1CD99823FD4AED3F4ABE9DBF4F17EFF55FEF1EA00CED2DFA89D275F6E897E3E2436F3C5F1C3EC41DB937BD777FBC422E7F79E176E84EF083A8497CBF5EF666EFDEFFFE477ABAAC37FDF2C8307CC5C693500FE88DA0F975EFF8B7AEE97FFFBE071CBE7CEF74BAE8F50759413FDEFA3DFDE6E5460CBDF9A4F76C7B3EF0CD7D0BA237E4CFF4CE4582E42F0F0A975B1EA0372E1706FFBCE557C099D4127E5FE9FA6F41E8BFB77BB8F113A7E53BBDAC78FDB718F1A1EB616B423E2FD1B87F88D8DFA6FE5DBA7BD7F9D9D358EF4B6D7A7B579A3BA76B8C6EFBDE84557F2D23873DE229ED4C7F3123F4EB234C8E06E4893B302BC18988888888888888888888E8B755EB97309F55FD1552F757606AD67323BF764CD91D3C33FFD99D543F0A4FC79F8367B24FCBD3D817E439F06BF004F665B81CBF25D7DA37E942FBAE5C8737908BF446F278BC1D3C1C6F4B0FC55BD3A33FB45E11EF218FC13BC923F07E746FBCA73CE6B4BB82766FBA1FDE5FEE860FA1BBF0C3E4F63B104D37B487D3EDF40ABA115E43B7D0CBE4FB7A297DCFAEA56FE1D5F40DBC1AFE7F85E94B76B5F96F75E50B7635F8A5C2F459BB9A7BAC307DCAAEB69E2B4C9FC0ABA1AD0AD307ED6A65BBBAF221BB9AD80BBA24E8920AD39FEC6ADE5DD035D595DFDAD5B4A70AD36FEC6AD97385E95DBC9A3512744985E96DBB1A3518744975E5BDB53B6B54987EB6AB39534157045D11744575E9751FD7CBFE6F7A8697A15FE145E82D78057BC79D9FDE8767A7DFC973D36FE5A9E9F7F2CCF4077962FA933C2FFD519E95FE0CCF4A1F91E7A40FC933D2C7E019E9A3F27CF4617936FA383C177DC69D8A3E09CF439F86A7A12FC873D057E009E86BEC04F47578E9D3EF64F64DB6906E20D7D02DE00ABB913B966E878EB49BABC3E83EF2CA2B7D545ED4E6CB6EBA0BFEE817FB61370A98AFF47B7E34ECB9B3AA8EFCC3DAFABBD464222222A27FBEECCF215BD579067CAED2B3F79FFAAF9772F31FDD59F583F074FC29772AFCBC3C0B7E499EC1BE08D7DBD7E16AFC9E5C6ADFA5EBF4067211DD42AED15BC90578437A30DE541E8BB7A607EAEBD21DE441F625D99FAFB4FA15F13505DEC2DDD7E7902FD133CCD57872C71F785B79E8A1B79607E2ADDD7DBCF50EB8C86FF5667BE025BFA7077D62704D1E70E01DE5DE7857B9ABDD59FE708FF71C4EB12BD7D1B7E58FF40DBD37DDD1EE2D1FD3A7A5FBD843E42EF6FBCDD9D11DEC61747B7B1CDDDC1E27377F948CA48FD8ADCE9655D08DCE5196D06DCE0CB7A60FDA2D961290D1F7177030A75BDA83E596779968F96FA0EFAD1053982EBDAFEFAECBA3A46FAE8624A56FAE9E25A5EFAD59A6A56FAD14077D95BE33E1414EEFDA0BD0D797A2D4D3D7C72414A61BDBE7E51B131EE4F28D25630BD363DF78B4A587BEDF3B6A1FBDAA58DEC20F5F532DDF584E5B2DDF59095C4DDF597F5D4DDF5AF55E2B3FD967AF2C95EFD1D7EDDBEEB37DFEDA4AF9AB7DE5DA42F80B7D631B1AF9E651FF4A7ACC37EDC3782BF8D6E3FA29DDBD659BFE7F51EEAD2702BD7CC1DFBD39D07F72739FD9F674A75AF012F436BC02BD27CF4EEFBAD3D3EFE4B9E9B7F2CCF47B7866FA933C2FFD519E96FE2CCF4A1F90E7A48FC073D291C737264F481F8427A40FCB93D1C7DDD08D9A7227A2CFBA93D017D829E88B6EBD7D032EB6EFC985F44DB8CCBEEFD6D04DDCD1763374B8DD5A1E42374747D8BDD09E745FB3CF2E849A5F475364E4DD35FB5B609DF4DAC8EFC7142E222222A2DF5DC92763D99FFAF6CBFFB4FD5AA9571D2F8DBC604AA91F84A7E34FB933E1E7E159EC4BF20CF6457802FC865C8CDF932BEDBB729DDE425E992ED15BC9E3F186F268BC2D3D126F2D0FB4DBD3C3EC0EF48C234166CEA04A449F3F73AD8ABC79EC8BC8A3ED86F060BCB1BC8DD78D04997077F91AFABCBC73EC8D77C0491E3103CA4B1E607793FBE31DE5DA91207B725FBBAFFCF17C6B37FABEDC73828F3BDD6FA089BBDCCF1E40F7C247C89FD746482BF7B107D13DEC41720F7B94DCC11E47B79E67D2DF8C3DDDD67EB31509DDE6D44D07BAE9289660BAE540939CF4DDB5045CE886F6BAF470F92FA06FADB35298AEBDAFEF2DCC037D95FE64BFBDAE98BEB57C9698BEB368999A7E67CF4EBFB1A7A7AF2FD0A7A72F2F8B9880DEB33F5E4F2F5F5E4733037D75F1D2C2F40483589687532490FF427A82412C2DFCE0F512D05757764E205F5E945A2F5F5F4F5B4FDF58C55C2DDF5A3BBE305D3DCD646F4E82547EB44F5F59093FD057AE2E94EFD2E7F9466E1BBA669AC9DE5DFD27B17CEBE3F6D1F0BD87F546416CE791205EE8F78D571AE3B90C3369B81DE80EB5E115E83D79767AD79D9E7E274F4DBF85A7A63FC813D391C7F724CF4B7F9467A53FC3B3D247E439E943F294F4317946FAA03C1F7D149E4D3EECCE67AF4A9F72E7A1CFB293D057D829E8AB70397D1DAEA6EFC8A5F42DB890BEE9D6D1F7E10ABA855A63B79347DA2DD5413BE04476D4FB8BEDED91E625BE0878535DF94FE5C04444444494A7BA4F234B3E052EF98AA3EC0BA6117846FDB03B197ECE9D49BF224F415F82A7D0AFCBD5F82DB9D4BE2917F22DE495E912BD953C1E6F288FB69BD243F1C6F248BC3DBDF448907CF299339132D1A7CFFFCA225F3A79AD8C3CD86E090FC6DBC243F1C6EE40BE8F3CE4C1D249DEC6DBEE811FDDDDEE27BF3B03D59FBE0577C7BBCA6F4FFDCD4EF79C23E34D77B47BCB1DE7C8B8CBFDEC0174AF39320172AFF93D21741F7B88DCC51E24F7B067A11B4E6231A79B8F33E96EC79E6E6D4F45B7398DD0416E3CCE24961E33CE4447DF3E39DC871E321204FAEFA3671C096276D8F3D277168911CB7FEB481035FDC19E9ABEBEF4979EBEBEE09A9EBE3ECE444F5F5EA02F01FD378E04C9404F3312C46C9C490DFADA4C9014F2C5712629E88BCBDDA6A037ECE1F445F91ADD54BF2A5F1E6752986E665F972FD34B8F3371FFADF5AC7DE69A6A79E569261B2BF6ABE57B7312A4F0DD110F42F8FE748A14F0D54F7E6BE436D3292472ABC11AF1F0F3FFA67B1B93B1F7E91F7D11FDD4EFABAFAA670A745BD31DEAB92BCB93D36FE0C9E9B7F2CCF47B78663AF2F89EE479E98FF2B4F4677952FA003C297D489E923E26CF481F9427A48FCAF3D187E5C9E8E36EE8364DB1D3D0A7D549E86BEE04F675B8D6BEE5AE3C58A3AE9C9120F1EE2F7BEC0ED8B03FED5F3B504FFEB30B25D5CE7A4FB2B53DC46A4E57A8A7F14264A7BAF297CA81898888882851759F42567DFA5BF3F97BCD574B555FEC8DB853E287E1E9F473F244F6597816FC8A3B077E592EC7EFC8B5FA5DB9CEBE2F57E14DE412BD993CDE6E48AF3DCEA4AE3CD23EE71A3AA1241D7DE63CA454F2E9D3A8B2D01FE10ABC9D3CDC6E070FC75BC243F5E6F038BD8BBCF5A81F4E5F9437F1D67E37BABFDD4DDE7DAA1042DF82FBE33DE537CFD17CE906725FBC37DDD1EE2D771C23E34EF71BC5E22EF7B307D0BDEC0172277B88DCC71E44F7789C89A23B1CF728B9833D077D491F47B79EF8D4D98E0BDD78044E2AFA1C3E946E3A8AA5B7011D7DFBF470217DF7A47C257D732904297D6F010A27BAE561CF49DF5AB0444CDF59E006FA327D674524357D63128B9CBEBE6C999ECE24160D7D795DC404F4D2935816C79914A6E718095298BEB6666C617A8E492C6BF4B4D34CC2C7992CCA57C799649033CD44215F1F0952986E63DF916FAD1D2F962BE99BF2AD15FBB5F2DD61033AB8C59C0495DC64C48304BEFEE0B86337911BD1B73EDF6BE2DEA00FF24DD8EDA7EBDB1B15B92DE8DFF9B0EB0ED6E8C3B3D3EFE4A9E9B7F0C4F407775AF9A33B2B7D049E938E3CBE3179657A42FBA83C9F7D5C0EDDAE097A32FB8C3C137DCA9DC93E0D4F435F9067A0AFB0F5F455B59ABEE5AE2C67C883425E7D3E4551793CDFD01DA9376787D97DE486F8F6C6DCD8567457A0A75D05DFB40BD95376B5B3555DF9A93A5222222222A25F5FB1571B5FD57CB154F5A55ED557AA23EEA4F8617A32FBB83B1B7E529E073F0FCFC25F95EBF11B72B17D4B2EC5EFCA757803B9CA6E4297E8ADE4B547B164950F9D4F928F3E713A4F2EFAE4595469E88FEED6B14F411F934B0EBC913CDD1C9971B8406F086FF135F42578E3D0C74F635995B7F02E7A0F7990DD451E82F792B79FE644D0F7E5EE78BF83EE6EF7A5BBDA7DE5AEC3872474CF013866724FBB3BBDFB52D0876E29773BEE017227BBFFDDE5C65EE0A077EDF6937B1CE80E76357D431F4637B7B7B7E542B7B6E7A01B9E75EA43377E83350BDDEA346527B9F1DCA14C7493F3DA55F6197F42FAE6922552FADE42315AFAD62416E80ABA7A384561FA083E2D7D63D1B5C274FD5C8DC2F464C37BA6E8EBAB3A26A0DFD96FAF9780BEBA8069617A8AB91A85E95DFBC3D512C857E98183B7A7ED8FD7D3CB97A7C8E41C0932F8313BBD7C7D19F3C2741BFD867C6FF178A95C4BDF926F2FD9AF931B4C1B50C94D0625A491C7CC33D985779E0804D89DE4FE783FF89A7DD0BFCDF61B39E0CBDE78E76E224BF65FD0333CC38AB7DF0D7093D27F8B5CAD7DADEE312F4CAF2B87AE68529E883E2B4F6487AEA82E7D5E9E85BE20CF815F833370E077D177DD32BB055CE33794C7EA8DE18178077990DD451E61778207D8FDE4AE7447B601BDBF1967F736BDBF9DE4F2DEA6FCD93F37B8B40B41C0818AB23FAB687E29B7EEB6BA72222222222222F70ABC20BD56EB05F54F15DF0E18783F430DEC56F68D9801784EFD283C9F7E4A9E0B3F4BCFC35F91E7B0AFC933E097E56AFC0E5C6ADF840BF516720DDD442EB14FE89E4E2749491F3D9B27197DEE1CAA44F481F3BF64F87DB9CCBE0FBFD8433F21B0076FE043F826F0A65E459F97C7F32DE10D7BF827BFD6E991766BBA768ECC16BC850FA36FCBA3EC1EF220BB0F3DC4EE238F786EE074D0AF767BBC1FDDDBEE28777E80BF6CDC76B5324FBBAFDCD3EE2DF7B33BDF5D1CED11729FE96CD78D86AD5BFA7BE9AD4D7AD0ED87F734B7E74237B707D2ADED7ABAED39CAD0FF7DFAAA3D926E7CD833D02D574188A6AFED46FBFA42FAB83D1F7DD89E903E6ACF481FB477AEACA5279C22334CCF3745669CBEB3A26361BA7EAEC63A5D3F9C22D5619FA3AFDBF5F4477BF78A72F9C652BD7AFA833D8CBE207FB0DF5CAF303DC34890557A869120ABF4043341960FBB157E59BEB706BB54BEBB7C7C52F9D0E74A73CA073FCDAB919BD0D7F17E72EF59327EF0F98F7FFBC18FA247F8DC67EE43E49FA401F9F4E902EEF0F166E963FAD94DAEC83D269ACC6F6D49BE7B7EC9B65A2637694D9E818E5C107241D005ADC9A16FB528AF4CD7DB97E572FABA5C4DDF900BED5B6AA1DDC0ADD19BC1C3ED96F250BC313C0EEF008FE1BBC1BDF1AE704FBB37DC8FEE2FF7A207C8F7D74292C157F137570F73AFD9FB5B08852FD0FB5B08961F6F7C01AEAE2CFCA39AEA4ED5BC44444444444444F49B2BF9F6CB6735DF3ABABE11A6068D54F67DBB7FF5DDD2BCFA617A2EFB383B9B7E5A9E46BF24CF815FA5EBEDCB723D7E872EB66FD1B5F83BD7D89930E9E4136750E592CF9EFF55492E1AAAF1201F7037EC193E4E3228D7CC03B9910FBBB57C03B9086F2357E02DEE2E22BB213DFAD1C6527ED507D3B7E491766B799CDD5E7EB2C7D10DE4277C31FA1F01DD481E61773AE87F02EE337E74F71F563FB9BBDD51EEFC02CA55EE6B8FA53BCEBF31A7FBD9CF1BF6A79BD9057423FB65B3F6F4D61B7D45E44D7C61FABE5D47B71F3BE44377B05FB71748B75E4AA030BDC8C0A4407AC8A0AA50BAED6A25B174D3F56DA2E9ABFAD686E2E94B7BD0DC848A3EA7CF46DF9D3BA4A427B48FCA77672649E9E966264DD0F7060F89E93B8387D4F454F649FACEFAC86A7A9EC943D3F2117BFFBA627A92A1492BF2AD15D8B5F2DDC5E385F2FD75EF0BD37583350CE89B7BE026F79EF1E033FA66966EF361B047ECB07CEE03C88EF2016A24DD15EE399EC2E1E56814DD5BEE34592300BE769E801D5CB144B2817A536EB086E3227A5BAE5D987A4B2EA5EFC995F44DB9CEBE0D97D92DE412BA095C62B79287DBEDE0A597602F0B0FB55BCBE3ECF6F2CAF4DA4BF6D795FBD3BDE0EE743FB8B7DD55EE697786FBE923E03EF620B9833D4CBEB73E8C56BE35E3412BDF1DF120944FDBEFAE1E2C9FD2DF5E3B187DBEF979B8BEBAF28F8AB289888888888888888888DCABF92E69BD7779EBBE4B5DF61DF6AABFD6787427F50FBBD3E927E589F40BF224F835790AFB2A5D8F5F97CBF17DD7E7E93B4F27F124940F9FFA55491EB6E8F71A7DF29CBB2CF42776F324B62AEE965DFE81B561B9F6D0EFC2857803B9C86E22BFE20BC92FF878FABAFCAC8FA6EFC90FF860FAB6FCC51E4B379007DAEDE97F0AD3A3EC1EF418BB8B3CE471C6FCF1E562AF47F79F80E3260F1E22634A77B67BCA9DEDAEF27F865E6B728FE78B8F60BADFBA13F674B7373ACE9B75A07BD923E84E760DBDCEE89E2BBDF2E81E077A9DC3DED86610DD7EEA501CDD61CDB230BAFD4A7171F43DBD9ABEA38FB1DFD1934FC0B9A5AFE253D0330FEF79A22FD99B1B8AA7AFE0D3D0E777A0BD05957C7F6492EBFB4866F8DE0674F4CDD93DC6F839FA303E803E2BCF639F97EFCD4C32B42BE836F815B901DD6017E6B853F224931206B11B74A751094B705FBAAFDC93EE2C77A43BC3A73F816C0ADF602FD047EDFEF0858F7DD7950FE1FDE1DB8B4FAEDEC95D7E37B0871FBD9681BCF2AC01860D48E4E1743378E9590395870DD49533264122AF4C0FD2FBC823EC5E727FBB9F9C41091239831204680F7CA4DBD81E4DB7B287BB97EDE7EB4AE4B3F6F6B515EE9F5B5F717F5F3B9ADC6A16FE75955063AF69F95B16F95B17AF668D5516FE7F35D544444444444444444444444444CF55F935D8DDEFA953FBEFE199F923F29CFE717936FB8C3C177E529E073F0F4FA35FA427C02FCBE5F6AE6BE84CBB8CF2F1B30453C9A74FCFCC425F39B534057CF5B4D804F291D391F5F6A660E2EC7B1DBE859EA2EBE62619D0CF7A25FDCFDEDA245AFAB45C60BFC84D26E068ECEBF270BBA13CDA6E088FB69BCA637F586DE5A1766B7A9CDD5C1E3767CB5E1E66F7A6879CA06C470FB2BBD063EE32FE74FFB3F12DE521769F831E32463186EE62F7A207D8DDE8FE763FBABBBD2EFD3D8EEEB81E9239DDD9FE5ED75E967EDC70617AA91FD4BAF4F3960BD3BD9F0B78D2BD273C38CABD273CB8D27D273CF8D2FD5EA1FAD35D273C54B1B7B6ED4CB7D26BE826FAE6666BD875F4DD1D686F2F90BEACEF6C2C96BEC4EF6D289E6E369D42417FFF31E9EF2E2B331E5EF74228DFF864E3DABDC54EBEF3A14CB17C6B0547297C73ED49A5DC633E45D4474F37E9139F994DB8FEFA88DA436EB1CEEA00DB435E79F9F5B2F020BA8B3CC4EE24AFBCE27D5D392BDE6BE4B557BCAFEA76C207C11DF8A172537DB8DCCE2EA05BE1257403BBC66D4097C167EC4A64A7BAF24375E5FFDEAC8122F28FCAC23FAA2B7FB5AB254444444444444444444444444444F4BB2AF5BBEABA9F28A9F9319E9E3ABFFE499E973F244F891F95E7D3CFC853D1A7E0A9F41DDEC379766AF5475DF7F3D98D09E5C367944AF523F2FB5DC844EFCA73D9E7E43D7D12F9D2021339E803F206BF14FDA4AF2557DA77E547BC563E0B97D90DE022BB855BA33783C7DB0DE5D1764B79F0A3A41B3D7288CCBE3CF85981A53C78389B273D6A1904E8FF0ABDD0D4A10BBDCED4A1CF0D95A5FF89FA4FD5851EF35CC654FEB3546584DD967ED8076FBBED1D26D41E4167D8D33F49F75CF2BE143DE0CEFEEE658FA5179B85F7EE648FBDAF9BDA03E85E7601DDCAAEA0DBCFC58DA3977947A62177781F2C8E6E3F9B2290BEBB03E72D85D3D7ED7AFAB23F097D417FD9804C3EBB13D7AB65A08FE843E46B0B21A6902FAEE158573EFB01A554F4A6FDF41E6F52B974C0C32EFDA28F955BD24BC97FECB7174A29FFD2C7C399932091579E935057EE6DF794FBDA7DE59E7467B91FDD1BEE670F90FBE063E00EFE50B8295F2037C26BE4A5473CFC86190FEDCB2AE16376B170ACB2F08FEACA6B8F49A82BFFA82CFCEDCBAE461011111111111111111111111111111111D15BB9CF5095FD9C63DD8F69DECA33D3EFE189F503F08CFA51763AFC1C3C137F459E43BF2AD7DBD7E56AFC965CAB6F72864E5A97DB9FE489F103F4A4F6117952FB90FCDBDEDF9B14F2F11590A4F62DB9D4BE2917DA5BF20D7AA07D5F7ED60BE9D36E95DD462EB9BFDBC815762BB9E067D589AE58C261991E6F77A3478E1DDA94ABE91BF2F81990D0FF317AE88A483BF2F871AD76F4F0C36E488F1D98643E6E20D26E4C8F7C3AE04C8F195465430F3CECEFCEF630BAF95DC651EE6097D12BCD393DD36D270DC4D24DFF530D965B3E9709A7DB3D858CA7DB3D718FA7EFF833D02D4653C8E80BF6D30674F469FDF9DA52FACC4E5CAEE228B71C0BD2BAB4277DE1830DA36C6FB9C9708DEEC532D2C73EB5E12B676DEA7F8CEE0D472EA09795FBC1933EA42790F3B0A8904357C88BCF7870D007C1CDF9A16E5B7B38DD082F70DBE865F04DBBD2FDA21F388F2D19FB58DEC3FB585DF94765E11FD595BFBDE2D512222222222222222222222222222222222222222252F70F7C28B698BFEE87C07B1FBDCFCFBF9167D73FD013DB9FE489F523F49CFC51793EFC843C197E4E9EC93E2BCFA35F91E7C02FCA13E0D7E56AFA86BCF6ACAAB2709D7D1F2EB29BC025762B793CDE509E68F586FB35C9D4F85BF5D3826A5AFB837A05AF934FAE7C28B3CFD147F949E969ECBF893E028FB14F1FF4CCF487BB4B1EFB3C7DD09E92FEBD03F7FB114F1F940F7C13C2E9FB0B5157A277EC25E86D7B0D7AFC90AAA6DD88EE2F7799B5A9A21BDDD925F4157D1EFAB4BDB109157D77C84088BD479FC32BE87DF9FAE0ED04F46FFECA7407FD9AB75FAC05BABB7CE21DC76CF2D9374BF3DC5D0CA682B42F1520F75A243984EE628F914397D02B2FAA5D576E4E8F935BD303E5C6F448B9AD3D565E996E880F979BD905F2C21F2B294DAFFB31A47DBB0EBE6797BAB7EC6AF84765E19F3D4293BA3F7B3EBC29D99FA5BE5F0C54D5FD515D39111111111111111111111111111111111111111111D12FACEA47C0EB9E3350F79487A7F34CF2D63947A680FEA4AD84BF40EB1CFB96B1887E809ED4DE3156C0B71E5ACE3FAD39F54D792F35F6D0943C937D129E883E2D4F439F9767A1FF2A7912FB923C057D4D9EC1BE2AD7DBD7E552FB0E5B6A6F593ED73ABC5BF63085BD251F58B231C12E3CCAF3DA07E8337B90933E848FA4CF2C069E9EDE95A77BB031A64B1745FC27E9D9EE314DFAEC42CE1AFCCC511FB327A63F1CF4CA74E13ABD2FC825B97689E1BFC882F49D071835FD3CF6F1F84772FAFBF130FFF9993A909FFE833FFD55057AEBD5E9883D03BDBF33B77B9099FEF04853971E255F1FADD1BD4856FA40617456EC57C859B15F21AF3CEBBCF48AFD75E5CC1A60D680C22E92FFE65903957F7B2A946FDAA572663CC82A0BFF68C89811FE76676F5E48E66C3674B748A7FE2EEBFD99888888888888888888888888888888888888888888888888888888A866254FD96C9E2C5B62379A27FA56F816F4CFB0CE7ED6EF933C2F7E409ED43E24CF891FA5E7B30FCBD3D927E4C9EC53F254F4397922FC343C8D7D459EC3BE26CF605F95EBEDEB72357F532EB46FCB2B2FCFA7B29BD025761BB9C26E25AFBCEC6AB8BD2EDD520E1D7A667AE11F53E8D075F6687AE12731ACC05E9A2E90577E99F4DB5F9C6AE485DFCCD8B7CBE095DFB7DBA42BE56527CCEFDAA12BEC6A79E5DFC82CDBD5ECFF2B4CBFB3772F2105BF36706093CABF7A3CB039D95FE53DAECFD59513111111111111111111111111111111111111111111111111111111111111111111111111115DCBBB70E0538FCB0A1E2E196BBBAFBD24E26527127E4B1EE4C3DF91F8E6E559EC2BF224F6357A06FBA21CFA56D015ADD213D8A157A2ABDD6FA5E985FF37FD7D74B5FAB3C2F4C24FD82BD357EC6AF2778FC8BCF49EBD7F0999B4D1E39D222FFDF93E9156FED52D2EB5FCB1B27022222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222FA07FA0F35FB3C02</ImageData>
+                    <PixelClass Name="EC" ImagePixelValue="1" KeyValue="171448819" />
+                    <PixelClass Name="NU" ImagePixelValue="2" KeyValue="171448820" />
+                    <PixelClass Name="CP" ImagePixelValue="3" KeyValue="171448821" />
+                </Image>
+                <SubVolume Name="EC" Handle="0" Type="Image" ImagePixelValue="1" KeyValue="171448825" />
+                <SubVolume Name="NU" Handle="1" Type="Image" ImagePixelValue="2" KeyValue="171448826" />
+                <SubVolume Name="CP" Handle="2" Type="Image" ImagePixelValue="3" KeyValue="171448827" />
+                <SurfaceClass Name="CP_EC_membrane" SubVolume1Ref="CP" SubVolume2Ref="EC" KeyValue="171448828" />
+                <SurfaceClass Name="CP_NU_membrane" SubVolume1Ref="CP" SubVolume2Ref="NU" KeyValue="171448829" />
+                <SurfaceDescription NumSamplesX="187" NumSamplesY="137" NumSamplesZ="20" CutoffFrequency="0.3">
+                    <VolumeRegion Name="EC0" RegionID="0" SubVolume="EC" Size="2663.2280531975102" Unit="um3" />
+                    <VolumeRegion Name="CP1" RegionID="1" SubVolume="CP" Size="1030.9346915676288" Unit="um3" />
+                    <VolumeRegion Name="NU2" RegionID="2" SubVolume="NU" Size="404.87725523486137" Unit="um3" />
+                    <MembraneRegion Name="membrane_EC0_CP1" VolumeRegion1="CP1" VolumeRegion2="EC0" Size="1373.815017913197" Unit="um2" />
+                    <MembraneRegion Name="membrane_CP1_NU2" VolumeRegion1="NU2" VolumeRegion2="CP1" Size="440.93027359523387" Unit="um2" />
+                </SurfaceDescription>
+            </Geometry>
+            <GeometryContext>
+                <FeatureMapping Feature="EC" GeometryClass="EC" SubVolume="EC" Size="50000.0" VolumePerUnitVolume="1.0">
+                    <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+                </FeatureMapping>
+                <FeatureMapping Feature="NU" GeometryClass="NU" SubVolume="NU" Size="50000.0" VolumePerUnitVolume="1.0">
+                    <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+                </FeatureMapping>
+                <FeatureMapping Feature="CP" GeometryClass="CP" SubVolume="CP" Size="50000.0" VolumePerUnitVolume="1.0">
+                    <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+                </FeatureMapping>
+                <MembraneMapping Membrane="NM" Size="6563.0" AreaPerUnitArea="1.0" CalculateVoltage="false" SpecificCapacitance="1.0" InitialVoltage="0.0" GeometryClass="CP_NU_membrane" />
+                <MembraneMapping Membrane="PM" Size="6563.0" AreaPerUnitArea="1.0" CalculateVoltage="false" SpecificCapacitance="1.0" InitialVoltage="0.0" GeometryClass="CP_EC_membrane" />
+            </GeometryContext>
+            <ReactionContext>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK_PP_N" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(21.563636 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="PreP3mRNA" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(0.013786999999999999 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK_N" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(21.563636 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK_P_N" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(21.563636 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P3_N" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(24.993847 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="M3K" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>999.999903688753</InitialConcentration>
+                    <Diffusion>(5.859786 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="M3K_P" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(5.859786 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="M2K" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>3999.99961475501</InitialConcentration>
+                    <Diffusion>(25.597491 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="M2K_P" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(25.597491 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="M2K_PP" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(25.597491 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>999.999903688753</InitialConcentration>
+                    <Diffusion>(21.563636 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK_P" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(21.563636 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK_PP" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(21.563636 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P1" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>99.9999903688752</InitialConcentration>
+                    <Diffusion>(24.993847 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P2" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>499.999951844377</InitialConcentration>
+                    <Diffusion>(24.993847 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P3" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>499.999975922188</InitialConcentration>
+                    <Diffusion>(24.993847 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P3mRNA" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(0.013786999999999999 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P3_C" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(24.993847 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <ReactionSpec ReactionStepRef="reaction_0" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_1" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_2" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_3" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_4" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_5" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_6" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_7" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_8" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_9" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_10" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_11" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_12" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_13" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_14" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_15" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_16" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_17" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_18" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_19" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_20" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_21" ReactionMapping="included" />
+            </ReactionContext>
+            <MathDescription Name="unnamed_generated">
+                <Constant Name="_F_">96485.3321</Constant>
+                <Constant Name="_F_nmol_">9.64853321E-5</Constant>
+                <Constant Name="_K_GHK_">1.0E-9</Constant>
+                <Constant Name="_N_pmol_">6.02214179E11</Constant>
+                <Constant Name="_PI_">3.141592653589793</Constant>
+                <Constant Name="_R_">8314.46261815</Constant>
+                <Constant Name="_T_">300.0</Constant>
+                <Constant Name="A">10.0</Constant>
+                <Constant Name="AreaPerUnitArea_NM">1.0</Constant>
+                <Constant Name="AreaPerUnitArea_PM">1.0</Constant>
+                <Constant Name="diff_scale">1.0</Constant>
+                <Constant Name="eff_width">3.8775E-9</Constant>
+                <Constant Name="K1">20.0</Constant>
+                <Constant Name="K10">200.0</Constant>
+                <Constant Name="k10">0.1</Constant>
+                <Constant Name="k11b">2.86</Constant>
+                <Constant Name="k11f">10.34</Constant>
+                <Constant Name="K12">169.0</Constant>
+                <Constant Name="k13">0.022</Constant>
+                <Constant Name="k14">0.0078</Constant>
+                <Constant Name="k15">0.0012</Constant>
+                <Constant Name="k16b">15.4</Constant>
+                <Constant Name="k16f">22.56</Constant>
+                <Constant Name="k17">2.5E-4</Constant>
+                <Constant Name="k18">2.5E-4</Constant>
+                <Constant Name="k19b">2.86</Constant>
+                <Constant Name="k19f">10.34</Constant>
+                <Constant Name="K2">200.0</Constant>
+                <Constant Name="k2">0.025</Constant>
+                <Constant Name="k20b">2.86</Constant>
+                <Constant Name="k20f">10.34</Constant>
+                <Constant Name="k21">0.68</Constant>
+                <Constant Name="K21">10300.0</Constant>
+                <Constant Name="K22">87.0</Constant>
+                <Constant Name="k22">0.31</Constant>
+                <Constant Name="K3">20.0</Constant>
+                <Constant Name="k3">0.1</Constant>
+                <Constant Name="K4">20.0</Constant>
+                <Constant Name="k4">0.1</Constant>
+                <Constant Name="K5">200.0</Constant>
+                <Constant Name="k5">0.1</Constant>
+                <Constant Name="K6">200.0</Constant>
+                <Constant Name="k6">0.1</Constant>
+                <Constant Name="K7">20.0</Constant>
+                <Constant Name="k7">0.1</Constant>
+                <Constant Name="K8">20.0</Constant>
+                <Constant Name="k8">0.1</Constant>
+                <Constant Name="K9">200.0</Constant>
+                <Constant Name="k9">0.1</Constant>
+                <Constant Name="K_millivolts_per_volt">1000.0</Constant>
+                <Constant Name="Ka">500.0</Constant>
+                <Constant Name="KI">9.0</Constant>
+                <Constant Name="KMOLE">0.001660538783162726</Constant>
+                <Constant Name="M2K_init_uM">3999.99961475501</Constant>
+                <Constant Name="M2K_P_init_uM">0.0</Constant>
+                <Constant Name="M2K_PP_init_uM">0.0</Constant>
+                <Constant Name="M3K_init_uM">999.999903688753</Constant>
+                <Constant Name="M3K_P_init_uM">0.0</Constant>
+                <Constant Name="MK_init_uM">999.999903688753</Constant>
+                <Constant Name="MK_N_init_uM">0.0</Constant>
+                <Constant Name="MK_P_init_uM">0.0</Constant>
+                <Constant Name="MK_P_N_init_uM">0.0</Constant>
+                <Constant Name="MK_PP_init_uM">0.0</Constant>
+                <Constant Name="MK_PP_N_init_uM">0.0</Constant>
+                <Constant Name="ml_to_m3">1.0E-6</Constant>
+                <Constant Name="n12">3.97</Constant>
+                <Constant Name="netValence_reaction_10">1.0</Constant>
+                <Constant Name="netValence_reaction_12">1.0</Constant>
+                <Constant Name="netValence_reaction_16">1.0</Constant>
+                <Constant Name="netValence_reaction_17">1.0</Constant>
+                <Constant Name="netValence_reaction_18">1.0</Constant>
+                <Constant Name="P1_init_uM">99.9999903688752</Constant>
+                <Constant Name="P2_init_uM">499.999951844377</Constant>
+                <Constant Name="P3_C_init_uM">0.0</Constant>
+                <Constant Name="P3_init_uM">499.999975922188</Constant>
+                <Constant Name="P3_N_init_uM">0.0</Constant>
+                <Constant Name="P3mRNA_init_uM">0.0</Constant>
+                <Constant Name="PreP3mRNA_init_uM">0.0</Constant>
+                <Constant Name="Sig">2.5</Constant>
+                <Constant Name="uni_vol_to_surf_scale">1.0</Constant>
+                <Constant Name="V12">29.24</Constant>
+                <Constant Name="Voltage_NM">0.0</Constant>
+                <Constant Name="Voltage_PM">0.0</Constant>
+                <Constant Name="VolumePerUnitVolume_CP">1.0</Constant>
+                <Constant Name="VolumePerUnitVolume_EC">1.0</Constant>
+                <Constant Name="VolumePerUnitVolume_NU">1.0</Constant>
+                <VolumeVariable Name="M2K" Domain="CP" />
+                <VolumeVariable Name="M2K_P" Domain="CP" />
+                <VolumeVariable Name="M2K_PP" Domain="CP" />
+                <VolumeVariable Name="M3K" Domain="CP" />
+                <VolumeVariable Name="M3K_P" Domain="CP" />
+                <VolumeVariable Name="MK" Domain="CP" />
+                <VolumeVariable Name="MK_N" Domain="NU" />
+                <VolumeVariable Name="MK_P" Domain="CP" />
+                <VolumeVariable Name="MK_P_N" Domain="NU" />
+                <VolumeVariable Name="MK_PP" Domain="CP" />
+                <VolumeVariable Name="MK_PP_N" Domain="NU" />
+                <VolumeVariable Name="P1" Domain="CP" />
+                <VolumeVariable Name="P2" Domain="CP" />
+                <VolumeVariable Name="P3" Domain="CP" />
+                <VolumeVariable Name="P3_C" Domain="CP" />
+                <VolumeVariable Name="P3_N" Domain="NU" />
+                <VolumeVariable Name="P3mRNA" Domain="CP" />
+                <VolumeVariable Name="PreP3mRNA" Domain="NU" />
+                <Function Name="J_reaction_0" Domain="CP">(Sig * M3K / K1 / ((1.0 + (M3K / K1)) * (1.0 + (MK_PP / KI))))</Function>
+                <Function Name="J_reaction_1" Domain="CP">(k3 * M3K_P * M2K * (1.0 + (A * MK_PP / Ka)) / K3 / (1.0 + (M2K / K3) + (M2K_P / K3)) / (1.0 + (MK_PP / Ka)))</Function>
+                <Function Name="J_reaction_10" Domain="CP_NU_membrane">(602.214179 * ((k11f * uni_vol_to_surf * MK_PP) - (k11b * uni_vol_to_surf * MK_PP_N)))</Function>
+                <Function Name="J_reaction_11" Domain="NU">(V12 * pow(MK_PP_N,n12) / (pow(K12,n12) + pow(MK_PP_N,n12)))</Function>
+                <Function Name="J_reaction_12" Domain="CP_NU_membrane">(602.214179 * k13 * uni_vol_to_surf * PreP3mRNA)</Function>
+                <Function Name="J_reaction_13" Domain="CP">(k14 * P3mRNA)</Function>
+                <Function Name="J_reaction_14" Domain="CP">(k15 * P3mRNA)</Function>
+                <Function Name="J_reaction_15" Domain="CP">(k17 * P3_C)</Function>
+                <Function Name="J_reaction_16" Domain="CP_NU_membrane">(602.214179 * ((k19f * uni_vol_to_surf * MK) - (k19b * uni_vol_to_surf * MK_N)))</Function>
+                <Function Name="J_reaction_17" Domain="CP_NU_membrane">(602.214179 * ((k20f * uni_vol_to_surf * MK_P) - (k20b * uni_vol_to_surf * MK_P_N)))</Function>
+                <Function Name="J_reaction_18" Domain="CP_NU_membrane">(602.214179 * ((k16f * uni_vol_to_surf * P3_C) - (k16b * uni_vol_to_surf * P3_N)))</Function>
+                <Function Name="J_reaction_19" Domain="NU">(k21 * P3_N * MK_PP_N / K21 / (1.0 + (MK_PP_N / K21) + (MK_P_N / K22)))</Function>
+                <Function Name="J_reaction_2" Domain="CP">(k4 * M3K_P * M2K_P * (1.0 + (A * MK_PP / Ka)) / K4 / (1.0 + (M2K_P / K4) + (M2K / K4)) / (1.0 + (MK_PP / Ka)))</Function>
+                <Function Name="J_reaction_20" Domain="NU">(k22 * P3_N * MK_P_N / K22 / (1.0 + (MK_P_N / K22) + (MK_PP_N / K21)))</Function>
+                <Function Name="J_reaction_21" Domain="NU">(k18 * P3_N)</Function>
+                <Function Name="J_reaction_3" Domain="CP">(k7 * M2K_PP * MK / K7 / (1.0 + (MK / K7) + (MK_P / K7)))</Function>
+                <Function Name="J_reaction_4" Domain="CP">(k8 * M2K_PP * MK_P / K8 / (1.0 + (MK / K8) + (MK_P / K8)))</Function>
+                <Function Name="J_reaction_5" Domain="CP">(k2 * P1 * M3K_P / K2 / (1.0 + (M3K_P / K2)))</Function>
+                <Function Name="J_reaction_6" Domain="CP">(k5 * P2 * M2K_PP / K5 / (1.0 + (M2K_PP / K5) + (M2K_P / K5)))</Function>
+                <Function Name="J_reaction_7" Domain="CP">(k6 * P2 * M2K_P / K6 / (1.0 + (M2K_PP / K6) + (M2K_P / K6)))</Function>
+                <Function Name="J_reaction_8" Domain="CP">(k9 * P3 * MK_PP / K9 / (1.0 + (MK_PP / K9) + (MK_P / K9)))</Function>
+                <Function Name="J_reaction_9" Domain="CP">(k10 * P3 * MK_P / K10 / (1.0 + (MK_PP / K10) + (MK_P / K10)))</Function>
+                <Function Name="KFlux_NM_CP" Domain="CP_NU_membrane">(AreaPerUnitArea_NM / VolumePerUnitVolume_CP)</Function>
+                <Function Name="KFlux_NM_NU" Domain="CP_NU_membrane">(AreaPerUnitArea_NM / VolumePerUnitVolume_NU)</Function>
+                <Function Name="M2K_diffusionRate" Domain="CP">(25.597491 * diff_scale)</Function>
+                <Function Name="M2K_P_diffusionRate" Domain="CP">(25.597491 * diff_scale)</Function>
+                <Function Name="M2K_PP_diffusionRate" Domain="CP">(25.597491 * diff_scale)</Function>
+                <Function Name="M3K_diffusionRate" Domain="CP">(5.859786 * diff_scale)</Function>
+                <Function Name="M3K_P_diffusionRate" Domain="CP">(5.859786 * diff_scale)</Function>
+                <Function Name="MK_diffusionRate" Domain="CP">(21.563636 * diff_scale)</Function>
+                <Function Name="MK_N_diffusionRate" Domain="NU">(21.563636 * diff_scale)</Function>
+                <Function Name="MK_P_diffusionRate" Domain="CP">(21.563636 * diff_scale)</Function>
+                <Function Name="MK_P_N_diffusionRate" Domain="NU">(21.563636 * diff_scale)</Function>
+                <Function Name="MK_PP_diffusionRate" Domain="CP">(21.563636 * diff_scale)</Function>
+                <Function Name="MK_PP_N_diffusionRate" Domain="NU">(21.563636 * diff_scale)</Function>
+                <Function Name="P1_diffusionRate" Domain="CP">(24.993847 * diff_scale)</Function>
+                <Function Name="P2_diffusionRate" Domain="CP">(24.993847 * diff_scale)</Function>
+                <Function Name="P3_C_diffusionRate" Domain="CP">(24.993847 * diff_scale)</Function>
+                <Function Name="P3_diffusionRate" Domain="CP">(24.993847 * diff_scale)</Function>
+                <Function Name="P3_N_diffusionRate" Domain="NU">(24.993847 * diff_scale)</Function>
+                <Function Name="P3mRNA_diffusionRate" Domain="CP">(0.013786999999999999 * diff_scale)</Function>
+                <Function Name="PreP3mRNA_diffusionRate" Domain="NU">(0.013786999999999999 * diff_scale)</Function>
+                <Function Name="Size_CP" Domain="CP">(VolumePerUnitVolume_CP * vcRegionVolume('CP'))</Function>
+                <Function Name="Size_EC" Domain="EC">(VolumePerUnitVolume_EC * vcRegionVolume('EC'))</Function>
+                <Function Name="Size_NM" Domain="CP_NU_membrane">(AreaPerUnitArea_NM * vcRegionArea('CP_NU_membrane'))</Function>
+                <Function Name="Size_NU" Domain="NU">(VolumePerUnitVolume_NU * vcRegionVolume('NU'))</Function>
+                <Function Name="Size_PM" Domain="CP_EC_membrane">(AreaPerUnitArea_PM * vcRegionArea('CP_EC_membrane'))</Function>
+                <Function Name="sobj_CP1_EC0_size" Domain="CP_EC_membrane">vcRegionArea('CP_EC_membrane')</Function>
+                <Function Name="sobj_NU2_CP1_size" Domain="CP_NU_membrane">vcRegionArea('CP_NU_membrane')</Function>
+                <Function Name="uni_vol_to_surf">(1.6666666666666665 * uni_vol_to_surf_scale)</Function>
+                <Function Name="UnitFactor_uM_um3_molecules_neg_1">(1000000.0 / 6.02214179E8)</Function>
+                <Function Name="vobj_CP1_size" Domain="CP">vcRegionVolume('CP')</Function>
+                <Function Name="vobj_EC0_size" Domain="EC">vcRegionVolume('EC')</Function>
+                <Function Name="vobj_NU2_size" Domain="NU">vcRegionVolume('NU')</Function>
+                <CompartmentSubDomain Name="EC">
+                    <BoundaryType Boundary="Xm" Type="Flux" />
+                    <BoundaryType Boundary="Xp" Type="Flux" />
+                    <BoundaryType Boundary="Ym" Type="Flux" />
+                    <BoundaryType Boundary="Yp" Type="Flux" />
+                    <BoundaryType Boundary="Zm" Type="Flux" />
+                    <BoundaryType Boundary="Zp" Type="Flux" />
+                </CompartmentSubDomain>
+                <CompartmentSubDomain Name="NU">
+                    <BoundaryType Boundary="Xm" Type="Flux" />
+                    <BoundaryType Boundary="Xp" Type="Flux" />
+                    <BoundaryType Boundary="Ym" Type="Flux" />
+                    <BoundaryType Boundary="Yp" Type="Flux" />
+                    <BoundaryType Boundary="Zm" Type="Flux" />
+                    <BoundaryType Boundary="Zp" Type="Flux" />
+                    <PdeEquation Name="MK_PP_N" SolutionType="Unknown">
+                        <Rate>- J_reaction_19</Rate>
+                        <Diffusion>MK_PP_N_diffusionRate</Diffusion>
+                        <Initial>MK_PP_N_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="PreP3mRNA" SolutionType="Unknown">
+                        <Rate>J_reaction_11</Rate>
+                        <Diffusion>PreP3mRNA_diffusionRate</Diffusion>
+                        <Initial>PreP3mRNA_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="MK_N" SolutionType="Unknown">
+                        <Rate>J_reaction_20</Rate>
+                        <Diffusion>MK_N_diffusionRate</Diffusion>
+                        <Initial>MK_N_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="MK_P_N" SolutionType="Unknown">
+                        <Rate>(J_reaction_19 - J_reaction_20)</Rate>
+                        <Diffusion>MK_P_N_diffusionRate</Diffusion>
+                        <Initial>MK_P_N_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="P3_N" SolutionType="Unknown">
+                        <Rate>- J_reaction_21</Rate>
+                        <Diffusion>P3_N_diffusionRate</Diffusion>
+                        <Initial>P3_N_init_uM</Initial>
+                    </PdeEquation>
+                </CompartmentSubDomain>
+                <CompartmentSubDomain Name="CP">
+                    <BoundaryType Boundary="Xm" Type="Flux" />
+                    <BoundaryType Boundary="Xp" Type="Flux" />
+                    <BoundaryType Boundary="Ym" Type="Flux" />
+                    <BoundaryType Boundary="Yp" Type="Flux" />
+                    <BoundaryType Boundary="Zm" Type="Flux" />
+                    <BoundaryType Boundary="Zp" Type="Flux" />
+                    <PdeEquation Name="M3K" SolutionType="Unknown">
+                        <Rate>( - J_reaction_0 + J_reaction_5)</Rate>
+                        <Diffusion>M3K_diffusionRate</Diffusion>
+                        <Initial>M3K_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="M3K_P" SolutionType="Unknown">
+                        <Rate>(J_reaction_0 - J_reaction_5)</Rate>
+                        <Diffusion>M3K_P_diffusionRate</Diffusion>
+                        <Initial>M3K_P_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="M2K" SolutionType="Unknown">
+                        <Rate>( - J_reaction_1 + J_reaction_7)</Rate>
+                        <Diffusion>M2K_diffusionRate</Diffusion>
+                        <Initial>M2K_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="M2K_P" SolutionType="Unknown">
+                        <Rate>(J_reaction_1 - J_reaction_2 + J_reaction_6 - J_reaction_7)</Rate>
+                        <Diffusion>M2K_P_diffusionRate</Diffusion>
+                        <Initial>M2K_P_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="M2K_PP" SolutionType="Unknown">
+                        <Rate>(J_reaction_2 - J_reaction_6)</Rate>
+                        <Diffusion>M2K_PP_diffusionRate</Diffusion>
+                        <Initial>M2K_PP_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="MK" SolutionType="Unknown">
+                        <Rate>( - J_reaction_3 + J_reaction_9)</Rate>
+                        <Diffusion>MK_diffusionRate</Diffusion>
+                        <Initial>MK_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="MK_P" SolutionType="Unknown">
+                        <Rate>(J_reaction_3 - J_reaction_4 + J_reaction_8 - J_reaction_9)</Rate>
+                        <Diffusion>MK_P_diffusionRate</Diffusion>
+                        <Initial>MK_P_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="MK_PP" SolutionType="Unknown">
+                        <Rate>(J_reaction_4 - J_reaction_8)</Rate>
+                        <Diffusion>MK_PP_diffusionRate</Diffusion>
+                        <Initial>MK_PP_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="P1" SolutionType="Unknown">
+                        <Rate>0.0</Rate>
+                        <Diffusion>P1_diffusionRate</Diffusion>
+                        <Initial>P1_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="P2" SolutionType="Unknown">
+                        <Rate>0.0</Rate>
+                        <Diffusion>P2_diffusionRate</Diffusion>
+                        <Initial>P2_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="P3" SolutionType="Unknown">
+                        <Rate>0.0</Rate>
+                        <Diffusion>P3_diffusionRate</Diffusion>
+                        <Initial>P3_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="P3mRNA" SolutionType="Unknown">
+                        <Rate>- J_reaction_13</Rate>
+                        <Diffusion>P3mRNA_diffusionRate</Diffusion>
+                        <Initial>P3mRNA_init_uM</Initial>
+                    </PdeEquation>
+                    <PdeEquation Name="P3_C" SolutionType="Unknown">
+                        <Rate>(J_reaction_14 - J_reaction_15)</Rate>
+                        <Diffusion>P3_C_diffusionRate</Diffusion>
+                        <Initial>P3_C_init_uM</Initial>
+                    </PdeEquation>
+                </CompartmentSubDomain>
+                <MembraneSubDomain Name="CP_EC_membrane" InsideCompartment="CP" OutsideCompartment="EC">
+                    <BoundaryType Boundary="Xm" Type="Value" />
+                    <BoundaryType Boundary="Xp" Type="Value" />
+                    <BoundaryType Boundary="Ym" Type="Value" />
+                    <BoundaryType Boundary="Yp" Type="Value" />
+                    <BoundaryType Boundary="Zm" Type="Value" />
+                    <BoundaryType Boundary="Zp" Type="Value" />
+                    <JumpCondition Name="M3K">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="M3K_P">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="M2K">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="M2K_P">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="M2K_PP">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="MK">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="MK_P">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="MK_PP">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P1">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P2">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P3">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P3mRNA">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P3_C">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                </MembraneSubDomain>
+                <MembraneSubDomain Name="CP_NU_membrane" InsideCompartment="CP" OutsideCompartment="NU">
+                    <BoundaryType Boundary="Xm" Type="Value" />
+                    <BoundaryType Boundary="Xp" Type="Value" />
+                    <BoundaryType Boundary="Ym" Type="Value" />
+                    <BoundaryType Boundary="Yp" Type="Value" />
+                    <BoundaryType Boundary="Zm" Type="Value" />
+                    <BoundaryType Boundary="Zp" Type="Value" />
+                    <JumpCondition Name="MK_PP_N">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>(UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_NU * J_reaction_10)</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="PreP3mRNA">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>- (UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_NU * J_reaction_12)</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="MK_N">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>(UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_NU * J_reaction_16)</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="MK_P_N">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>(UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_NU * J_reaction_17)</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P3_N">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>(UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_NU * J_reaction_18)</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="M3K">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="M3K_P">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="M2K">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="M2K_P">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="M2K_PP">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="MK">
+                        <InFlux>- (UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_CP * J_reaction_16)</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="MK_P">
+                        <InFlux>- (UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_CP * J_reaction_17)</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="MK_PP">
+                        <InFlux>- (UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_CP * J_reaction_10)</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P1">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P2">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P3">
+                        <InFlux>0.0</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P3mRNA">
+                        <InFlux>(UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_CP * J_reaction_12)</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                    <JumpCondition Name="P3_C">
+                        <InFlux>- (UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_CP * J_reaction_18)</InFlux>
+                        <OutFlux>0.0</OutFlux>
+                    </JumpCondition>
+                </MembraneSubDomain>
+            </MathDescription>
+            <Simulation Name="Simulation0 tol1e-8">
+                <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Sundials Stiff PDE Solver (Variable Time Step)">
+                    <TimeBound StartTime="0.0" EndTime="4000.0" />
+                    <TimeStep DefaultTime="0.05" MinTime="0.0" MaxTime="4.0" />
+                    <ErrorTolerance Absolut="1.0E-8" Relative="1.0E-8" />
+                    <OutputOptions OutputTimeStep="100.0" />
+                    <SundialsSolverOptions>
+                        <maxOrderAdvection>2</maxOrderAdvection>
+                    </SundialsSolverOptions>
+                    <NumberProcessors>1</NumberProcessors>
+                </SolverTaskDescription>
+                <MathOverrides />
+                <MeshSpecification>
+                    <Size X="187" Y="137" Z="20" />
+                </MeshSpecification>
+            </Simulation>
+            <SpatialObjects>
+                <SpatialObject Name="vobj_EC0" Type="Volume" subVolume="EC" regionId="0">
+                    <QuantityCategoryList>
+                        <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+                        <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+                        <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+                    </QuantityCategoryList>
+                </SpatialObject>
+                <SpatialObject Name="vobj_CP1" Type="Volume" subVolume="CP" regionId="1">
+                    <QuantityCategoryList>
+                        <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+                        <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+                        <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+                    </QuantityCategoryList>
+                </SpatialObject>
+                <SpatialObject Name="vobj_NU2" Type="Volume" subVolume="NU" regionId="2">
+                    <QuantityCategoryList>
+                        <QuantityCategory Name="VolumeCentroid" Enabled="false" />
+                        <QuantityCategory Name="InteriorVelocity" Enabled="false" />
+                        <QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+                    </QuantityCategoryList>
+                </SpatialObject>
+                <SpatialObject Name="sobj_CP1_EC0" Type="Surface" subVolumeInside="CP" regionIdInside="1" subVolumeOutside="EC" regionIdOutside="0">
+                    <QuantityCategoryList>
+                        <QuantityCategory Name="SurfaceNormal" Enabled="false" />
+                        <QuantityCategory Name="SurfaceVelocity" Enabled="false" />
+                        <QuantityCategory Name="DistanceToSurface" Enabled="false" />
+                        <QuantityCategory Name="DirectionToSurface" Enabled="false" />
+                        <QuantityCategory Name="SurfaceSize" Enabled="true" />
+                    </QuantityCategoryList>
+                </SpatialObject>
+                <SpatialObject Name="sobj_NU2_CP1" Type="Surface" subVolumeInside="NU" regionIdInside="2" subVolumeOutside="CP" regionIdOutside="1">
+                    <QuantityCategoryList>
+                        <QuantityCategory Name="SurfaceNormal" Enabled="false" />
+                        <QuantityCategory Name="SurfaceVelocity" Enabled="false" />
+                        <QuantityCategory Name="DistanceToSurface" Enabled="false" />
+                        <QuantityCategory Name="DirectionToSurface" Enabled="false" />
+                        <QuantityCategory Name="SurfaceSize" Enabled="true" />
+                    </QuantityCategoryList>
+                </SpatialObject>
+            </SpatialObjects>
+            <MicroscopeMeasurement Name="fluor">
+                <ConvolutionKernel Type="ProjectionZKernel" />
+            </MicroscopeMeasurement>
+        </SimulationSpec>
+        <SimulationSpec Name="Compartmental" Stochastic="false" UseConcentration="true" RuleBased="false" MassConservationModelReduction="false" InsufficientIterations="false" InsufficientMaxMolecules="false">
+            <NetworkConstraints RbmMaxIteration="3" RbmMaxMoleculesPerSpecies="10" RbmSpeciesLimit="800" RbmReactionsLimit="2500" />
+            <Geometry Name="non-spatial595365948" Dimension="0">
+                <Extent X="10.0" Y="10.0" Z="10.0" />
+                <Origin X="0.0" Y="0.0" Z="0.0" />
+                <SubVolume Name="Compartment" Handle="0" Type="Compartmental" KeyValue="171441307" />
+            </Geometry>
+            <GeometryContext>
+                <FeatureMapping Feature="EC" GeometryClass="Compartment" SubVolume="Compartment" Size="5.34">
+                    <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+                </FeatureMapping>
+                <FeatureMapping Feature="NU" GeometryClass="Compartment" SubVolume="Compartment" Size="0.379">
+                    <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+                </FeatureMapping>
+                <FeatureMapping Feature="CP" GeometryClass="Compartment" SubVolume="Compartment" Size="0.962">
+                    <BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+                </FeatureMapping>
+                <MembraneMapping Membrane="NM" Size="440.0" CalculateVoltage="false" SpecificCapacitance="1.0" InitialVoltage="0.0" GeometryClass="Compartment" />
+                <MembraneMapping Membrane="PM" Size="1355.0" CalculateVoltage="false" SpecificCapacitance="1.0" InitialVoltage="0.0" GeometryClass="Compartment" />
+            </GeometryContext>
+            <ReactionContext>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK_PP_N" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(2.1563636E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="PreP3mRNA" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(1.3787E-14 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK_N" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(2.1563636E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK_P_N" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(2.1563636E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P3_N" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(2.4993847E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="M3K" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>999.999903688753</InitialConcentration>
+                    <Diffusion>(5.859786E-12 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="M3K_P" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(5.859786E-12 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="M2K" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>3999.99961475501</InitialConcentration>
+                    <Diffusion>(2.5597491E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="M2K_P" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(2.5597491E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="M2K_PP" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(2.5597491E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>999.999903688753</InitialConcentration>
+                    <Diffusion>(2.1563636E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK_P" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(2.1563636E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="MK_PP" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(2.1563636E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P1" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>99.9999903688752</InitialConcentration>
+                    <Diffusion>(2.4993847E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P2" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>499.999951844377</InitialConcentration>
+                    <Diffusion>(2.4993847E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P3" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>499.999975922188</InitialConcentration>
+                    <Diffusion>(2.4993847E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P3mRNA" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(1.3787E-14 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <LocalizedCompoundSpec LocalizedCompoundRef="P3_C" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+                    <InitialConcentration>0.0</InitialConcentration>
+                    <Diffusion>(2.4993847E-11 * diff_scale)</Diffusion>
+                </LocalizedCompoundSpec>
+                <ReactionSpec ReactionStepRef="reaction_0" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_1" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_2" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_3" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_4" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_5" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_6" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_7" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_8" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_9" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_10" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_11" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_12" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_13" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_14" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_15" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_16" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_17" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_18" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_19" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_20" ReactionMapping="included" />
+                <ReactionSpec ReactionStepRef="reaction_21" ReactionMapping="included" />
+            </ReactionContext>
+            <MathDescription Name="Compartmental_generated">
+                <Constant Name="_F_">96485.3321</Constant>
+                <Constant Name="_F_nmol_">9.64853321E-5</Constant>
+                <Constant Name="_K_GHK_">1.0E-9</Constant>
+                <Constant Name="_N_pmol_">6.02214179E11</Constant>
+                <Constant Name="_PI_">3.141592653589793</Constant>
+                <Constant Name="_R_">8314.46261815</Constant>
+                <Constant Name="_T_">300.0</Constant>
+                <Constant Name="A">10.0</Constant>
+                <Constant Name="diff_scale">1.0</Constant>
+                <Constant Name="eff_width">3.8775E-9</Constant>
+                <Constant Name="K1">20.0</Constant>
+                <Constant Name="K10">200.0</Constant>
+                <Constant Name="k10">0.1</Constant>
+                <Constant Name="k11b">2.86</Constant>
+                <Constant Name="k11f">10.34</Constant>
+                <Constant Name="K12">169.0</Constant>
+                <Constant Name="k13">0.022</Constant>
+                <Constant Name="k14">0.0078</Constant>
+                <Constant Name="k15">0.0012</Constant>
+                <Constant Name="k16b">15.4</Constant>
+                <Constant Name="k16f">22.56</Constant>
+                <Constant Name="k17">2.5E-4</Constant>
+                <Constant Name="k18">2.5E-4</Constant>
+                <Constant Name="k19b">2.86</Constant>
+                <Constant Name="k19f">10.34</Constant>
+                <Constant Name="K2">200.0</Constant>
+                <Constant Name="k2">0.025</Constant>
+                <Constant Name="k20b">2.86</Constant>
+                <Constant Name="k20f">10.34</Constant>
+                <Constant Name="k21">0.68</Constant>
+                <Constant Name="K21">10300.0</Constant>
+                <Constant Name="K22">87.0</Constant>
+                <Constant Name="k22">0.31</Constant>
+                <Constant Name="K3">20.0</Constant>
+                <Constant Name="k3">0.1</Constant>
+                <Constant Name="K4">20.0</Constant>
+                <Constant Name="k4">0.1</Constant>
+                <Constant Name="K5">200.0</Constant>
+                <Constant Name="k5">0.1</Constant>
+                <Constant Name="K6">200.0</Constant>
+                <Constant Name="k6">0.1</Constant>
+                <Constant Name="K7">20.0</Constant>
+                <Constant Name="k7">0.1</Constant>
+                <Constant Name="K8">20.0</Constant>
+                <Constant Name="k8">0.1</Constant>
+                <Constant Name="K9">200.0</Constant>
+                <Constant Name="k9">0.1</Constant>
+                <Constant Name="K_millivolts_per_volt">1000.0</Constant>
+                <Constant Name="Ka">500.0</Constant>
+                <Constant Name="KI">9.0</Constant>
+                <Constant Name="KMOLE">0.001660538783162726</Constant>
+                <Constant Name="M2K_init_uM">3999.99961475501</Constant>
+                <Constant Name="M2K_P_init_uM">0.0</Constant>
+                <Constant Name="M2K_PP_init_uM">0.0</Constant>
+                <Constant Name="M3K_init_uM">999.999903688753</Constant>
+                <Constant Name="M3K_P_init_uM">0.0</Constant>
+                <Constant Name="MK_init_uM">999.999903688753</Constant>
+                <Constant Name="MK_N_init_uM">0.0</Constant>
+                <Constant Name="MK_P_init_uM">0.0</Constant>
+                <Constant Name="MK_P_N_init_uM">0.0</Constant>
+                <Constant Name="MK_PP_init_uM">0.0</Constant>
+                <Constant Name="MK_PP_N_init_uM">0.0</Constant>
+                <Constant Name="ml_to_m3">1.0E-6</Constant>
+                <Constant Name="n12">3.97</Constant>
+                <Constant Name="netValence_reaction_10">1.0</Constant>
+                <Constant Name="netValence_reaction_12">1.0</Constant>
+                <Constant Name="netValence_reaction_16">1.0</Constant>
+                <Constant Name="netValence_reaction_17">1.0</Constant>
+                <Constant Name="netValence_reaction_18">1.0</Constant>
+                <Constant Name="P1_init_uM">99.9999903688752</Constant>
+                <Constant Name="P2_init_uM">499.999951844377</Constant>
+                <Constant Name="P3_C_init_uM">0.0</Constant>
+                <Constant Name="P3_init_uM">499.999975922188</Constant>
+                <Constant Name="P3_N_init_uM">0.0</Constant>
+                <Constant Name="P3mRNA_init_uM">0.0</Constant>
+                <Constant Name="PreP3mRNA_init_uM">0.0</Constant>
+                <Constant Name="Sig">2.5</Constant>
+                <Constant Name="Size_CP">0.962</Constant>
+                <Constant Name="Size_EC">5.34</Constant>
+                <Constant Name="Size_NM">440.0</Constant>
+                <Constant Name="Size_NU">0.379</Constant>
+                <Constant Name="Size_PM">1355.0</Constant>
+                <Constant Name="uni_vol_to_surf_scale">1.0</Constant>
+                <Constant Name="V12">29.24</Constant>
+                <Constant Name="Voltage_NM">0.0</Constant>
+                <Constant Name="Voltage_PM">0.0</Constant>
+                <VolumeVariable Name="M2K" Domain="Compartment" />
+                <VolumeVariable Name="M2K_P" Domain="Compartment" />
+                <VolumeVariable Name="M2K_PP" Domain="Compartment" />
+                <VolumeVariable Name="M3K" Domain="Compartment" />
+                <VolumeVariable Name="M3K_P" Domain="Compartment" />
+                <VolumeVariable Name="MK" Domain="Compartment" />
+                <VolumeVariable Name="MK_N" Domain="Compartment" />
+                <VolumeVariable Name="MK_P" Domain="Compartment" />
+                <VolumeVariable Name="MK_P_N" Domain="Compartment" />
+                <VolumeVariable Name="MK_PP" Domain="Compartment" />
+                <VolumeVariable Name="MK_PP_N" Domain="Compartment" />
+                <VolumeVariable Name="P1" Domain="Compartment" />
+                <VolumeVariable Name="P2" Domain="Compartment" />
+                <VolumeVariable Name="P3" Domain="Compartment" />
+                <VolumeVariable Name="P3_C" Domain="Compartment" />
+                <VolumeVariable Name="P3_N" Domain="Compartment" />
+                <VolumeVariable Name="P3mRNA" Domain="Compartment" />
+                <VolumeVariable Name="PreP3mRNA" Domain="Compartment" />
+                <Function Name="J_reaction_0" Domain="Compartment">(Sig * M3K / K1 / ((1.0 + (M3K / K1)) * (1.0 + (MK_PP / KI))))</Function>
+                <Function Name="J_reaction_1" Domain="Compartment">(k3 * M3K_P * M2K * (1.0 + (A * MK_PP / Ka)) / K3 / (1.0 + (M2K / K3) + (M2K_P / K3)) / (1.0 + (MK_PP / Ka)))</Function>
+                <Function Name="J_reaction_10" Domain="Compartment">(602.214179 * ((k11f * uni_vol_to_surf * MK_PP) - (k11b * uni_vol_to_surf * MK_PP_N)))</Function>
+                <Function Name="J_reaction_11" Domain="Compartment">(V12 * pow(MK_PP_N,n12) / (pow(K12,n12) + pow(MK_PP_N,n12)))</Function>
+                <Function Name="J_reaction_12" Domain="Compartment">(602.214179 * k13 * uni_vol_to_surf * PreP3mRNA)</Function>
+                <Function Name="J_reaction_13" Domain="Compartment">(k14 * P3mRNA)</Function>
+                <Function Name="J_reaction_14" Domain="Compartment">(k15 * P3mRNA)</Function>
+                <Function Name="J_reaction_15" Domain="Compartment">(k17 * P3_C)</Function>
+                <Function Name="J_reaction_16" Domain="Compartment">(602.214179 * ((k19f * uni_vol_to_surf * MK) - (k19b * uni_vol_to_surf * MK_N)))</Function>
+                <Function Name="J_reaction_17" Domain="Compartment">(602.214179 * ((k20f * uni_vol_to_surf * MK_P) - (k20b * uni_vol_to_surf * MK_P_N)))</Function>
+                <Function Name="J_reaction_18" Domain="Compartment">(602.214179 * ((k16f * uni_vol_to_surf * P3_C) - (k16b * uni_vol_to_surf * P3_N)))</Function>
+                <Function Name="J_reaction_19" Domain="Compartment">(k21 * P3_N * MK_PP_N / K21 / (1.0 + (MK_PP_N / K21) + (MK_P_N / K22)))</Function>
+                <Function Name="J_reaction_2" Domain="Compartment">(k4 * M3K_P * M2K_P * (1.0 + (A * MK_PP / Ka)) / K4 / (1.0 + (M2K_P / K4) + (M2K / K4)) / (1.0 + (MK_PP / Ka)))</Function>
+                <Function Name="J_reaction_20" Domain="Compartment">(k22 * P3_N * MK_P_N / K22 / (1.0 + (MK_P_N / K22) + (MK_PP_N / K21)))</Function>
+                <Function Name="J_reaction_21" Domain="Compartment">(k18 * P3_N)</Function>
+                <Function Name="J_reaction_3" Domain="Compartment">(k7 * M2K_PP * MK / K7 / (1.0 + (MK / K7) + (MK_P / K7)))</Function>
+                <Function Name="J_reaction_4" Domain="Compartment">(k8 * M2K_PP * MK_P / K8 / (1.0 + (MK / K8) + (MK_P / K8)))</Function>
+                <Function Name="J_reaction_5" Domain="Compartment">(k2 * P1 * M3K_P / K2 / (1.0 + (M3K_P / K2)))</Function>
+                <Function Name="J_reaction_6" Domain="Compartment">(k5 * P2 * M2K_PP / K5 / (1.0 + (M2K_PP / K5) + (M2K_P / K5)))</Function>
+                <Function Name="J_reaction_7" Domain="Compartment">(k6 * P2 * M2K_P / K6 / (1.0 + (M2K_PP / K6) + (M2K_P / K6)))</Function>
+                <Function Name="J_reaction_8" Domain="Compartment">(k9 * P3 * MK_PP / K9 / (1.0 + (MK_PP / K9) + (MK_P / K9)))</Function>
+                <Function Name="J_reaction_9" Domain="Compartment">(k10 * P3 * MK_P / K10 / (1.0 + (MK_PP / K10) + (MK_P / K10)))</Function>
+                <Function Name="KFlux_NM_CP" Domain="Compartment">(Size_NM / Size_CP)</Function>
+                <Function Name="KFlux_NM_NU" Domain="Compartment">(Size_NM / Size_NU)</Function>
+                <Function Name="uni_vol_to_surf">(1.6666666666666665 * uni_vol_to_surf_scale)</Function>
+                <Function Name="UnitFactor_uM_um3_molecules_neg_1">(1000000.0 / 6.02214179E8)</Function>
+                <CompartmentSubDomain Name="Compartment">
+                    <BoundaryType Boundary="Xm" Type="Value" />
+                    <BoundaryType Boundary="Xp" Type="Value" />
+                    <BoundaryType Boundary="Ym" Type="Value" />
+                    <BoundaryType Boundary="Yp" Type="Value" />
+                    <BoundaryType Boundary="Zm" Type="Value" />
+                    <BoundaryType Boundary="Zp" Type="Value" />
+                    <OdeEquation Name="MK_PP_N" SolutionType="Unknown">
+                        <Rate>((UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_NU * J_reaction_10) - J_reaction_19)</Rate>
+                        <Initial>MK_PP_N_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="PreP3mRNA" SolutionType="Unknown">
+                        <Rate>(J_reaction_11 - (UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_NU * J_reaction_12))</Rate>
+                        <Initial>PreP3mRNA_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="MK_N" SolutionType="Unknown">
+                        <Rate>((UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_NU * J_reaction_16) + J_reaction_20)</Rate>
+                        <Initial>MK_N_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="MK_P_N" SolutionType="Unknown">
+                        <Rate>((UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_NU * J_reaction_17) + J_reaction_19 - J_reaction_20)</Rate>
+                        <Initial>MK_P_N_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="P3_N" SolutionType="Unknown">
+                        <Rate>((UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_NU * J_reaction_18) - J_reaction_21)</Rate>
+                        <Initial>P3_N_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="M3K" SolutionType="Unknown">
+                        <Rate>( - J_reaction_0 + J_reaction_5)</Rate>
+                        <Initial>M3K_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="M3K_P" SolutionType="Unknown">
+                        <Rate>(J_reaction_0 - J_reaction_5)</Rate>
+                        <Initial>M3K_P_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="M2K" SolutionType="Unknown">
+                        <Rate>( - J_reaction_1 + J_reaction_7)</Rate>
+                        <Initial>M2K_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="M2K_P" SolutionType="Unknown">
+                        <Rate>(J_reaction_1 - J_reaction_2 + J_reaction_6 - J_reaction_7)</Rate>
+                        <Initial>M2K_P_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="M2K_PP" SolutionType="Unknown">
+                        <Rate>(J_reaction_2 - J_reaction_6)</Rate>
+                        <Initial>M2K_PP_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="MK" SolutionType="Unknown">
+                        <Rate>( - J_reaction_3 + J_reaction_9 - (UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_CP * J_reaction_16))</Rate>
+                        <Initial>MK_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="MK_P" SolutionType="Unknown">
+                        <Rate>(J_reaction_3 - J_reaction_4 + J_reaction_8 - J_reaction_9 - (UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_CP * J_reaction_17))</Rate>
+                        <Initial>MK_P_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="MK_PP" SolutionType="Unknown">
+                        <Rate>(J_reaction_4 - J_reaction_8 - (UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_CP * J_reaction_10))</Rate>
+                        <Initial>MK_PP_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="P1" SolutionType="Unknown">
+                        <Rate>0.0</Rate>
+                        <Initial>P1_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="P2" SolutionType="Unknown">
+                        <Rate>0.0</Rate>
+                        <Initial>P2_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="P3" SolutionType="Unknown">
+                        <Rate>0.0</Rate>
+                        <Initial>P3_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="P3mRNA" SolutionType="Unknown">
+                        <Rate>((UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_CP * J_reaction_12) - J_reaction_13)</Rate>
+                        <Initial>P3mRNA_init_uM</Initial>
+                    </OdeEquation>
+                    <OdeEquation Name="P3_C" SolutionType="Unknown">
+                        <Rate>(J_reaction_14 - J_reaction_15 - (UnitFactor_uM_um3_molecules_neg_1 * KFlux_NM_CP * J_reaction_18))</Rate>
+                        <Initial>P3_C_init_uM</Initial>
+                    </OdeEquation>
+                </CompartmentSubDomain>
+            </MathDescription>
+            <Simulation Name="Compartmental Simulation0">
+                <SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Combined Stiff Solver (IDA/CVODE)">
+                    <TimeBound StartTime="0.0" EndTime="4000.0" />
+                    <TimeStep DefaultTime="0.1" MinTime="1.0E-8" MaxTime="4.0" />
+                    <ErrorTolerance Absolut="1.0E-9" Relative="1.0E-9" />
+                    <OutputOptions OutputTimeStep="10.0" />
+                    <NumberProcessors>1</NumberProcessors>
+                </SolverTaskDescription>
+                <MathOverrides />
+            </Simulation>
+            <MicroscopeMeasurement Name="fluor">
+                <ConvolutionKernel Type="ProjectionZKernel" />
+            </MicroscopeMeasurement>
+        </SimulationSpec>
+        <pathwayModel>
+            <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#" version="3.0" />
+        </pathwayModel>
+        <relationshipModel>
+            <RMNS version="3.0" />
+        </relationshipModel>
+        <vcmetadata>
+            <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+            <nonrdfAnnotationList>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_16)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI24">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T13:50:11Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_0)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI9">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-06-24T16:07:16Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_4)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI12">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-06-24T16:12:30Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_7)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI15">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-06-24T16:11:59Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="Species(species_18)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI8">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-30T10:52:59Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_3)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI11">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-06-24T16:12:28Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_17)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI25">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T13:50:56Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="BioModel(SarmaGhosh2012SBMLS1nGeomDefaultUnits)">
+                    <freetext>&lt;notes&gt;
+      &lt;body xmlns="http://www.w3.org/1999/xhtml"/&gt;
+    &lt;/notes&gt;</freetext>
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI1">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2010-09-22T00:34:27Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_11)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI19">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T12:20:17Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_20)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI28">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T14:51:05Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_6)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI14">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-06-24T16:11:41Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_8)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI16">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-06-24T16:13:02Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_12)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI20">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T12:27:14Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_10)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI18">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T12:13:26Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_21)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI29">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T14:58:04Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_15)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI23">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T13:14:43Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_5)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI13">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-06-24T16:09:13Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_9)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI17">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-06-25T17:53:24Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="Species(species_13)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI4">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T15:02:55Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="Species(species_11)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI3">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T13:02:54Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_1)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI10">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-06-21T21:00:47Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_19)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI27">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T14:46:17Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_18)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI26">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T14:11:14Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_14)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI22">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T12:31:48Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="ReactionStep(reaction_13)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI21">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T12:31:01Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="Species(species_14)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI5">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-30T10:52:50Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="Species(species_16)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI7">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T14:52:18Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+                <nonrdfAnnotation vcid="Species(species_7)">
+                    <annotationList>
+                        <annotation>
+                            <COPASI xmlns="http://www.copasi.org/static/sbml">
+                                <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/">
+                                    <rdf:Description rdf:about="#COPASI2">
+                                        <dcterms:created>
+                                            <rdf:Description>
+                                                <dcterms:W3CDTF>2011-10-29T13:02:38Z</dcterms:W3CDTF>
+                                            </rdf:Description>
+                                        </dcterms:created>
+                                    </rdf:Description>
+                                </rdf:RDF>
+                            </COPASI>
+                        </annotation>
+                    </annotationList>
+                </nonrdfAnnotation>
+            </nonrdfAnnotationList>
+            <uriBindingList>
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI25" vcid="ReactionStep(reaction_17)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI1" vcid="BioModel(SarmaGhosh2012SBMLS1nGeomDefaultUnits)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI16" vcid="ReactionStep(reaction_8)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI13" vcid="ReactionStep(reaction_5)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI9" vcid="ReactionStep(reaction_0)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI18" vcid="ReactionStep(reaction_10)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI29" vcid="ReactionStep(reaction_21)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI26" vcid="ReactionStep(reaction_18)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI17" vcid="ReactionStep(reaction_9)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI20" vcid="ReactionStep(reaction_12)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI10" vcid="ReactionStep(reaction_1)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI14" vcid="ReactionStep(reaction_6)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI23" vcid="ReactionStep(reaction_15)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI5" vcid="Species(species_14)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI24" vcid="ReactionStep(reaction_16)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI27" vcid="ReactionStep(reaction_19)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI28" vcid="ReactionStep(reaction_20)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI19" vcid="ReactionStep(reaction_11)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI4" vcid="Species(species_13)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI7" vcid="Species(species_16)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI2" vcid="Species(species_7)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI15" vcid="ReactionStep(reaction_7)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI12" vcid="ReactionStep(reaction_4)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI8" vcid="Species(species_18)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI11" vcid="ReactionStep(reaction_3)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI21" vcid="ReactionStep(reaction_13)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI3" vcid="Species(species_11)" />
+                <uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI22" vcid="ReactionStep(reaction_14)" />
+            </uriBindingList>
+        </vcmetadata>
+    </BioModel>
+</vcml>

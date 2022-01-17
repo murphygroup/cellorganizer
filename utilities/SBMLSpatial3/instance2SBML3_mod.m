@@ -181,6 +181,7 @@ options.output.SBMLNameMap = name_map;
 
 [docNode,docRootNode,wrapperNode,GeowrapperNode,options] = setupSBML3(CSGdata,meshData,models,imgs, SBMLfile,param,options);
 
+
 %%%Define the Geometry
 geometryDefNode = docNode.createElement([param.prefix, 'listOfGeometryDefinitions']);
 GeowrapperNode.appendChild(geometryDefNode);

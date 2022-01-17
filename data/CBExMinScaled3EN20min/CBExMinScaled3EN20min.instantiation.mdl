@@ -1,0 +1,21 @@
+INSTANTIATE Scene OBJECT
+{
+  CP OBJECT CP {}
+  EN OBJECT EN {}
+  NU OBJECT NU {}
+  mind_rel RELEASE_SITE
+  {
+   SHAPE = Scene.CP[ALL] - Scene.NU[ALL] - Scene.EN[ALL]
+   MOLECULE = mind_adp
+   CONCENTRATION = 4320 / (NavL * 2.8235 * um3_to_L) * spatial_scale^3
+   RELEASE_PROBABILITY = 1
+  }
+  mine_rel RELEASE_SITE
+  {
+   SHAPE = Scene.CP[ALL] - Scene.NU[ALL] - Scene.EN[ALL]
+   MOLECULE = mine
+   CONCENTRATION = 1080 / (NavL * 2.8235 * um3_to_L) * spatial_scale^3
+   RELEASE_PROBABILITY = 1
+  }
+}
+
