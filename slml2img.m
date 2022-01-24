@@ -930,7 +930,13 @@ for i=1:1:numberOfSynthesizedImages
                 end
             end
 
-
+            if (field_exists_and_true_or_char(options.output,'SBML') || ...
+                field_exists_and_true_or_char(options.output,'SBMLSpatial') || ...
+                    options.output.VCML.writeVCML || ...
+                    options.output.MCellMDL.writeMCellMDL)
+                options = nameModels(primitives, frameworkSBML, models, imgs, options);
+            end
+            
             %support for SBML Spatial Level 3 Version 1.0 Draft 0.95
             if field_exists_and_true_or_char(options.output,'SBMLSpatial')
                 if check_if_SBML_output_supported( models )
