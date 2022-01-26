@@ -1552,6 +1552,7 @@ for i = 1:VCMLNumSimulations
         parameter_object = parameters(parameter_name);
         ParameterNodeName = parameter_name;
         ParameterNodeValue = parameter_object.value;
+        parameter_value_is_numeric = ~parameter_object.hasVariables();
         
         if parameter_value_is_numeric
             % Number
