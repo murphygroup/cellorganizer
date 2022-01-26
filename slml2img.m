@@ -893,23 +893,18 @@ for i=1:1:numberOfSynthesizedImages
                                 field_exists_and_true_or_char(options.output,'SBMLSpatial') || ...
                                 options.output.VCML.writeVCML || ...
                                 options.output.MCellMDL.writeMCellMDL)
+                            model_class = [];
                             if isfield(options,'SBML_PName')
-                                %D. Sullivan ***Temporary - this wont work for the HTM***
-                                if true_or_char(options.output.SBML)
-                                    primitives = createSBMLstruct(models{j}.proteinModel,num2str(j),[options.SBML_PName{j},num2str(j)],primitives);
-                                end
+                                model_class = [options.SBML_PName{j},num2str(j)];
+                            end
+                            
+                            %D. Sullivan ***Temporary - this wont work for the HTM***
+                            if true_or_char(options.output.SBML)
+                                primitives = createSBMLstruct(models{j}.proteinModel,num2str(j),model_class,primitives);
+                            end
 
-                                if field_exists_and_true_or_char(options.output,'SBMLSpatial') || options.output.VCML.writeVCML || options.output.MCellMDL.writeMCellMDL
-                                    primitives = createSBMLstruct3(models{j}.proteinModel,num2str(j),[options.SBML_PName{j},num2str(j)],primitives,options);
-                                end
-                            else
-                                if true_or_char(options.output.SBML)
-                                    primitives = createSBMLstruct(models{j}.proteinModel,num2str(j),[],primitives);
-                                end
-
-                                if field_exists_and_true_or_char(options.output,'SBMLSpatial') || options.output.VCML.writeVCML || options.output.MCellMDL.writeMCellMDL
-                                    primitives = createSBMLstruct3(models{j}.proteinModel,num2str(j),[],primitives,options);
-                                end
+                            if field_exists_and_true_or_char(options.output,'SBMLSpatial') || options.output.VCML.writeVCML || options.output.MCellMDL.writeMCellMDL
+                                primitives = createSBMLstruct3(models{j}.proteinModel,num2str(j),model_class,primitives,options);
                             end
 
                             if field_exists_and_true(options.output,'primitives')
