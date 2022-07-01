@@ -982,6 +982,7 @@ else
 end
 
 
+%{
 % Print for use in BNGL files
 fprintf('\n');
 fprintf('\n');
@@ -996,6 +997,7 @@ for i = 1:n_compartments
 end
 fprintf('\n');
 fprintf('\n');
+%}
 
 
 % Add indices to network_info.compartments
@@ -1592,6 +1594,7 @@ end
 all_membrane_data_elapsed_time = toc(all_membrane_data_start_time);
 
 
+%{
 % Print for use in BNGL files
 fprintf('\n');
 fprintf('\n');
@@ -1604,6 +1607,7 @@ for k = 1:length(all_membrane_data)
 end
 fprintf('\n');
 fprintf('\n');
+%}
 
 
 
