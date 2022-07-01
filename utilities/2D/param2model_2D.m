@@ -29,8 +29,8 @@ function model = param2model_2D( cell_params, options )
 % Feb 17, 2018 X. Ruan add code for 2D PCA model
 
 disp(upper('Checking if we are training a diffeomorphic model'));
-if (isfield( options, 'nucleus') && isfield( options.nucleus, 'type') && strcmpi(options.nucleus.type, 'diffeomorphic')) ...
-        || (isfield( options, 'cell')   && isfield( options.cell, 'type')    && strcmpi(options.cell.type, 'diffeomorphic'))
+if (fieldisequal( options, 'nucleus.type', 'diffeomorphic', false)) ...
+        || (fieldisequal( options, 'cell.type', 'diffeomorphic', false))
     isdiffeomorphic = true;
     disp('Training diffeomorphic model');
 else
@@ -39,8 +39,8 @@ else
 end
 
 disp(upper('Checking if we are training a PCA model'))
-if (isfield( options, 'nucleus') && isfield( options.nucleus, 'type') && strcmpi(options.nucleus.type, 'pca')) ...
-        || (isfield( options, 'cell')   && isfield( options.cell, 'type')    && strcmpi(options.cell.type, 'pca'))
+if (fieldisequal( options, 'nucleus.type', 'pca', false)) ...
+        || (fieldisequal( options, 'cell.type', 'pca', false))
     ispca = true;
     disp('Training a PCA model')
 else
@@ -86,12 +86,12 @@ end%param2model_2D
 function model = build_diffeomorphic_model( cell_params, cell_param, options )
 components = {};
 
-if (isfield( options, 'cell')   && isfield( options.cell, 'type')    && strcmpi(options.cell.type, 'diffeomorphic'))
+if (fieldisequal( options, 'cell.type', 'diffeomorphic', false))
     % xruan 01/05/2016 change components{end} = 'cell'; to components{end + 1} = 'cell';
     components{end + 1} = 'cell';
 end
 
-if (isfield( options, 'nucleus') && isfield( options.nucleus, 'type') && strcmpi(options.nucleus.type, 'diffeomorphic'))
+if (fieldisequal( options, 'nucleus.type', 'diffeomorphic', false))
     % xruan 01/05/2016 change components{end} = 'nucleus'; to components{end + 1} = 'nucleus';
     components{end + 1} = 'nuc';
 end
@@ -118,10 +118,10 @@ end%build_diffeomorphic_model
 
 function model = build_pca_model( cell_params, cell_param, options )
 components = {};
-if (isfield( options, 'cell')   && isfield( options.cell, 'type')    && strcmpi(options.cell.type, 'pca'))
+if (fieldisequal( options, 'cell.type', 'pca', false))
     components{end + 1} = 'cell';
 end
-if (isfield( options, 'nucleus') && isfield( options.nucleus, 'type') && strcmpi(options.nucleus.type, 'pca'))
+if (fieldisequal( options, 'nucleus.type', 'pca', false))
     components{end + 1} = 'nuc';
 end
 options.components = components;
@@ -222,7 +222,7 @@ if ismember( options.train.flag, {'cell', 'framework', 'all'} )
 end
 
 if ismember( options.train.flag, {'all', 'protein'} )
-    if isfield(options, 'protein') && isfield(options.protein, 'type' ) && ...
+    if isfieldr(options, 'protein.type') && ...
             ~isempty( options.protein.type )
         protein_model_save = [options.paramdir filesep options.protein.type '.mat'];
         if ~exist(protein_model_save, 'file')
