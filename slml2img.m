@@ -343,7 +343,7 @@ try
     % for i=1:1:length(c)
         % logfile = ['',logfile,num2str(c(i))]; %#ok<AGROW>
     % end
-    logfile = char(datetime('now', 'TimeZone', 'local', 'Format', 'yyyyMMddHHmmss'));
+    logfile = datestr(datetime('now', 'TimeZone', 'local'), 'yyyymmddHHMMSS.FFF'); %#ok<AGROW>
     logfile = [ pwd filesep 'log' filesep logfile, '.log' ];
 
     fileID = fopen( logfile, 'w' );
