@@ -659,7 +659,7 @@ for i=1:1:numberOfSynthesizedImages
         
         if field_exists_and_true(options.output,'shape_space_coords')
             shape_space_coords = [];
-            if isfield(options, 'spharm_rpdm') && isfield(options.spharm_rpdm, 'shape_space_coords')
+            if isfieldr(options, 'spharm_rpdm.shape_space_coords')
                 shape_space_coords = options.spharm_rpdm.shape_space_coords;
             end
             if ~isempty(shape_space_coords)
@@ -1064,73 +1064,4 @@ fclose( fileID );
 %icaoberg 7/1/2013
 disp( 'Finished synthesis' );
 answer = true;
-end
-
-function answer = check_if_SBML_output_supported( models )
-
-answer = true;
-for k=1:1:length(models)
-    if isfield(models{1}, 'proteinModel') && ~strcmpi(models{1}.proteinModel.class, 'vesicle' ) && ~strcmpi(models{1}.proteinModel.type, 'gmm' )
-        answer = false;
-    end
-end
-end%check_if_SBML_output_supported
-
-function answer = field_exists_and_true( options, field, alltrue )
-% FIELD_EXISTS_AND_TRUE Returns true if field exists and evaluates to true.
-%
-% List Of Input Arguments  Descriptions
-% -----------------------  ------------
-% options                  A structure
-% field                    A string specifying the field to check
-% alltrue                  (optional) Boolean flag that indicates whether a true result requires the field to be all true (alltrue == true, Matlab's default behavior) or any true (alltrue == false). Default is true.
-
-if nargin < 3
-    alltrue = true;
-end
-
-answer = isfield(options,field);
-if alltrue
-    answer = answer && options.(field);
-else
-    answer = answer && any(options.(field));
-end
-
-end
-
-function answer = true_or_char( value, alltrue )
-% TRUE_OR_CHAR Returns true if value either evaluates to true or is a char array.
-%
-% List Of Input Arguments  Descriptions
-% -----------------------  ------------
-% value                    A string specifying the field to check
-% alltrue                  (optional) Boolean flag that indicates whether a true result requires the field to be all true (alltrue == true, Matlab's default behavior) or any true (alltrue == false). Default is true.
-
-if nargin < 2
-    alltrue = true;
-end
-
-if alltrue
-    answer = ~isempty(value) && (ischar(value) || value);
-else
-    answer = ~isempty(value) && (ischar(value) || any(value));
-end
-
-end
-
-function answer = field_exists_and_true_or_char( options, field, alltrue )
-% FIELD_EXISTS_AND_TRUE_OR_CHAR Returns true if field exists and either evaluates to true or is a char array.
-%
-% List Of Input Arguments  Descriptions
-% -----------------------  ------------
-% options                  A structure
-% field                    A string specifying the field to check
-% alltrue                  (optional) Boolean flag that indicates whether a true result requires the field to be all true (alltrue == true, Matlab's default behavior) or any true (alltrue == false). Default is true.
-
-if nargin < 3
-    alltrue = true;
-end
-
-answer = isfield(options,field);
-answer = answer && true_or_char(options.(field), alltrue);
 end
