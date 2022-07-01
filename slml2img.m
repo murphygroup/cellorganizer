@@ -718,6 +718,18 @@ for i=1:1:numberOfSynthesizedImages
             end
             clear image;
 
+            output_filename_root = 'nucleus';
+            % Scale mesh vertices to have units of um (no longer dependent on options.output.meshes)
+            if (isstruct(options.nucmesh) && ...
+                    ~field_exists_and_true(options,'cubicOverride') && ...
+                    isfield(options.resolution,'objects') && ...
+                    isfield(options.resolution,'cubic'))
+                options.nucmesh_cubic = true;
+                % xruan 05/21/2019 also adjust resolution for meshes
+                options.nucmesh.vertices = options.nucmesh.vertices .* repmat(options.resolution.objects ./ options.resolution.cubic, size(options.nucmesh.vertices, 1), 1);
+                output_filename_root = [output_filename_root '_cubic'];
+            end
+
             % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
             if field_exists_and_true(options.output,'meshes')
                 if options.verbose
@@ -731,7 +743,7 @@ for i=1:1:numberOfSynthesizedImages
                     output_mesh = struct('vertices', zeros(0, 3), 'faces', zeros(0, 3, 'uint8'));
                 end
                 nucmesh_with_objects = struct('vertices', output_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', output_mesh.faces)));
-                write_wobj(nucmesh_with_objects, [outdir filesep 'nucleus.obj']);
+                write_wobj(nucmesh_with_objects, [outdir filesep output_filename_root '.obj']);
             end
         end
 
@@ -765,6 +777,18 @@ for i=1:1:numberOfSynthesizedImages
             end
             clear image;
 
+            output_filename_root = 'cell';
+            % Scale mesh vertices to have units of um (no longer dependent on options.output.meshes)
+            if (isstruct(options.cellmesh) && ...
+                    ~field_exists_and_true(options,'cubicOverride') && ...
+                    isfield(options.resolution,'objects') && ...
+                    isfield(options.resolution,'cubic'))
+                options.cellmesh_cubic = true;
+                % xruan 05/21/2019 also adjust resolution for meshes
+                options.cellmesh.vertices = options.cellmesh.vertices .* repmat(options.resolution.objects ./ options.resolution.cubic, size(options.cellmesh.vertices, 1), 1);
+                output_filename_root = [output_filename_root '_cubic'];
+            end
+            
             % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
             if field_exists_and_true(options.output,'meshes')
                 if options.verbose
@@ -778,7 +802,7 @@ for i=1:1:numberOfSynthesizedImages
                     output_mesh = struct('vertices', zeros(0, 3), 'faces', zeros(0, 3, 'uint8'));
                 end
                 cellmesh_with_objects = struct('vertices', output_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', output_mesh.faces)));
-                write_wobj(cellmesh_with_objects, [outdir filesep 'cell.obj']);
+                write_wobj(cellmesh_with_objects, [outdir filesep output_filename_root '.obj']);
             end
         end
 
