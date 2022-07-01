@@ -271,11 +271,11 @@ if remove_mesh_intersections
     min_clearance = 0;
     % min_clearance = options.oobbuffer;
     try
-        % meshData = removeMeshIntersections(meshData, min_clearance, 'delete_higher_index');
-        meshData = removeMeshIntersections(meshData, min_clearance, 'delete_intersects_framework');
+        meshData = removeMeshIntersections(meshData, options);
     catch ME
         if any(strcmp(ME.identifier, {'CellOrganizer:removeMeshIntersections:selfIntersection', 'CellOrganizer:removeMeshIntersections:intersection'}))
-            warning('CellOrganizer:instance2MCellMDL:meshIntersection', 'removeMeshIntersections threw ''%s''', ME.identifier);
+            warning('CellOrganizer:instance2MCellMDL:meshIntersection', 'removeMeshIntersections threw the following exception');
+            ME
             result = false;
             return;
         else
