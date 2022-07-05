@@ -71,6 +71,7 @@ end
 if reject_on_any_intersection
     meshData_flat_essential_mask = meshData_flat_essential_mask | true;
 end
+meshData_flat_modified_mask = false(1, length(meshData_flat));;
 
 meshData_flat_to_start = false(1, length(meshData_flat));
 if remove_on_framework_intersection
@@ -82,14 +83,24 @@ if remove_on_any_intersection
     meshData_flat_to_start = meshData_flat_to_start | true;
 end
 
+nucleus_mesh_index = find(strcmp(meshData_flat_names, 'frameworkMesh') & strcmp(meshData_flat_subnames, 'NU'));
+nucleus_mesh = meshData_flat(nucleus_mesh_index).mesh;
+nucleus_mesh_adjacency = logical(meshAdjacencyMatrix(nucleus_mesh.faces));
+cell_mesh_index = find(strcmp(meshData_flat_names, 'frameworkMesh') & strcmp(meshData_flat_subnames, 'CP'));
+cell_mesh = meshData_flat(cell_mesh_index).mesh;
+
+options_output = options.output;
+% options_output.separation_distribution = 1;
+% options_output.nucleus_normal_proportion = 1;
+% options_output.maximum_filter_rounds_value = 1;
+[nucleus_mesh_mod, cell_mesh_mod] = adjustMeshPairSpacing(nucleus_mesh, cell_mesh, options_output);
+
+meshData_flat(nucleus_mesh_index).mesh = nucleus_mesh_mod;
+meshData_flat(cell_mesh_index).mesh = cell_mesh_mod;
+
+%{
 if min_clearance > -inf
     % Move cell vertices along nucleus normals in an attempt to remove intersections (nucleus sticking out of cell)
-    
-    nucleus_mesh_index = find(strcmp(meshData_flat_names, 'nucleus'));
-    nucleus_mesh = meshData{nucleus_mesh_index};
-    nucleus_mesh_adjacency = logical(meshAdjacencyMatrix(nucleus_mesh.faces));
-    cell_mesh_index = find(strcmp(meshData_flat_names, 'cell'));
-    cell_mesh = meshData{cell_mesh_index};
     
     nn = vertexNormal(nucleus_mesh.vertices, nucleus_mesh.faces);
     nv = nucleus_mesh.vertices;
@@ -118,8 +129,9 @@ if min_clearance > -inf
     
     cell_mesh.vertices = cv_mod + nv_mean;
     
-    meshData{cell_mesh_index} = cell_mesh;
+    meshData{cell_mesh_index} = adjustMeshPairSpacing(nucleus_mesh, cell_mesh, options);
 end
+%}
 
 
 % TODO: For other meshes, use a closest point algorithm or approximate with kd-tree to enforce min_clearance
@@ -129,20 +141,15 @@ use_octree = false;
 if check_intersections
     % Find self-intersections
     for i = 1:length(meshData_flat)
-        fprintf('@@@@ 006 i = %i\n', i); % Debug
-    
         item = meshData_flat(i);
-        fprintf('@@@@ 006.001\n', i); % Debug
         item_mesh = item.mesh;
-        fprintf('@@@@ 006.002\n', i); % Debug
         % Do not keep intersecting meshes
         if use_octree
             error('CellOrganizer:removeMeshIntersections:notImplemented', 'Not implemented');
             % mesh_self_intersects = fastMesh2Mesh(item_mesh.vertices, item_mesh.vertices, item_mesh.faces, item_mesh.faces, octs, true);
         else
-            fprintf('@@@@ 006.003\n', i); % Debug
-            mesh_self_intersects = any(SurfaceIntersection(item_mesh, 'self'), 1:2);
-            fprintf('@@@@ 006.004\n', i); % Debug
+            % mesh_self_intersects = any(SurfaceIntersection(item_mesh, 'self'), 1:2);
+            mesh_self_intersects = any(SurfaceIntersectionBlock(item_mesh, 'self', 4), 1:2);
         end
         if mesh_self_intersects
             if meshData_flat_essential_mask(i)
@@ -178,7 +185,8 @@ if check_intersections
                 error('CellOrganizer:removeMeshIntersectionsremoveMeshIntersections:notImplemented', 'Not implemented');
                 % meshes_intersect = fastMesh2Mesh(mesh1.vertices, mesh2.vertices, mesh1.faces, mesh2.faces, octs, true);
             else
-                meshes_intersect = any(SurfaceIntersection(mesh1, mesh2), 1:2);
+                % meshes_intersect = any(SurfaceIntersection(mesh1, mesh2), 1:2);
+                meshes_intersect = any(SurfaceIntersectionBlock(mesh1, mesh2, 4), 1:2);
             end
             if meshes_intersect && meshData_flat_essential_mask(j)
                 error('CellOrganizer:removeMeshIntersections:intersection', 'Framework or domain meshes intersect');
@@ -193,13 +201,16 @@ for i = length(meshData):-1:1
     for j = length(meshData(i).list):-1:1
         if ~meshData_flat_keep_mask(k)
             meshData(i).list = [meshData(i).list(1:j - 1), meshData(i).list(j + 1:end)];
+        elseif meshData_flat_modified_mask(k)
+            meshData(i).list(j).mesh = meshData_flat(k).mesh;
         end
         k = k - 1;
     end
 end
 
 n_removed = sum(~meshData_flat_keep_mask);
-fprintf('Removed %d intersecting meshes\n', n_removed);
+n_modified = sum(~meshData_flat_keep_mask & meshData_flat_modified_mask);
+fprintf('Removed %d intersecting meshes, modified %d\n', n_removed, n_modified);
 
 
 end

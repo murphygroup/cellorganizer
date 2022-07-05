@@ -61,19 +61,11 @@ function answer = generate_simulation_instances_generic( options )
 %
 % * `simulation_interaction_radius`: MCell-specific maximum distance for bimolecular reactions to be simulated (default: `0.03`)
 %
-% * ``:  (default: ``)
+% * `framework_min_clearance`: double specifying the minimum distance in μm to impose between nucleus and cell after synthesis. -inf to disable. Currently only used for framework meshes assuming corresponding vertices by instance2MCellMDL. (default: `-inf`)
 % 
-% * ``:  (default: ``)
+% * `framework_clearance_n_max_filter_rounds`: integer specifying the number of rounds of maximum filter to apply to the projections of cell vertices onto nucleus normals among the immediate neighbors of each vertex. 0 to disable. Currently only used for framework meshes assuming corresponding vertices by instance2MCellMDL. (default: `1`)
 % 
-% * ``:  (default: ``)
-% 
-% * ``:  (default: ``)
-% 
-% * ``:  (default: ``)
-% 
-% * ``:  (default: ``)
-% 
-% * ``:  (default: ``)
+% * `intersecting_mesh_object_policy`: string specifying policy for checking framework and objects for intersection and whether to remove objects or reject the synthesized cell entirely. Currently untested for values other than 'ignore'. Currently only used for framework meshes assuming corresponding vertices by instance2MCellMDL. (default: `'ignore'`)
 % 
 %
 % Output
@@ -81,9 +73,17 @@ function answer = generate_simulation_instances_generic( options )
 % % * one valid VCML file with multiple simulations per input VCML model
 % % * a set of MCell simulation files per input MCell model
 
+% Developer notes
+% ---------------
+% 
+% * Only certain options for `slml2img` are copied from `options` to `s2i_options`. Add options for which support is desired when using this utility around the lines `% Default arguments` and `% Copy options fields for use by slml2img`.
+
+% 
+% * ``:  (default: `''`)
+
 % Author: Taraz Buck, Ivan E. Cao-Berg
 %
-% Copyright (C) 2016-2021 Murphy Lab
+% Copyright (C) 2016-2022 Murphy Lab
 % Lane Center for Computational Biology
 % School of Computer Science
 % Carnegie Mellon University
@@ -148,7 +148,9 @@ options_defaults.simulation_relative_tolerance = 1e-8;
 % MCell-specific
 options_defaults.simulation_interaction_radius = 0.03;
 
-% options_defaults. = ;
+options_defaults.framework_min_clearance = -inf;
+options_defaults.framework_clearance_n_max_filter_rounds = 1;
+options_defaults.intersecting_mesh_object_policy_default = 'ignore';
 
 options_required = struct();
 options_required.reaction_network_file = [];
@@ -604,6 +606,12 @@ s2i_options.MCellMDL.default_time_step = options.simulation_default_time_step;
 s2i_options.MCellMDL.max_time_step = options.simulation_max_time_step;
 s2i_options.MCellMDL.output_time_step = options.simulation_output_time_step;
 s2i_options.MCellMDL.interaction_radius = options.simulation_interaction_radius;
+
+% Copy options fields for use by slml2img
+
+s2i_options.framework_min_clearance = options.framework_min_clearance;
+s2i_options.framework_clearance_n_max_filter_rounds = options.framework_clearance_n_max_filter_rounds;
+s2i_options.intersecting_mesh_object_policy_default = options.intersecting_mesh_object_policy_default;
 
 
 

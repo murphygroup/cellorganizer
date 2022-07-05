@@ -210,7 +210,7 @@ function param = synthesis( param )
         param = rmfield(param, 'NET');
     end
     
-    for temp = {'framework_min_clearance', 'framework_clearance_n_max_filter_rounds', 'intersecting_mesh_object_policy'}'
+    for temp = {'framework_min_clearance', 'framework_clearance_n_max_filter_rounds', 'intersecting_mesh_object_policy'}
         temp = temp{1};
         if isfield(param, temp)
             param.output.(temp) = param.(temp);
