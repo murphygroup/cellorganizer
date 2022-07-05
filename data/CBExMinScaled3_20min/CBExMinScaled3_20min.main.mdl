@@ -1,0 +1,22 @@
+INCLUDE_FILE = "CBExMinScaled3_20min.parameters.mdl"
+
+INCLUDE_FILE = "CBExMinScaled3_20min.initialization.mdl"
+
+INCLUDE_FILE = "CBExMinScaled3_20min.molecules.mdl"
+
+INCLUDE_FILE = "CBExMinScaled3_20min.surface_classes.mdl"
+
+INCLUDE_FILE = "CBExMinScaled3_20min.reactions.mdl"
+
+INCLUDE_FILE = "CBExMinScaled3_20min.geometry.mdl"
+
+INCLUDE_FILE = "CBExMinScaled3_20min.mod_surf_regions.mdl"
+
+INCLUDE_FILE = "CBExMinScaled3_20min.instantiation.mdl"
+
+sprintf(seed,"%05g",SEED)
+
+INCLUDE_FILE = "CBExMinScaled3_20min.viz_output.mdl"
+
+INCLUDE_FILE = "CBExMinScaled3_20min.rxn_output.mdl"
+

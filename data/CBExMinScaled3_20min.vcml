@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This biomodel was generated in VCML Version Rel_Version_7.2.0_build_39-->
+<vcml
+	xmlns="http://sourceforge.net/projects/vcell/vcml" Version="Rel_Version_7.2.0_build_39">
+	<BioModel Name="img">
+		<Model Name="Model1">
+			<ModelParameters>
+				<Parameter Name="V12" Role="user defined" Unit="nmol.s-1">29.24</Parameter>
+				<Parameter Name="n12" Role="user defined" Unit="1">3.97</Parameter>
+				<Parameter Name="k5" Role="user defined" Unit="s-1">0.7</Parameter>
+				<Parameter Name="A" Role="user defined" Unit="1">10.0</Parameter>
+				<Parameter Name="Ka" Role="user defined" Unit="nmol.ml-1">500.0</Parameter>
+				<Parameter Name="k3" Role="user defined" Unit="M-1.s-1">(900000.0 * (spatial_scale ^  - 3.0))</Parameter>
+				<Parameter Name="KI" Role="user defined" Unit="nmol.ml-1">9.0</Parameter>
+				<Parameter Name="Sig" Role="user defined" Unit="nmol.ml-1.s-1">2.5</Parameter>
+				<Parameter Name="k2" Role="user defined" Unit="M-1.s-1">(3800.0 * (spatial_scale ^  - 3.0))</Parameter>
+				<Parameter Name="eff_width" Role="user defined" Unit="m">3.8775E-9</Parameter>
+				<Parameter Name="ml_to_m3" Role="user defined" Unit="m3.ml-1">1.0E-6</Parameter>
+				<Parameter Name="uni_vol_to_surf" Role="user defined" Unit="ml.m-2">(1.6666666666666665 * uni_vol_to_surf_scale)</Parameter>
+				<Parameter Name="diff_scale" Role="user defined" Unit="1">1.0</Parameter>
+				<Parameter Name="uni_vol_to_surf_scale" Role="user defined" Unit="1">1.0</Parameter>
+				<Parameter Name="k1" Role="user defined" Unit="s-1">1.0</Parameter>
+				<Parameter Name="spatial_scale" Role="user defined" Unit="1">((2.8235 / (1653.3 - 274.19)) ^ (1.0 / 3.0))</Parameter>
+				<Parameter Name="k4" Role="user defined" Unit="M-1.s-1">(5.6E7 * (spatial_scale ^  - 3.0))</Parameter>
+				<Parameter Name="diff_CP" Role="user defined" Unit="um2.s-1">((2.5E-8 * diff_scale * (spatial_scale ^  - 2.0)) * ((cm_to_m / um_to_m) ^ 2.0))</Parameter>
+				<Parameter Name="diff_PM" Role="user defined" Unit="um2.s-1">(((0.0 + diff_PM_adjustment) * diff_scale * (spatial_scale ^  - 2.0)) * ((cm_to_m / um_to_m) ^ 2.0))</Parameter>
+				<Parameter Name="M_to_uM" Role="user defined" Unit="uM.M-1">(1.0 / 1.0E-6)</Parameter>
+				<Parameter Name="initConc_mind_adp" Role="user defined" Unit="uM">((4320.0 / (NavL * 2.8235 * um3_to_L) * (spatial_scale ^ 3.0)) * M_to_uM)</Parameter>
+				<Parameter Name="NavL" Role="user defined" Unit="molecules.mol-1">6.02214076E23</Parameter>
+				<Parameter Name="um3_to_L" Role="user defined" Unit="L.um-3">(1.0E-18 / 0.001)</Parameter>
+				<Parameter Name="initConc_mine" Role="user defined" Unit="uM">((1080.0 / (NavL * 2.8235 * um3_to_L) * (spatial_scale ^ 3.0)) * M_to_uM)</Parameter>
+				<Parameter Name="cm_to_m" Role="user defined" Unit="m.cm-1">(0.01 / 1.0)</Parameter>
+				<Parameter Name="um_to_m" Role="user defined" Unit="m.um-1">(1.0E-6 / 1.0)</Parameter>
+				<Parameter Name="diff_PM_adjustment" Role="user defined" Unit="cm2.s-1">0.0</Parameter>
+			</ModelParameters>
+			<Compound Name="s0" />
+			<Compound Name="s1" />
+			<Compound Name="s2" />
+			<Compound Name="s3" />
+			<Compound Name="s4" />
+			<Feature Name="NU" KeyValue="193201301" />
+			<Feature Name="CP" KeyValue="193201297" />
+			<Feature Name="EC" KeyValue="193201299" />
+			<Membrane MembraneVoltage="Voltage_PM" Name="PM" KeyValue="193201305" />
+			<Membrane MembraneVoltage="Voltage_NM" Name="NM" KeyValue="193201307" />
+			<LocalizedCompound Name="mind_adp" CompoundRef="s0" Structure="CP" OverrideName="true" KeyValue="193201311" />
+			<LocalizedCompound Name="mind_atp" CompoundRef="s1" Structure="CP" OverrideName="true" KeyValue="193201312" />
+			<LocalizedCompound Name="mine" CompoundRef="s2" Structure="CP" OverrideName="true" KeyValue="193201313" />
+			<LocalizedCompound Name="mind_m" CompoundRef="s3" Structure="PM" OverrideName="true" KeyValue="193201314" />
+			<LocalizedCompound Name="minde_m" CompoundRef="s4" Structure="PM" OverrideName="true" KeyValue="193201315" />
+			<SimpleReaction Structure="CP" Name="r1" Reversible="true" FluxOption="MolecularOnly" KeyValue="193201316">
+				<Reactant LocalizedCompoundRef="mind_adp" Stoichiometry="1" KeyValue="193201317" />
+				<Product LocalizedCompoundRef="mind_atp" Stoichiometry="1" KeyValue="193201318" />
+				<Kinetics KineticsType="MassAction">
+					<Parameter Name="J" Role="reaction rate" Unit="uM.s-1">((Kf * mind_adp) - (Kr * mind_atp))</Parameter>
+					<Parameter Name="Kf" Role="forward rate constant" Unit="s-1">k1</Parameter>
+					<Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+				</Kinetics>
+			</SimpleReaction>
+			<SimpleReaction Structure="PM" Name="r2" Reversible="true" FluxOption="MolecularOnly" KeyValue="193201319">
+				<Reactant LocalizedCompoundRef="mind_atp" Stoichiometry="1" KeyValue="193201320" />
+				<Product LocalizedCompoundRef="mind_m" Stoichiometry="1" KeyValue="193201321" />
+				<Kinetics KineticsType="MassAction">
+					<Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">((Kf * mind_atp) - (Kr * mind_m))</Parameter>
+					<Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+					<Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+					<Parameter Name="Kf" Role="forward rate constant" Unit="molecules.um-2.s-1.uM-1">(k2 * (M_to_uM ^  - 1.0))</Parameter>
+					<Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+				</Kinetics>
+			</SimpleReaction>
+			<SimpleReaction Structure="PM" Name="r3" Reversible="true" FluxOption="MolecularOnly" KeyValue="193201322">
+				<Reactant LocalizedCompoundRef="mind_atp" Stoichiometry="1" KeyValue="193201323" />
+				<Reactant LocalizedCompoundRef="mind_m" Stoichiometry="1" KeyValue="193201324" />
+				<Product LocalizedCompoundRef="mind_m" Stoichiometry="1" KeyValue="193201325" />
+				<Product LocalizedCompoundRef="mind_m" Stoichiometry="1" KeyValue="193201326" />
+				<Kinetics KineticsType="MassAction">
+					<Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">(((Kf * mind_atp) * mind_m) - ((Kr * mind_m) * mind_m))</Parameter>
+					<Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+					<Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+					<Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">(k3 * (M_to_uM ^  - 1.0))</Parameter>
+					<Parameter Name="Kr" Role="reverse rate constant" Unit="um2.s-1.molecules-1">0.0</Parameter>
+				</Kinetics>
+			</SimpleReaction>
+			<SimpleReaction Structure="PM" Name="r4" Reversible="true" FluxOption="MolecularOnly" KeyValue="193201327">
+				<Reactant LocalizedCompoundRef="mind_atp" Stoichiometry="1" KeyValue="193201328" />
+				<Reactant LocalizedCompoundRef="minde_m" Stoichiometry="1" KeyValue="193201329" />
+				<Product LocalizedCompoundRef="mind_m" Stoichiometry="1" KeyValue="193201330" />
+				<Product LocalizedCompoundRef="minde_m" Stoichiometry="1" KeyValue="193201331" />
+				<Kinetics KineticsType="MassAction">
+					<Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">(((Kf * mind_atp) * minde_m) - ((Kr * mind_m) * minde_m))</Parameter>
+					<Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+					<Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+					<Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">(k3 * (M_to_uM ^  - 1.0))</Parameter>
+					<Parameter Name="Kr" Role="reverse rate constant" Unit="um2.s-1.molecules-1">0.0</Parameter>
+				</Kinetics>
+			</SimpleReaction>
+			<SimpleReaction Structure="PM" Name="r5" Reversible="true" FluxOption="MolecularOnly" KeyValue="193201332">
+				<Reactant LocalizedCompoundRef="mine" Stoichiometry="1" KeyValue="193201333" />
+				<Reactant LocalizedCompoundRef="mind_m" Stoichiometry="1" KeyValue="193201334" />
+				<Product LocalizedCompoundRef="minde_m" Stoichiometry="1" KeyValue="193201335" />
+				<Kinetics KineticsType="MassAction">
+					<Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">(((Kf * mine) * mind_m) - (Kr * minde_m))</Parameter>
+					<Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+					<Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+					<Parameter Name="Kf" Role="forward rate constant" Unit="s-1.uM-1">(k4 * (M_to_uM ^  - 1.0))</Parameter>
+					<Parameter Name="Kr" Role="reverse rate constant" Unit="s-1">0.0</Parameter>
+				</Kinetics>
+			</SimpleReaction>
+			<SimpleReaction Structure="PM" Name="r6" Reversible="true" FluxOption="MolecularOnly" KeyValue="193201336">
+				<Reactant LocalizedCompoundRef="minde_m" Stoichiometry="1" KeyValue="193201337" />
+				<Product LocalizedCompoundRef="mind_adp" Stoichiometry="1" KeyValue="193201338" />
+				<Product LocalizedCompoundRef="mine" Stoichiometry="1" KeyValue="193201339" />
+				<Kinetics KineticsType="MassAction">
+					<Parameter Name="J" Role="reaction rate" Unit="molecules.um-2.s-1">((Kf * minde_m) - ((Kr * mind_adp) * mine))</Parameter>
+					<Parameter Name="I" Role="inward current density" Unit="pA.um-2">0.0</Parameter>
+					<Parameter Name="netValence" Role="net charge valence" Unit="1">1.0</Parameter>
+					<Parameter Name="Kf" Role="forward rate constant" Unit="s-1">k5</Parameter>
+					<Parameter Name="Kr" Role="reverse rate constant" Unit="molecules.um-2.s-1.uM-2">0.0</Parameter>
+				</Kinetics>
+			</SimpleReaction>
+			<Diagram Name="c1" Structure="EC">
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="minde_m" LocationX="53" LocationY="63" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="102" LocationY="204" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="66" LocationY="201" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r3" LocationX="128" LocationY="224" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mine" LocationX="102" LocationY="34" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_atp" LocationX="170" LocationY="220" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r5" LocationX="91" LocationY="34" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r6" LocationX="14" LocationY="46" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_m" LocationX="130" LocationY="120" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_adp" LocationX="14" LocationY="141" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r4" LocationX="82" LocationY="139" />
+			</Diagram>
+			<Diagram Name="c0" Structure="NU">
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="minde_m" LocationX="53" LocationY="63" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="102" LocationY="204" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="66" LocationY="201" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r3" LocationX="128" LocationY="224" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mine" LocationX="102" LocationY="34" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_atp" LocationX="170" LocationY="220" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r5" LocationX="91" LocationY="34" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r6" LocationX="14" LocationY="46" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_m" LocationX="130" LocationY="120" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_adp" LocationX="14" LocationY="141" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r4" LocationX="82" LocationY="139" />
+			</Diagram>
+			<Diagram Name="compartment_0" Structure="CP">
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="minde_m" LocationX="53" LocationY="63" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="102" LocationY="204" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="66" LocationY="201" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r3" LocationX="128" LocationY="224" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mine" LocationX="102" LocationY="34" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_atp" LocationX="170" LocationY="220" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r5" LocationX="91" LocationY="34" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r6" LocationX="14" LocationY="46" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_m" LocationX="130" LocationY="120" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_adp" LocationX="14" LocationY="141" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r4" LocationX="82" LocationY="139" />
+			</Diagram>
+			<Diagram Name="m1" Structure="PM">
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="minde_m" LocationX="53" LocationY="63" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="102" LocationY="204" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="66" LocationY="201" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r3" LocationX="128" LocationY="224" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mine" LocationX="102" LocationY="34" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_atp" LocationX="170" LocationY="220" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r5" LocationX="91" LocationY="34" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r6" LocationX="14" LocationY="46" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_m" LocationX="130" LocationY="120" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_adp" LocationX="14" LocationY="141" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r4" LocationX="82" LocationY="139" />
+			</Diagram>
+			<Diagram Name="m0" Structure="NM">
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="minde_m" LocationX="53" LocationY="63" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r2" LocationX="102" LocationY="204" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r1" LocationX="66" LocationY="201" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r3" LocationX="128" LocationY="224" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mine" LocationX="102" LocationY="34" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_atp" LocationX="170" LocationY="220" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r5" LocationX="91" LocationY="34" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r6" LocationX="14" LocationY="46" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_m" LocationX="130" LocationY="120" />
+				<LocalizedCompoundShape NodeReferenceModeAttrTag="full" LocalizedCompoundRef="mind_adp" LocationX="14" LocationY="141" />
+				<SimpleReactionShape NodeReferenceModeAttrTag="full" SimpleReactionRef="r4" LocationX="82" LocationY="139" />
+			</Diagram>
+			<ModelUnitSystem VolumeSubstanceUnit="uM.um3" MembraneSubstanceUnit="molecules" LumpedReactionSubstanceUnit="molecules" VolumeUnit="um3" AreaUnit="um2" LengthUnit="um" TimeUnit="s" />
+		</Model>
+		<SimulationSpec Name="img_4000sec_Spatial" Stochastic="false" UseConcentration="true" RuleBased="false" MassConservationModelReduction="false" InsufficientIterations="false" InsufficientMaxMolecules="false" CharacteristicSize="0.19999999999999998">
+			<NetworkConstraints RbmMaxIteration="3" RbmMaxMoleculesPerSpecies="10" RbmSpeciesLimit="800" RbmReactionsLimit="2500" />
+			<Geometry Name="geom" Dimension="3">
+				<Annotation>NoName</Annotation>
+				<Extent X="27.8205" Y="19.6" Z="4.0" />
+				<Origin X="0.0" Y="0.0" Z="0.0" />
+				<Image Name="img">
+					<Annotation>NoName</Annotation>
+					<ImageData X="70" Y="49" Z="10" CompressedSize="1097">789CEDDADB92A3300C04D0C2F9FF7F9E7D1828B075E99644C26CD46F3B559CB50D9651926DEB743A9D4EA7D3E9743A9DCE9FCB18A3C21801E7F78A3127F49F4B294108C65450C64640C8470007423C06446C0747748732348645442780AC4C0899992032311F56468D324A90139352468D324A904A258B3C4A1935CAA851462B0A5274A79FF2D815EEE92754A9928A597C0444984D480942431A424926E2331B60ECCE2202D77D63120B43DE5D0C61A1C4E386214FE8B25EFF4230AAB107715CE480B288C36084E3E086B13C14A23114A1313422323C222D316F48830920EB60224359071342F6FD99546626861CC5223594AB125BDB53DDFAFF14A1570B2052C757A3A0CCB8323165380A5E5D4C05AE74E775093002C2D67F19A10E341DA1A66510F0BC1C037EEBB0084DD9A5F5AF3252D9DB80946D808C8BB814289CA12D766DE75D397DAE1237924F8A82C49EB82473F316C21DE1B2A5DE0510B1F49288760AE4067238B98178CB831B1643183AC3210AC322E2ADA20D71303C52A4AC4C04591BC78422B77C30B20C263494A9552B52020FCB59C9F58D0F5286A504BA2C49E1BBAC8472BE4252F82E4B1C0CD965C56B9D68B0F75B4588BD2DCF4681A815A1C623DC1A9F31BA2C939897996DB25446886FB80E46380E81CCD0FE1792E87C4F124F9A8C849D82A7BF6213991B3A5C14E66A97330E288DBCECE64846D4B38440AC630D5554C36660C36408C4581C06D118CE50264523E260628AFE2605224ECBC729CA07D630B2F66A91A1DCA62466240E8657A42E964752837987C2F747254A623BCA432119C5E026A51BC4704CE442E510EFC9D19695599E8122CAC1340621AC8E140829FAB993E130C6C2EC7F2191B316BDB4D3F948C25B4734E2DA1D4581F9CDA16A5CEB6E0859AB378F882749DE801CC0F019C8701910411907711814B11918B11802D19F3F7C3E06032FEDA1183FC60111F54BD480A2B6D49CA2BCEFA288D464552B7467939B9286B0CF6EC1AD5611E6B9D311660F180A53A574046E64F5A5C51DF54961E6852126030AD779C95F4341C6A6BFC03086C51086EA90C6158A5C3C5379A3D3F9E214ECC4820D5D51A16EA896A1BA3D2973F90FD47FE914613B47F55C2410EB904611E7A8C7141DF985F288CF78F3C1180C719618441C8652ECC61151CCC1708AF5A60A21EE5BF3FB15BD11A85198AF6C92CBEB2BD9C66663B663C186F44B95CF38F3C12685202E83555EEBB332FB0EEBCE89E308913942201A4412321340B6DC37469D4EA763A7A2C0642ADCD54839150577A9DC19E57569D2586C3F0DCFA72AEB8C0B323961641E0F8C682F0B2823232CA3295C4BAD2B44873F2C05FEBCC1565066540C663C50F190D48B3777ABB388D96811CA063CBAE07ECC2B2AC329D30A1FFFA28CCDEA2508C45650C4720843613861722217773A9D4EA753F16DE3567218254FC455296B613FDAC316BF2FA41C4929FB19708D52C4FC5DE54EE41343B955219122A5EC875BD3C541A5D3E9743A9D4EA7D3E9743A9D4EA7B3FD0059C2CBEB</ImageData>
+					<PixelClass Name="EC" ImagePixelValue="1" />
+					<PixelClass Name="CP" ImagePixelValue="2" />
+					<PixelClass Name="NU" ImagePixelValue="3" />
+				</Image>
+				<SubVolume Name="EC" Handle="0" Type="Image" ImagePixelValue="1" />
+				<SubVolume Name="CP" Handle="1" Type="Image" ImagePixelValue="2" />
+				<SubVolume Name="NU" Handle="2" Type="Image" ImagePixelValue="3" />
+				<SurfaceClass Name="CP_EC_membrane" SubVolume1Ref="CP" SubVolume2Ref="EC" />
+				<SurfaceClass Name="CP_NU_membrane" SubVolume1Ref="CP" SubVolume2Ref="NU" />
+				<SurfaceDescription NumSamplesX="70" NumSamplesY="49" NumSamplesZ="10" CutoffFrequency="0.3">
+					<VolumeRegion Name="EC0" RegionID="0" SubVolume="EC" Size="1257.836036231884" Unit="um3" />
+					<VolumeRegion Name="CP1" RegionID="1" SubVolume="CP" Size="536.6474397745573" Unit="um3" />
+					<VolumeRegion Name="NU2" RegionID="2" SubVolume="NU" Size="386.6437239935588" Unit="um3" />
+					<MembraneRegion Name="membrane_EC0_CP1" VolumeRegion1="CP1" VolumeRegion2="EC0" Size="836.5047731003508" Unit="um2" />
+					<MembraneRegion Name="membrane_CP1_NU2" VolumeRegion1="NU2" VolumeRegion2="CP1" Size="404.4594623853364" Unit="um2" />
+				</SurfaceDescription>
+			</Geometry>
+			<GeometryContext>
+				<FeatureMapping Feature="NU" GeometryClass="NU" SubVolume="NU" Size="336.0082" VolumePerUnitVolume="1.0">
+					<BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+				</FeatureMapping>
+				<FeatureMapping Feature="CP" GeometryClass="CP" SubVolume="CP" Size="466.3672" VolumePerUnitVolume="1.0">
+					<BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+				</FeatureMapping>
+				<FeatureMapping Feature="EC" GeometryClass="EC" SubVolume="EC" Size="1378.7528" VolumePerUnitVolume="1.0">
+					<BoundariesTypes Xm="Flux" Xp="Flux" Ym="Flux" Yp="Flux" Zm="Flux" Zp="Flux" />
+				</FeatureMapping>
+				<MembraneMapping Membrane="PM" Size="6563.0" AreaPerUnitArea="1.0" CalculateVoltage="false" SpecificCapacitance="1.0" InitialVoltage="0.0" GeometryClass="CP_EC_membrane" />
+				<MembraneMapping Membrane="NM" Size="6563.0" AreaPerUnitArea="1.0" CalculateVoltage="false" SpecificCapacitance="1.0" InitialVoltage="0.0" GeometryClass="CP_NU_membrane" />
+			</GeometryContext>
+			<ReactionContext>
+				<LocalizedCompoundSpec LocalizedCompoundRef="mind_adp" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+					<InitialConcentration>initConc_mind_adp</InitialConcentration>
+					<Diffusion>diff_CP</Diffusion>
+				</LocalizedCompoundSpec>
+				<LocalizedCompoundSpec LocalizedCompoundRef="mind_atp" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+					<InitialConcentration>0.0</InitialConcentration>
+					<Diffusion>diff_CP</Diffusion>
+				</LocalizedCompoundSpec>
+				<LocalizedCompoundSpec LocalizedCompoundRef="mine" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+					<InitialConcentration>initConc_mine</InitialConcentration>
+					<Diffusion>diff_CP</Diffusion>
+				</LocalizedCompoundSpec>
+				<LocalizedCompoundSpec LocalizedCompoundRef="mind_m" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+					<InitialConcentration>0.0</InitialConcentration>
+					<Diffusion>diff_PM</Diffusion>
+				</LocalizedCompoundSpec>
+				<LocalizedCompoundSpec LocalizedCompoundRef="minde_m" ForceConstant="false" WellMixed="false" ForceContinuous="false">
+					<InitialConcentration>0.0</InitialConcentration>
+					<Diffusion>diff_PM</Diffusion>
+				</LocalizedCompoundSpec>
+				<ReactionSpec ReactionStepRef="r1" ReactionMapping="included" />
+				<ReactionSpec ReactionStepRef="r2" ReactionMapping="included" />
+				<ReactionSpec ReactionStepRef="r3" ReactionMapping="included" />
+				<ReactionSpec ReactionStepRef="r4" ReactionMapping="included" />
+				<ReactionSpec ReactionStepRef="r5" ReactionMapping="included" />
+				<ReactionSpec ReactionStepRef="r6" ReactionMapping="included" />
+			</ReactionContext>
+			<MathDescription Name="img_4000sec_Spatial_generated">
+				<Constant Name="_F_">96485.3321</Constant>
+				<Constant Name="_F_nmol_">9.64853321E-5</Constant>
+				<Constant Name="_K_GHK_">1.0E-9</Constant>
+				<Constant Name="_N_pmol_">6.02214179E11</Constant>
+				<Constant Name="_PI_">3.141592653589793</Constant>
+				<Constant Name="_R_">8314.46261815</Constant>
+				<Constant Name="_T_">300.0</Constant>
+				<Constant Name="A">10.0</Constant>
+				<Constant Name="AreaPerUnitArea_NM">1.0</Constant>
+				<Constant Name="AreaPerUnitArea_PM">1.0</Constant>
+				<Constant Name="diff_PM_adjustment">0.0</Constant>
+				<Constant Name="diff_scale">1.0</Constant>
+				<Constant Name="eff_width">3.8775E-9</Constant>
+				<Constant Name="k1">1.0</Constant>
+				<Constant Name="k5">0.7</Constant>
+				<Constant Name="K_millivolts_per_volt">1000.0</Constant>
+				<Constant Name="Ka">500.0</Constant>
+				<Constant Name="KI">9.0</Constant>
+				<Constant Name="KMOLE">0.001660538783162726</Constant>
+				<Constant Name="Kr_r1">0.0</Constant>
+				<Constant Name="Kr_r2">0.0</Constant>
+				<Constant Name="Kr_r3">0.0</Constant>
+				<Constant Name="Kr_r4">0.0</Constant>
+				<Constant Name="Kr_r5">0.0</Constant>
+				<Constant Name="Kr_r6">0.0</Constant>
+				<Constant Name="mind_atp_init_uM">0.0</Constant>
+				<Constant Name="mind_m_init_molecules_um_2">0.0</Constant>
+				<Constant Name="minde_m_init_molecules_um_2">0.0</Constant>
+				<Constant Name="ml_to_m3">1.0E-6</Constant>
+				<Constant Name="n12">3.97</Constant>
+				<Constant Name="NavL">6.02214076E23</Constant>
+				<Constant Name="netValence_r2">1.0</Constant>
+				<Constant Name="netValence_r3">1.0</Constant>
+				<Constant Name="netValence_r4">1.0</Constant>
+				<Constant Name="netValence_r5">1.0</Constant>
+				<Constant Name="netValence_r6">1.0</Constant>
+				<Constant Name="Sig">2.5</Constant>
+				<Constant Name="uni_vol_to_surf_scale">1.0</Constant>
+				<Constant Name="V12">29.24</Constant>
+				<Constant Name="Voltage_NM">0.0</Constant>
+				<Constant Name="Voltage_PM">0.0</Constant>
+				<Constant Name="VolumePerUnitVolume_CP">1.0</Constant>
+				<Constant Name="VolumePerUnitVolume_EC">1.0</Constant>
+				<Constant Name="VolumePerUnitVolume_NU">1.0</Constant>
+				<VolumeVariable Name="mind_adp" Domain="CP" />
+				<VolumeVariable Name="mind_atp" Domain="CP" />
+				<MembraneVariable Name="mind_m" Domain="CP_EC_membrane" />
+				<MembraneVariable Name="minde_m" Domain="CP_EC_membrane" />
+				<VolumeVariable Name="mine" Domain="CP" />
+				<Function Name="cm_to_m">(0.01 / 1.0)</Function>
+				<Function Name="diff_CP">((2.5E-8 * diff_scale * (spatial_scale ^  - 2.0)) * ((cm_to_m / um_to_m) ^ 2.0))</Function>
+				<Function Name="diff_PM">(((0.0 + diff_PM_adjustment) * diff_scale * (spatial_scale ^  - 2.0)) * ((cm_to_m / um_to_m) ^ 2.0))</Function>
+				<Function Name="initConc_mind_adp">((4320.0 / (NavL * 2.8235 * um3_to_L) * (spatial_scale ^ 3.0)) * M_to_uM)</Function>
+				<Function Name="initConc_mine">((1080.0 / (NavL * 2.8235 * um3_to_L) * (spatial_scale ^ 3.0)) * M_to_uM)</Function>
+				<Function Name="J_r1" Domain="CP">((Kf_r1 * mind_adp) - (Kr_r1 * mind_atp))</Function>
+				<Function Name="J_r2" Domain="CP_EC_membrane">((Kf_r2 * mind_atp) - (Kr_r2 * mind_m))</Function>
+				<Function Name="J_r3" Domain="CP_EC_membrane">(((Kf_r3 * mind_atp) * mind_m) - ((Kr_r3 * mind_m) * mind_m))</Function>
+				<Function Name="J_r4" Domain="CP_EC_membrane">(((Kf_r4 * mind_atp) * minde_m) - ((Kr_r4 * mind_m) * minde_m))</Function>
+				<Function Name="J_r5" Domain="CP_EC_membrane">(((Kf_r5 * mine) * mind_m) - (Kr_r5 * minde_m))</Function>
+				<Function Name="J_r6" Domain="CP_EC_membrane">((Kf_r6 * minde_m) - ((Kr_r6 * mind_adp) * mine))</Function>
+				<Function Name="k2">(3800.0 * (spatial_scale ^  - 3.0))</Function>
+				<Function Name="k3">(900000.0 * (spatial_scale ^  - 3.0))</Function>
+				<Function Name="k4">(5.6E7 * (spatial_scale ^  - 3.0))</Function>
+				<Function Name="Kf_r1" Domain="CP">k1</Function>
+				<Function Name="Kf_r2" Domain="CP_EC_membrane">(k2 * (M_to_uM ^  - 1.0))</Function>
+				<Function Name="Kf_r3" Domain="CP_EC_membrane">(k3 * (M_to_uM ^  - 1.0))</Function>
+				<Function Name="Kf_r4" Domain="CP_EC_membrane">(k3 * (M_to_uM ^  - 1.0))</Function>
+				<Function Name="Kf_r5" Domain="CP_EC_membrane">(k4 * (M_to_uM ^  - 1.0))</Function>
+				<Function Name="Kf_r6" Domain="CP_EC_membrane">k5</Function>
+				<Function Name="KFlux_PM_CP" Domain="CP_EC_membrane">(AreaPerUnitArea_PM / VolumePerUnitVolume_CP)</Function>
+				<Function Name="M_to_uM">(1.0 / 1.0E-6)</Function>
+				<Function Name="mind_adp_diffusionRate" Domain="CP">diff_CP</Function>
+				<Function Name="mind_adp_init_uM" Domain="CP">initConc_mind_adp</Function>
+				<Function Name="mind_atp_diffusionRate" Domain="CP">diff_CP</Function>
+				<Function Name="mind_m_diffusionRate" Domain="CP_EC_membrane">diff_PM</Function>
+				<Function Name="minde_m_diffusionRate" Domain="CP_EC_membrane">diff_PM</Function>
+				<Function Name="mine_diffusionRate" Domain="CP">diff_CP</Function>
+				<Function Name="mine_init_uM" Domain="CP">initConc_mine</Function>
+				<Function Name="Size_CP" Domain="CP">(VolumePerUnitVolume_CP * vcRegionVolume('CP'))</Function>
+				<Function Name="Size_EC" Domain="EC">(VolumePerUnitVolume_EC * vcRegionVolume('EC'))</Function>
+				<Function Name="Size_NM" Domain="CP_NU_membrane">(AreaPerUnitArea_NM * vcRegionArea('CP_NU_membrane'))</Function>
+				<Function Name="Size_NU" Domain="NU">(VolumePerUnitVolume_NU * vcRegionVolume('NU'))</Function>
+				<Function Name="Size_PM" Domain="CP_EC_membrane">(AreaPerUnitArea_PM * vcRegionArea('CP_EC_membrane'))</Function>
+				<Function Name="sobj_CP2_NU3_size" Domain="CP_NU_membrane">vcRegionArea('CP_NU_membrane')</Function>
+				<Function Name="sobj_EC1_CP2_size" Domain="CP_EC_membrane">vcRegionArea('CP_EC_membrane')</Function>
+				<Function Name="spatial_scale">((2.8235 / (1653.3 - 274.19)) ^ (1.0 / 3.0))</Function>
+				<Function Name="um3_to_L">(1.0E-18 / 0.001)</Function>
+				<Function Name="um_to_m">(1.0E-6 / 1.0)</Function>
+				<Function Name="uni_vol_to_surf">(1.6666666666666665 * uni_vol_to_surf_scale)</Function>
+				<Function Name="UnitFactor_uM_um3_molecules_neg_1">(1000000.0 / 6.02214179E8)</Function>
+				<Function Name="vobj_CP2_size" Domain="CP">vcRegionVolume('CP')</Function>
+				<Function Name="vobj_EC1_size" Domain="EC">vcRegionVolume('EC')</Function>
+				<Function Name="vobj_NU3_size" Domain="NU">vcRegionVolume('NU')</Function>
+				<CompartmentSubDomain Name="EC">
+					<BoundaryType Boundary="Xm" Type="Flux" />
+					<BoundaryType Boundary="Xp" Type="Flux" />
+					<BoundaryType Boundary="Ym" Type="Flux" />
+					<BoundaryType Boundary="Yp" Type="Flux" />
+					<BoundaryType Boundary="Zm" Type="Flux" />
+					<BoundaryType Boundary="Zp" Type="Flux" />
+				</CompartmentSubDomain>
+				<CompartmentSubDomain Name="CP">
+					<BoundaryType Boundary="Xm" Type="Flux" />
+					<BoundaryType Boundary="Xp" Type="Flux" />
+					<BoundaryType Boundary="Ym" Type="Flux" />
+					<BoundaryType Boundary="Yp" Type="Flux" />
+					<BoundaryType Boundary="Zm" Type="Flux" />
+					<BoundaryType Boundary="Zp" Type="Flux" />
+					<PdeEquation Name="mind_adp" SolutionType="Unknown">
+						<Rate> - J_r1</Rate>
+						<Diffusion>mind_adp_diffusionRate</Diffusion>
+						<Initial>mind_adp_init_uM</Initial>
+					</PdeEquation>
+					<PdeEquation Name="mind_atp" SolutionType="Unknown">
+						<Rate>J_r1</Rate>
+						<Diffusion>mind_atp_diffusionRate</Diffusion>
+						<Initial>mind_atp_init_uM</Initial>
+					</PdeEquation>
+					<PdeEquation Name="mine" SolutionType="Unknown">
+						<Rate>0.0</Rate>
+						<Diffusion>mine_diffusionRate</Diffusion>
+						<Initial>mine_init_uM</Initial>
+					</PdeEquation>
+				</CompartmentSubDomain>
+				<CompartmentSubDomain Name="NU">
+					<BoundaryType Boundary="Xm" Type="Flux" />
+					<BoundaryType Boundary="Xp" Type="Flux" />
+					<BoundaryType Boundary="Ym" Type="Flux" />
+					<BoundaryType Boundary="Yp" Type="Flux" />
+					<BoundaryType Boundary="Zm" Type="Flux" />
+					<BoundaryType Boundary="Zp" Type="Flux" />
+				</CompartmentSubDomain>
+				<MembraneSubDomain Name="CP_EC_membrane" InsideCompartment="CP" OutsideCompartment="EC">
+					<BoundaryType Boundary="Xm" Type="Value" />
+					<BoundaryType Boundary="Xp" Type="Value" />
+					<BoundaryType Boundary="Ym" Type="Value" />
+					<BoundaryType Boundary="Yp" Type="Value" />
+					<BoundaryType Boundary="Zm" Type="Value" />
+					<BoundaryType Boundary="Zp" Type="Value" />
+					<PdeEquation Name="mind_m" SolutionType="Unknown">
+						<Rate>(J_r2 + J_r3 + J_r4 - J_r5)</Rate>
+						<Diffusion>mind_m_diffusionRate</Diffusion>
+						<Initial>mind_m_init_molecules_um_2</Initial>
+					</PdeEquation>
+					<PdeEquation Name="minde_m" SolutionType="Unknown">
+						<Rate>(J_r5 - J_r6)</Rate>
+						<Diffusion>minde_m_diffusionRate</Diffusion>
+						<Initial>minde_m_init_molecules_um_2</Initial>
+					</PdeEquation>
+					<JumpCondition Name="mind_adp">
+						<InFlux>(UnitFactor_uM_um3_molecules_neg_1 * KFlux_PM_CP * J_r6)</InFlux>
+						<OutFlux>0.0</OutFlux>
+					</JumpCondition>
+					<JumpCondition Name="mind_atp">
+						<InFlux>(( - (UnitFactor_uM_um3_molecules_neg_1 * KFlux_PM_CP * J_r2) - (UnitFactor_uM_um3_molecules_neg_1 * KFlux_PM_CP * J_r3)) - (UnitFactor_uM_um3_molecules_neg_1 * KFlux_PM_CP * J_r4))</InFlux>
+						<OutFlux>0.0</OutFlux>
+					</JumpCondition>
+					<JumpCondition Name="mine">
+						<InFlux>( - (UnitFactor_uM_um3_molecules_neg_1 * KFlux_PM_CP * J_r5) + (UnitFactor_uM_um3_molecules_neg_1 * KFlux_PM_CP * J_r6))</InFlux>
+						<OutFlux>0.0</OutFlux>
+					</JumpCondition>
+				</MembraneSubDomain>
+				<MembraneSubDomain Name="CP_NU_membrane" InsideCompartment="CP" OutsideCompartment="NU">
+					<BoundaryType Boundary="Xm" Type="Value" />
+					<BoundaryType Boundary="Xp" Type="Value" />
+					<BoundaryType Boundary="Ym" Type="Value" />
+					<BoundaryType Boundary="Yp" Type="Value" />
+					<BoundaryType Boundary="Zm" Type="Value" />
+					<BoundaryType Boundary="Zp" Type="Value" />
+					<JumpCondition Name="mind_adp">
+						<InFlux>0.0</InFlux>
+						<OutFlux>0.0</OutFlux>
+					</JumpCondition>
+					<JumpCondition Name="mind_atp">
+						<InFlux>0.0</InFlux>
+						<OutFlux>0.0</OutFlux>
+					</JumpCondition>
+					<JumpCondition Name="mine">
+						<InFlux>0.0</InFlux>
+						<OutFlux>0.0</OutFlux>
+					</JumpCondition>
+				</MembraneSubDomain>
+			</MathDescription>
+			<Simulation Name="img_4000sec_Spatial_Simulation0 tol1e-8">
+				<SolverTaskDescription TaskType="Unsteady" UseSymbolicJacobian="false" Solver="Sundials Stiff PDE Solver (Variable Time Step)">
+					<TimeBound StartTime="0.0" EndTime="1200.0" />
+					<TimeStep DefaultTime="0.05" MinTime="0.0" MaxTime="4.0" />
+					<ErrorTolerance Absolut="1.0E-8" Relative="1.0E-8" />
+					<OutputOptions OutputTimeStep="2.0" />
+					<SundialsSolverOptions>
+						<maxOrderAdvection>2</maxOrderAdvection>
+					</SundialsSolverOptions>
+					<NumberProcessors>1</NumberProcessors>
+				</SolverTaskDescription>
+				<MathOverrides />
+				<MeshSpecification>
+					<Size X="70" Y="49" Z="10" />
+				</MeshSpecification>
+			</Simulation>
+			<SpatialObjects>
+				<SpatialObject Name="vobj_EC1" Type="Volume" subVolume="EC" regionId="0">
+					<QuantityCategoryList>
+						<QuantityCategory Name="VolumeCentroid" Enabled="false" />
+						<QuantityCategory Name="InteriorVelocity" Enabled="false" />
+						<QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+					</QuantityCategoryList>
+				</SpatialObject>
+				<SpatialObject Name="vobj_CP2" Type="Volume" subVolume="CP" regionId="1">
+					<QuantityCategoryList>
+						<QuantityCategory Name="VolumeCentroid" Enabled="false" />
+						<QuantityCategory Name="InteriorVelocity" Enabled="false" />
+						<QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+					</QuantityCategoryList>
+				</SpatialObject>
+				<SpatialObject Name="vobj_NU3" Type="Volume" subVolume="NU" regionId="2">
+					<QuantityCategoryList>
+						<QuantityCategory Name="VolumeCentroid" Enabled="false" />
+						<QuantityCategory Name="InteriorVelocity" Enabled="false" />
+						<QuantityCategory Name="VolumeRegionSize" Enabled="true" />
+					</QuantityCategoryList>
+				</SpatialObject>
+				<SpatialObject Name="sobj_EC1_CP2" Type="Surface" subVolumeInside="CP" regionIdInside="1" subVolumeOutside="EC" regionIdOutside="0">
+					<QuantityCategoryList>
+						<QuantityCategory Name="SurfaceNormal" Enabled="false" />
+						<QuantityCategory Name="SurfaceVelocity" Enabled="false" />
+						<QuantityCategory Name="DistanceToSurface" Enabled="false" />
+						<QuantityCategory Name="DirectionToSurface" Enabled="false" />
+						<QuantityCategory Name="SurfaceSize" Enabled="true" />
+					</QuantityCategoryList>
+				</SpatialObject>
+				<SpatialObject Name="sobj_CP2_NU3" Type="Surface" subVolumeInside="NU" regionIdInside="2" subVolumeOutside="CP" regionIdOutside="1">
+					<QuantityCategoryList>
+						<QuantityCategory Name="SurfaceNormal" Enabled="false" />
+						<QuantityCategory Name="SurfaceVelocity" Enabled="false" />
+						<QuantityCategory Name="DistanceToSurface" Enabled="false" />
+						<QuantityCategory Name="DirectionToSurface" Enabled="false" />
+						<QuantityCategory Name="SurfaceSize" Enabled="true" />
+					</QuantityCategoryList>
+				</SpatialObject>
+			</SpatialObjects>
+			<MicroscopeMeasurement Name="fluor">
+				<ConvolutionKernel Type="ProjectionZKernel" />
+			</MicroscopeMeasurement>
+		</SimulationSpec>
+		<pathwayModel>
+			<rdf:RDF
+				xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+				xmlns:bp="http://www.biopax.org/release/biopax-level3.owl#" version="3.0" />
+			</pathwayModel>
+			<relationshipModel>
+				<RMNS version="3.0" />
+			</relationshipModel>
+			<vcmetadata>
+				<rdf:RDF
+					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+					<nonrdfAnnotationList>
+						<nonrdfAnnotation vcid="BioModel(img)">
+							<freetext>&lt;notes&gt;
+      &lt;body
+								xmlns="http://www.w3.org/1999/xhtml"/&gt;
+    &lt;/notes&gt;
+							</freetext>
+							<annotationList>
+								<annotation>
+									<COPASI
+										xmlns="http://www.copasi.org/static/sbml">
+										<rdf:RDF
+											xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+											xmlns:dcterms="http://purl.org/dc/terms/">
+											<rdf:Description rdf:about="#COPASI1">
+												<dcterms:created>
+													<rdf:Description>
+														<dcterms:W3CDTF>2010-09-22T00:34:27Z</dcterms:W3CDTF>
+													</rdf:Description>
+												</dcterms:created>
+											</rdf:Description>
+										</rdf:RDF>
+									</COPASI>
+								</annotation>
+							</annotationList>
+						</nonrdfAnnotation>
+					</nonrdfAnnotationList>
+					<uriBindingList>
+						<uriBinding uri="http://www.sbml.org/sbml/level2/version2/COPASI1" vcid="BioModel(img)" />
+					</uriBindingList>
+				</vcmetadata>
+			</BioModel>
+		</vcml>

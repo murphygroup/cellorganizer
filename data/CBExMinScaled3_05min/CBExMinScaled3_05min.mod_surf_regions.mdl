@@ -1,0 +1,8 @@
+MODIFY_SURFACE_REGIONS
+{
+  CP[ALL]
+  {
+    SURFACE_CLASS = PM
+  }
+}
+
