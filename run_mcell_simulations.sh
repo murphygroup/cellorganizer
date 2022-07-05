@@ -4,7 +4,7 @@
 usage()
 {
     cat << EOF
-usage: run_mcell_simulations.sh --help | [--dry_run] [--mode <mode>] [--cluster_partition <partition>] [--cluster_cpus <ncpus>] [--cluster_memory <MB>] [--cluster_exclusive] [--cluster_jobs <njobs>] [--seed_offset <off>] [--verbose] [--keep_cluster_scripts] [--ignore_errors] directory_of_simulations ...
+usage: run_mcell_simulations.sh --help | [--dry_run] [--mode <mode>] [--cluster_partition <partition>] [--cluster_cpus <ncpus>] [--cluster_memory <MB>] [--cluster_exclusive] [--cluster_jobs <njobs>] [--seed_offset <off>] [--verbose] [--keep_cluster_scripts] [--ignore_errors] [--keep_existing_results] directory_of_simulations ...
 EOF
 }
 
@@ -21,9 +21,10 @@ seed_offset=0
 verbose=0
 keep_cluster_scripts=0
 ignore_errors=0
+keep_existing_results=0
 
 option_pattern='^--[[A-Za-z0-9_\-]\+$'
-options_pattern='^--\(help\|dry_run\|mode\|n_seeds\|cluster_partition\|cluster_cpus\|cluster_memory\|cluster_exclusive\|cluster_jobs\|seed_offset\|verbose\|keep_cluster_scripts\|ignore_errors\)$'
+options_pattern='^--\(help\|dry_run\|mode\|n_seeds\|cluster_partition\|cluster_cpus\|cluster_memory\|cluster_exclusive\|cluster_jobs\|seed_offset\|verbose\|keep_cluster_scripts\|ignore_errors\|keep_existing_results\)$'
 mode_pattern='^\(local\|slurm\)$'
 
 integer_pattern='^[0-9]\+$'
@@ -55,7 +56,7 @@ execute_command()
         echo "Dry run; would have executed '$@'"
     else
         echo "Executing '$@'"
-        $@
+        eval $@
     fi
 }
 
@@ -146,7 +147,6 @@ while (( "$#" )); do
             
             cluster_exclusive)
                 cluster_exclusive=1
-                shift
                 ;;
             
             matlab_name)
@@ -190,17 +190,18 @@ while (( "$#" )); do
             
             verbose)
                 verbose=1
-                shift
                 ;;
             
             keep_cluster_scripts)
                 keep_cluster_scripts=1
-                shift
                 ;;
             
             ignore_errors)
                 ignore_errors=1
-                shift
+                ;;
+            
+            keep_existing_results)
+                keep_existing_results=1
                 ;;
             
             *)
@@ -220,6 +221,27 @@ while (( "$#" )); do
 done
 
 mcell_scripts=($(find "${directory_of_simulations[@]}" -regex '.*/cell\(\.main\)?\.\(mdl\|mcell\)' | sort))
+n_mcell_scripts="${#mcell_scripts[@]}"
+if (( $keep_existing_results )) ; then
+    # Do not run scripts with react_data or viz_data subdirectories
+    shopt -s globstar
+    for i in $(seq 0 $(expr $n_mcell_scripts - 1)); do
+        mcell_script="${mcell_scripts[${i}]}"
+        mcell_script_dir="'${mcell_script}'/cell\(\.main\)?\.\(mdl\|mcell\)//"
+        mcell_script_react_data_pattern="${mcell_script_dir}react_data/**/*.dat"
+        mcell_script_viz_data_pattern="${mcell_script_dir}viz_data/**/*.dat"
+        # FIXME: This might break with spaces in filenames
+        for f in $mcell_script_react_data_pattern ; do
+            unset mcell_scripts[$i]
+            break
+        done
+        for f in $mcell_script_viz_data_pattern ; do
+            unset mcell_scripts[$i]
+            break
+        done
+    done
+    mcell_scripts=("${mcell_scripts[@]}")
+fi
 n_mcell_scripts="${#mcell_scripts[@]}"
 case "$mode" in
     slurm)
@@ -285,6 +307,7 @@ EOF
         cat <<- EOF >> "${tempfilename}"
 
 MCELL_SCRIPT="${mcell_script}"
+echo "Running MCell on \${MCELL_SCRIPT}"
 MCELL_SCRIPT_DIR="\$(dirname "\${MCELL_SCRIPT}")"
 MCELL_SEED=$(expr $cmd_ind + 1 + ${seed_offset})
 MCELL_SCRIPT_STDOUT="\${MCELL_SCRIPT}.\${MCELL_SEED}.stdout"
@@ -298,10 +321,10 @@ MCELL_DRY_RUN=0
 execute_command()
 {
     if (( \$MCELL_DRY_RUN )) ; then
-        echo2 "Dry run; would have executed '\$@'"
+        echo2 "Dry run; would have executed 'eval \$@'"
     else
-        echo2 \$@
-        \$@
+        echo2 eval \$@
+        eval \$@
     fi
 }
 execute_command_with_optional_ignore_error()
@@ -331,12 +354,12 @@ echo2 Finished at \`$timestamp_cmd_long\`
 execute_command cd "${original_dir}"
 EOF
         
+        chmod a+rx "${tempfilename}"
         let n_mcell_commands_done++
     done
 done
 
 job_name_base="mcell_`$timestamp_cmd`"
-echo ${tempfilenames[@]}
 for tempfilename in ${tempfilenames[@]} ; do
     echo
     if [ "$verbose" = 1 ]; then
@@ -346,13 +369,13 @@ for tempfilename in ${tempfilenames[@]} ; do
     
     case "$mode" in
         local)
-            execute_command "${tempfilename}"
+            execute_command bash "${tempfilename}"
             ;;
         
         slurm)
             job_name="${job_name_base}_${job_count}"
             let job_count++
-            slurm_command="${slurm_command_base} --job-name=${job_name} ${tempfilename}"
+            slurm_command="${slurm_command_base} --job-name=\"${job_name}\" \"${tempfilename}\""
             execute_command "${slurm_command}"
             ;;
     esac
