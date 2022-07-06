@@ -1,5 +1,5 @@
-function [can_start, final_name, final_exists, temp_name] = chunk_start( fname, final_extension, should_block)
-  %[can_start, final_name, final_exists] = chunk_start(path, fname, final_extension, should_block)
+function [can_start, final_name, final_exists, temp_name] = chunk_start( fname, final_extension, should_block, max_block_time)
+  %[can_start, final_name, final_exists] = chunk_start(fname, final_extension, should_block, max_block_time)
   %chunk_finish(path, fname, unique_filename)
   %  chunk_start checks if a certain unit of work has been done or is being 
   %  computed. The path is the location of both the final and temporary/lock
@@ -8,7 +8,7 @@ function [can_start, final_name, final_exists, temp_name] = chunk_start( fname, 
   %  final_extension. Temporary files are named [fname, '.tmp']. Save to
   %  final_name and then call chunk_finish to delete the temporary file.
   %
-  %  Copyright 2008-2013 Taraz Buck/tebuck at cmu.
+  %  Copyright 2008-2020 Taraz Buck/tebuck at cmu.
   %
   %  Tests:
   %  [can_start, final_name, final_exists] = chunk_start('.', 'atomic_test')
@@ -29,6 +29,7 @@ function [can_start, final_name, final_exists, temp_name] = chunk_start( fname, 
   % 2015-01-28 icaoberg: modified code to use matlab's builtin functions instead of depending on system call
   % 2016-02-22 xruan: update enviromemntal variable for job id from PBS to SLURM
   % 2019-09-28 tebuck: do not search for files in unintended directories
+  % 2020-08-03 tebuck: add argument max_block_time
 
   % Process options
   if nargin < 2 || isempty(final_extension)
@@ -36,6 +37,11 @@ function [can_start, final_name, final_exists, temp_name] = chunk_start( fname, 
   end
   if nargin < 3 || isempty(should_block)
       should_block = false;
+  end
+  if nargin < 4 || isempty(max_block_time)
+      max_block_time = inf;
+  else
+      start_time = tic;
   end
   
   [fname_path, fname_name, fname_ext] = fileparts(fname);
@@ -111,7 +117,7 @@ function [can_start, final_name, final_exists, temp_name] = chunk_start( fname, 
   
   while true
     % If another job is doing this work but is unfinished and we should wait until the work finishes, just pause and keep checking again if work and writing are both finished:
-    if work_being_done && should_block && exist(temp_name, 'file')
+    if work_being_done && should_block && exist(temp_name, 'file') && toc(start_time) < max_block_time
       pause(1);
       continue;
     else

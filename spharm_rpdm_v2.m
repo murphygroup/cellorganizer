@@ -80,15 +80,17 @@ for i = 1:length(spharm_obj_files)
 
     paramfiles{i} = [options.paramdir filesep 'param' num2str(i) '.mat'];
     
-    tmpfile = [paramfiles{i} '.tmp'];
-    if exist(tmpfile, 'file')
-        continue
-    elseif exist(paramfiles{i}, 'file')
+    fname = paramfiles{i};
+    [fname_path, fname_name, fname_ext] = fileparts(fname);
+    fname = [fname_path, fname_name];
+    [can_start, final_name, final_exists, tmpfile] = chunk_start(fname, '.mat');
+    if final_exists
         isdone(i) = true;
+    end
+    if ~can_start
         continue
     end
     
-    system(['touch "' tmpfile '"']);
     [spharm_obj,options.dna_image_path] = readfileifnonblank(spharm_obj_files,i);
     [immask,options.crop_image_path] = readfileifnonblank(options.masks,i);
 
@@ -112,7 +114,7 @@ for i = 1:length(spharm_obj_files)
                 save(paramfiles{i}, '-struct', 'cell_params')
                 isdone(i) = true;
             end
-            delete(tmpfile);
+            chunk_finish(fname);
         end
     catch the_error
         warning(['Unable to extract parameters for cell ' num2str(i) ...
@@ -201,15 +203,14 @@ if isa(dna_images, 'cell' ) && ...
             dna_images_list = temp;
             for j=1:1:length(dna_images_list)
                 disp(['Adding file ' dna_images_list{j}]);
-                temp_labels{length(temp_labels)+1} = num2str(label);
+                temp_labels{end+1} = num2str(label);
             end
         else
             disp('Adding another dataset to list')
             for j=1:1:length(temp)
-                dna_images_list{length(dna_images_list)+1} = ...
-                    temp{j};
+                dna_images_list{end+1} = temp{j};
                 disp(['Adding file ' temp{j}]);
-                temp_labels{length(temp_labels)+1} = num2str(label);
+                temp_labels{end+1} = num2str(label);
             end
         end
     end
@@ -224,10 +225,9 @@ else
         label = label + 1;
         disp('Adding datasets to list')
         for j=1:1:length(dataset)
-            dna_images_list{length(dna_images_list)+1} = ...
-                dataset{j};
+            dna_images_list{end+1} = dataset{j};
             disp(['Adding file function handle ' num2str(j) ' to list']);
-            temp_labels{length(temp_labels)+1} = num2str(label);
+            temp_labels{end+1} = num2str(label);
         end
         options.labels = temp_labels;
         clear dataset
@@ -237,10 +237,9 @@ else
         label = label + 1;
         disp('Adding datasets to list')
         for j=1:1:length(temp)
-            dna_images_list{length(dna_images_list)+1} = ...
-                temp{j};
+            dna_images_list{end+1} = temp{j};
             disp(['Adding file ' temp{j}]);
-            temp_labels{length(temp_labels)+1} = num2str(label);
+            temp_labels{end+1} = num2str(label);
         end
         options.labels = temp_labels;
         clear temp_labels;
@@ -268,8 +267,7 @@ if isa(cell_images, 'cell' ) && ...
         else
             disp('Adding another dataset to list')
             for j=1:1:length(temp)
-                cell_images_list{length(cell_images_list)+1} = ...
-                    temp{j};
+                cell_images_list{end+1} = temp{j};
                 disp(['Adding file ' temp{j}]);
             end
         end
@@ -281,8 +279,7 @@ else
         label = label + 1;
         disp('Adding datasets to list')
         for j=1:1:length(dataset)
-            cell_images_list{length(cell_images_list)+1} = ...
-                dataset{j};
+            cell_images_list{end+1} = dataset{j};
             disp(['Adding file function handle ' num2str(j) ' to list']);
         end
         clear dataset
@@ -291,8 +288,7 @@ else
         temp = ml_ls( dataset );
         disp('Adding datasets to list')
         for j=1:1:length(temp)
-            cell_images_list{length(cell_images_list)+1} = ...
-                temp{j};
+            cell_images_list{end+1} = temp{j};
             disp(['Adding file ' temp{j}]);
         end
     end
@@ -320,8 +316,7 @@ if isa(prot_images, 'cell' ) && ...
         else
             disp('Adding another dataset to list')
             for j=1:1:length(temp)
-                protein_images_list{length(protein_images_list)+1} = ...
-                    temp{j};
+                protein_images_list{end+1} = temp{j};
                 disp(['Adding file ' temp{j}]);
             end
         end
@@ -333,10 +328,9 @@ else
         label = label + 1;
         disp('Adding datasets to list')
         for j=1:1:length(dataset)
-            protein_images_list{length(protein_images_list)+1} = ...
-                dataset{j};
+            protein_images_list{end+1} = dataset{j};
             disp(['Adding file function handle ' num2str(j) ' to list']);
-            temp_labels{length(temp_labels)+1} = num2str(label);
+            temp_labels{end+1} = num2str(label);
         end
         clear dataset
     else
@@ -344,8 +338,7 @@ else
         temp = ml_ls( dataset );
         disp('Adding datasets to list')
         for j=1:1:length(temp)
-            protein_images_list{length(protein_images_list)+1} = ...
-                temp{j};
+            protein_images_list{end+1} = temp{j};
             disp(['Adding file ' temp{j}]);
         end
     end
@@ -538,7 +531,7 @@ if iscell( dnaImagesDirectoryPath ) && ...
         check_images_directory(cellImagesDirectoryPath) && ...
         check_images_directory(proteinImagesDirectoryPath) )
     disp('Multiple datasets found');
-    disp('Checking consistency accross datasets')
+    disp('Checking consistency across datasets')
     if numel(unique(nonzeros([length(dnaImagesDirectoryPath), ...
             length(cellImagesDirectoryPath), ...
             length(proteinImagesDirectoryPath)]))) == 1
@@ -588,7 +581,7 @@ for i = 1:length(file_array)
     disp(['Parsing image ' file_array{i} ]);
     temp = get_list_of_function_handles_from_ometiff( [file_array{i}], channel_num);
     for j=1:1:length(temp)
-        imgDir{length(imgDir)+1} = temp{j};
+        imgDir{end+1} = temp{j};
     end
 end
 end

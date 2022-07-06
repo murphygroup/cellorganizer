@@ -1,0 +1,8 @@
+MODIFY_SURFACE_REGIONS
+{
+  NU[ALL]
+  {
+    SURFACE_CLASS = Catalytic
+  }
+}
+

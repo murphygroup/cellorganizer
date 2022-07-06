@@ -38,11 +38,11 @@ global CELLORGANIZER_ROOT_PATH
 CELLORGANIZER_ROOT_PATH = pwd;
 
 %icaoberg 10/2/2015
-disp('Adding appropiate folders to path.');
+disp('Adding appropriate folders to path.');
 addpath(genpath( [pwd filesep 'utilities']));
 addpath(genpath( [pwd filesep 'models']));
 addpath(genpath( [pwd filesep 'demos']));
-addpath(genpath( [pwd filesep 'applications']));
+addpath( [pwd filesep 'applications']);
 addpath([pwd filesep 'images']);
 
 javaaddpath( [ pwd filesep ...
@@ -61,6 +61,7 @@ if ~is_it_compatible_with_cellorganizer()
         rmpath(genpath( [pwd filesep 'utilities']));
         rmpath(genpath( [pwd filesep 'models']));
         rmpath(genpath( [pwd filesep 'demos']));
+        rmpath( [pwd filesep 'applications']);
         error( ['The current system is not ' ...
             'compatible with CellOrganizer. Please refer to the official documentation for more information.'] );
     end

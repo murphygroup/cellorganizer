@@ -62,37 +62,50 @@ function answer = slml2img( varargin )
 %
 % Outputs
 % -------
-% output.tifimages                          (optional) Boolean flag specifying whether to write out tif images. Default is true.
-% output.indexedimage                       (optional) Boolean flag specifying whether to write out indexed image. Default is false.
-% output.blenderfile                        (optional) Boolean flag specifying whether to write out (.obj) files for use in blender. Default is false.
-% output.meshes                             (optional) Boolean flag specifying whether to write out (.obj) files of analytic meshes (if available, does not work with every model type). Default is false.
-% output.shape_space_coords                 (optional) Boolean flag specifying whether to write out (.mat, .txt) files containing shape space coordinates (currently only for SPHARM geometry). Default is false.
-% output.blender.downsample                 (optional) downsampling fraction for the creation of object files (1 means no downsampling, 1/5 means 1/5 the size).
-% output.SBML                               (optional) boolean flag specifying whether to write out (.xml) files with SBML-Spatial 2 representations of geometries. Default is false.
-% output.SBMLDownsampling                   (optional) downsampling fraction for the creation of SBML Spatial files when output.SBML or output.SBMLSpatial are true (1 means no downsampling, 1/5 means 1/5 the size).
-% output.SBMLSpatial                        (optional) boolean flag specifying whether to write out (.xml) file with SBML-Spatial 3 representations of geometries. Default is false.
-% output.SBMLSpatialImage                   (optional) boolean flag specifying whether SBML-Spatial 3 output represents geometries with image volumes instead of meshes. Meshes are not supported by Virtual Cell. Default is false.
- % output.SBMLSpatialUseCompression         (optional) boolean flag specifying whether to write SBML Spatial output using compression. Default is true.
- % output.SBMLSpatialUseAnalyticMeshes      (optional) boolean flag specifying whether to use analytic meshes instead of isosurfaces of rasterized shapes. Default is false.
-% output.SBMLSpatialVCellCompatible         (optional) boolean flag specifying whether to write SBML Spatial output compatible with Virtual Cell but not the Level 3 Version 1 Release 0.90 draft specifications. Default is false.
-% output.SBMLSpatialImageDownsampling       (optional) downsampling fraction for the creation of SBML Spatial files when output.SBMLSpatialImage is true (1 means no downsampling, 1/5 means 1/5 the size).
+% output.tifimages                              (optional) Boolean flag specifying whether to write out tif images. Default is true.
+% output.indexedimage                           (optional) Boolean flag specifying whether to write out indexed image. Default is false.
+% output.blenderfile                            (optional) Boolean flag specifying whether to write out (.obj) files for use in blender. Default is false.
+% output.meshes                                 (optional) Boolean flag specifying whether to write out (.obj) files of analytic meshes (if available, does not work with every model type). Default is false.
+% output.shape_space_coords                     (optional) Boolean flag specifying whether to write out (.mat, .txt) files containing shape space coordinates (currently only for SPHARM geometry). Default is false.
+% output.blender.downsample                     (optional) downsampling fraction for the creation of object files (1 means no downsampling, 1/5 means 1/5 the size).
+% output.SBML                                   (optional) boolean flag specifying whether to write out (.xml) files with SBML-Spatial 2 representations of geometries. Default is false.
+% output.SBMLDownsampling                       (optional) downsampling fraction for the creation of SBML Spatial files when output.SBML or output.SBMLSpatial are true (1 means no downsampling, 1/5 means 1/5 the size).
+% output.SBMLSpatial                            (optional) boolean flag specifying whether to write out (.xml) file with SBML-Spatial 3 representations of geometries. Default is false.
+% output.SBMLSpatialImage                       (optional) boolean flag specifying whether SBML-Spatial 3 output represents geometries with image volumes instead of meshes. Meshes are not supported by Virtual Cell. Default is false.
+% output.SBMLSpatialUseCompression              (optional) boolean flag specifying whether to write SBML Spatial output using compression. Default is true.
+% output.SBMLSpatialUseAnalyticMeshes           (optional) boolean flag specifying whether to use analytic meshes instead of isosurfaces of rasterized shapes. Default is false.
+% output.SBMLSpatialVCellCompatible             (optional) boolean flag specifying whether to write SBML Spatial output compatible with Virtual Cell but not the Level 3 Version 1 Release 0.90 draft specifications. Default is false.
+% output.SBMLSpatialImageDownsampling           (optional) downsampling fraction for the creation of SBML Spatial files when output.SBMLSpatialImage is true (1 means no downsampling, 1/5 means 1/5 the size).
 % output.SBMLTranslations                   (optional) N x 2 cell array of strings (first column) to be replaced by other strings (second column) in CellOrganizer-generated SBML.
 % output.SBMLIncludeEC                      (optional) boolean flag specifying whether to include an extracellular region in SBML Spatial output. Default is false.
 % output.SBMLECScale                        (optional) scaling for extracellular region in SBML Spatial output. Default is 1.
-% output.VCML.writeVCML                     (optional) boolean flag specifying whether to write out VCML files for use with Virtual Cell. Default is false.
+% output.VCML.writeVCML                         (optional) boolean flag specifying whether to write out VCML files for use with Virtual Cell. Default is false.
 % output.VCML.input_filename                (optional) string specifying Virtual Cell VCML file with biochemistry which will be combined with generated geometry in output file. Default is empty string.
-% output.VCML.downsampling                  (optional) downsampling fraction for the creation of object files (1 means no downsampling, 1/5 means 1/5 the size). Default is 1.
-% output.VCML.addTranslocationIntermediates (optional) boolean flag specifying whether to create intermediate species and reactions for reactions involving non-adjacent translocations, which are valid in cBNGL but not Virtual Cell. Default is true.
-% output.VCML.numSimulations                (optional) number of simulations in VCML file.
-% output.VCML.translations                  (optional) N x 2 cell array of strings (first column) to be replaced by other strings (second column).
-% output.VCML.defaultDiffusionCoefficient   (optional) double specifying diffusion coefficient in meters squared per second. Default is 1.0958e-11.
+% output.VCML.downsampling                      (optional) downsampling fraction for the creation of object files (1 means no downsampling, 1/5 means 1/5 the size). Default is 1.
+% output.VCML.addTranslocationIntermediates     (optional) boolean flag specifying whether to create intermediate species and reactions for reactions involving non-adjacent translocations, which are valid in cBNGL but not Virtual Cell. Default is true.
+% output.VCML.numSimulations                    (optional) number of simulations in VCML file.
+% output.VCML.translations                      (optional) N x 2 cell array of strings (first column) to be replaced by other strings (second column).
+% output.VCML.defaultDiffusionCoefficient       (optional) double specifying diffusion coefficient in meters squared per second. Default is 1.0958e-11.
 % output.VCML.NET.filename                  (optional) string specifying BioNetGen network file to include in VCML files for use with Virtual Cell. Default is empty string.
 % output.VCML.NET.units.concentration       (optional) string specifying concentration units in NET file. Default is 'uM'.
 % output.VCML.NET.units.length              (optional) string specifying length units in NET file. Default is 'um'.
 % output.VCML.NET.units.time                (optional) string specifying time units in NET file. Default is 's'.
 % output.VCML.NET.effectiveWidth            (optional) double specifying surface thickness in meters. Default is 3.8775e-9.
 % output.VCML.NET.useImageAdjacency         (optional) boolean specifying whether to derive compartment adjacency from the synthetic image. Can break Virtual Cell compatibility due to inclusion of BioNetGen representation of translocation between non-adjacent compartments. Default is true.
-% output.OMETIFF                            (optional) boolean flag specifying whether to write out an (.ome.tif) OME TIFF. Default is false.
+% output.MCellMDL.writeMCellMDL                 (optional) boolean flag specifying whether to write out MCellMDL files for use with Virtual Cell. Default is false.
+% output.MCellMDL.downsampling                  (optional) downsampling fraction for the creation of object files (1 means no downsampling, 1/5 means 1/5 the size). Default is 1.
+% output.MCellMDL.addTranslocationIntermediates (optional) boolean flag specifying whether to create intermediate species and reactions for reactions involving non-adjacent translocations, which are valid in cBNGL but not Virtual Cell. Default is true.
+% output.MCellMDL.numSimulations                (optional) number of simulations in MCellMDL file.
+% output.MCellMDL.translations                  (optional) N x 2 cell array of strings (first column) to be replaced by other strings (second column).
+% output.MCellMDL.defaultDiffusionCoefficient   (optional) double specifying diffusion coefficient in meters squared per second. Default is 1.0958e-11.
+% output.MCellMDL.input_filename_pattern        (optional) string specifying pattern matching a set of MCell MDL files to be combined with generated MDL files. This should be empty or `[path][prefix].*.[extension]`. Extension can be `.mdl`, `.mcell`, or otherwise. If not empty, CellOrganizer will only generate the geometry file and will copy the other files matching the pattern to the output directory, and it is the user's responsibility to ensure compatibility between the input and CellOrganizer's output. Default is `''`. Only one of `output.MCellMDL.input_filename_pattern` and `output.NET.filename` can be non-empty.
+% output.NET.filename                           (optional) string specifying BioNetGen network file to include in VCML or MCell MDL files for use with Virtual Cell or MCell MDL files for MCell. Default is `''`. Only one of `output.MCellMDL.input_filename_pattern` and `output.NET.filename` can be non-empty.
+% output.NET.units.concentration                (optional) string specifying concentration units in NET file. Default is 'uM'.
+% output.NET.units.length                       (optional) string specifying length units in NET file. Default is 'um'.
+% output.NET.units.time                         (optional) string specifying time units in NET file. Default is 's'.
+% output.NET.effectiveWidth                     (optional) double specifying surface thickness in meters. Default is 3.8775e-9.
+% output.NET.useImageAdjacency                  (optional) boolean specifying whether to derive compartment adjacency from the synthetic image. Can break Virtual Cell compatibility due to inclusion of BioNetGen representation of translocation between non-adjacent compartments. Default is true.
+% output.OMETIFF                                (optional) boolean flag specifying whether to write out an (.ome.tif) OME TIFF. Default is false.
 %
 % PCA model options
 % ------------------
@@ -306,9 +319,10 @@ elseif ~isfield(options.output,'tifimages') && ...
         ~isfield(options.output,'meshes') && ...
         ~isfield(options.output,'SBML') && ...
         ~isfield(options.output,'SBMLSpatial') && ...
-        ~options.output.VCML.writeVCML
+        ~options.output.VCML.writeVCML && ...
+        ~options.output.MCellMDL.writeMCellMDL
     error(['CellOrganizer: Unsupported output specified. Supported ' ...
-        'outputs for options.output are tifimages, indexedimage, SBML, SBMLSpatial, and VCML.'])
+        'outputs for options.output are tifimages, indexedimage, SBML, SBMLSpatial, VCML, and MCellMDL.'])
 end
 
 %LOGS
@@ -329,7 +343,7 @@ try
     % for i=1:1:length(c)
         % logfile = ['',logfile,num2str(c(i))]; %#ok<AGROW>
     % end
-    logfile = char(datetime('now', 'TimeZone', 'local', 'Format', 'yyyyMMddHHmmss'));
+    logfile = datestr(datetime('now', 'TimeZone', 'local'), 'yyyymmddHHMMSS.FFF'); %#ok<AGROW>
     logfile = [ pwd filesep 'log' filesep logfile, '.log' ];
 
     fileID = fopen( logfile, 'w' );
@@ -446,7 +460,7 @@ end
 disp( ['Setting target directory to ' targetDirectory ] );
 
 %icaoberg 12/2/2013
-if ~exist( targetDirectory )
+if ~exist( targetDirectory, 'dir' )
     disp( 'Target directory does not exist. Making target directory.' );
     mkdir( targetDirectory )
 end
@@ -532,13 +546,13 @@ options.resolution.cubic = ...
 %synthesize multicolor images and save them to disk
 for i=1:1:numberOfSynthesizedImages
     if ~options.overwrite_synthetic_instances
-        if exist([options.targetDirectory filesep options.prefix filesep 'cell' num2str(i)])
+        if exist([options.targetDirectory filesep options.prefix filesep 'cell' num2str(i)], 'dir')
             continue
         end
     else
         temporary_target_directory = ...
             [options.targetDirectory filesep options.prefix filesep 'cell' num2str(i)];
-        if exist( temporary_target_directory )
+        if exist( temporary_target_directory, 'dir' ) && options.clean_synthetic_instances
             rmdir(temporary_target_directory, ...
                 's' );
             mkdir(temporary_target_directory);
@@ -585,7 +599,7 @@ for i=1:1:numberOfSynthesizedImages
         temporary_file = [ options.temporary_results filesep 'image.mat' ];
 
         if options.output.tifimages
-            if exist( temporary_file )
+            if exist( temporary_file, 'file' )
                 load( temporary_file );
 
                 outdir = [ targetDirectory filesep prefix filesep 'cell' num2str(i) ];
@@ -599,7 +613,7 @@ for i=1:1:numberOfSynthesizedImages
         end
 
         if options.output.OMETIFF
-            if exist( temporary_file )
+            if exist( temporary_file, 'file' )
                 load( temporary_file );
 
                 outdir = [ targetDirectory filesep prefix filesep 'cell' num2str(i) ];
@@ -631,7 +645,7 @@ for i=1:1:numberOfSynthesizedImages
             end
         end
 
-        if exist( temporary_file )
+        if exist( temporary_file, 'file' )
             delete( temporary_file );
         end
     else
@@ -645,7 +659,7 @@ for i=1:1:numberOfSynthesizedImages
         
         if field_exists_and_true(options.output,'shape_space_coords')
             shape_space_coords = [];
-            if isfield(options, 'spharm_rpdm') && isfield(options.spharm_rpdm, 'shape_space_coords')
+            if isfieldr(options, 'spharm_rpdm.shape_space_coords')
                 shape_space_coords = options.spharm_rpdm.shape_space_coords;
             end
             if ~isempty(shape_space_coords)
@@ -704,6 +718,18 @@ for i=1:1:numberOfSynthesizedImages
             end
             clear image;
 
+            output_filename_root = 'nucleus';
+            % Scale mesh vertices to have units of um (no longer dependent on options.output.meshes)
+            if (isstruct(options.nucmesh) && ...
+                    ~field_exists_and_true(options,'cubicOverride') && ...
+                    isfield(options.resolution,'objects') && ...
+                    isfield(options.resolution,'cubic'))
+                options.nucmesh_cubic = true;
+                % xruan 05/21/2019 also adjust resolution for meshes
+                options.nucmesh.vertices = options.nucmesh.vertices .* repmat(options.resolution.objects ./ options.resolution.cubic, size(options.nucmesh.vertices, 1), 1);
+                output_filename_root = [output_filename_root '_cubic'];
+            end
+
             % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
             if field_exists_and_true(options.output,'meshes')
                 if options.verbose
@@ -717,7 +743,7 @@ for i=1:1:numberOfSynthesizedImages
                     output_mesh = struct('vertices', zeros(0, 3), 'faces', zeros(0, 3, 'uint8'));
                 end
                 nucmesh_with_objects = struct('vertices', output_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', output_mesh.faces)));
-                write_wobj(nucmesh_with_objects, [outdir filesep 'nucleus.obj']);
+                write_wobj(nucmesh_with_objects, [outdir filesep output_filename_root '.obj']);
             end
         end
 
@@ -751,6 +777,18 @@ for i=1:1:numberOfSynthesizedImages
             end
             clear image;
 
+            output_filename_root = 'cell';
+            % Scale mesh vertices to have units of um (no longer dependent on options.output.meshes)
+            if (isstruct(options.cellmesh) && ...
+                    ~field_exists_and_true(options,'cubicOverride') && ...
+                    isfield(options.resolution,'objects') && ...
+                    isfield(options.resolution,'cubic'))
+                options.cellmesh_cubic = true;
+                % xruan 05/21/2019 also adjust resolution for meshes
+                options.cellmesh.vertices = options.cellmesh.vertices .* repmat(options.resolution.objects ./ options.resolution.cubic, size(options.cellmesh.vertices, 1), 1);
+                output_filename_root = [output_filename_root '_cubic'];
+            end
+            
             % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
             if field_exists_and_true(options.output,'meshes')
                 if options.verbose
@@ -764,7 +802,7 @@ for i=1:1:numberOfSynthesizedImages
                     output_mesh = struct('vertices', zeros(0, 3), 'faces', zeros(0, 3, 'uint8'));
                 end
                 cellmesh_with_objects = struct('vertices', output_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', output_mesh.faces)));
-                write_wobj(cellmesh_with_objects, [outdir filesep 'cell.obj']);
+                write_wobj(cellmesh_with_objects, [outdir filesep output_filename_root '.obj']);
             end
         end
 
@@ -772,12 +810,14 @@ for i=1:1:numberOfSynthesizedImages
                 field_exists_and_true_or_char(options.output,'blenderfile') || ...
                 field_exists_and_true_or_char(options.output,'SBML') || ...
                 field_exists_and_true_or_char(options.output,'SBMLSpatial') || ...
-                options.output.VCML.writeVCML
+                options.output.VCML.writeVCML || ...
+                options.output.VCML.writeMCellMDL
             %create framework struct for SBML model using the first two
             %images (nuc, cell)
             if (field_exists_and_true_or_char(options.output,'SBML') || ...
                     field_exists_and_true_or_char(options.output,'SBMLSpatial') || ...
-                    options.output.VCML.writeVCML)
+                    options.output.VCML.writeVCML || ...
+                    options.output.MCellMDL.writeMCellMDL)
                 %D. Sullivan 11/4/14 - adjust resolutions to be cubic since
                 %simulating in non-cubic voxels doesn't make sense
                 if (field_exists_and_true(options,'cubicOverride'))
@@ -819,12 +859,13 @@ for i=1:1:numberOfSynthesizedImages
             %%%I think we should do this for the framework not the primitives%%%
             primitives = struct();
             if field_exists_and_true(options.output,'SBMLIncludeEC')
-                if field_exists_and_true_or_char(options.output,'SBML')
+                if (field_exists_and_true_or_char(options.output,'SBML') && field_exists_and_true(options.output,'SBMLIncludeEC'))
                     primitives = getBox(imgs,options.SBML_0Name,options.resolution.cubic,[],options);
                 end
                 
-                if (field_exists_and_true_or_char(options.output,'SBMLSpatial') || ...
-                        options.output.VCML.writeVCML)
+                if ((field_exists_and_true_or_char(options.output,'SBMLSpatial') && field_exists_and_true(options.output,'SBMLIncludeEC')) || ...
+                        options.output.VCML.writeVCML || ...
+                        options.output.MCellMDL.writeMCellMDL)
                     primitives = getBox3(imgs,options.SBML_0Name,options.resolution.cubic,[],options);
                 end
             end
@@ -874,24 +915,20 @@ for i=1:1:numberOfSynthesizedImages
                         %D. Sullivan 7/23/13 added primitives type of output
                         if (field_exists_and_true_or_char(options.output,'SBML') || ...
                                 field_exists_and_true_or_char(options.output,'SBMLSpatial') || ...
-                                options.output.VCML.writeVCML)
+                                options.output.VCML.writeVCML || ...
+                                options.output.MCellMDL.writeMCellMDL)
+                            model_class = [];
                             if isfield(options,'SBML_PName')
-                                %D. Sullivan ***Temporary - this wont work for the HTM***
-                                if true_or_char(options.output.SBML)
-                                    primitives = createSBMLstruct(models{j}.proteinModel,num2str(j),[options.SBML_PName{j},num2str(j)],primitives);
-                                end
+                                model_class = [options.SBML_PName{j},num2str(j)];
+                            end
+                            
+                            %D. Sullivan ***Temporary - this wont work for the HTM***
+                            if true_or_char(options.output.SBML)
+                                primitives = createSBMLstruct(models{j}.proteinModel,num2str(j),model_class,primitives);
+                            end
 
-                                if field_exists_and_true_or_char(options.output,'SBMLSpatial') || options.output.VCML.writeVCML
-                                    primitives = createSBMLstruct3(models{j}.proteinModel,num2str(j),[options.SBML_PName{j},num2str(j)],primitives,options);
-                                end
-                            else
-                                if true_or_char(options.output.SBML)
-                                    primitives = createSBMLstruct(models{j}.proteinModel,num2str(j),[],primitives);
-                                end
-
-                                if field_exists_and_true_or_char(options.output,'SBMLSpatial') || options.output.VCML.writeVCML
-                                    primitives = createSBMLstruct3(models{j}.proteinModel,num2str(j),[],primitives,options);
-                                end
+                            if field_exists_and_true_or_char(options.output,'SBMLSpatial') || options.output.VCML.writeVCML || options.output.MCellMDL.writeMCellMDL
+                                primitives = createSBMLstruct3(models{j}.proteinModel,num2str(j),model_class,primitives,options);
                             end
 
                             if field_exists_and_true(options.output,'primitives')
@@ -912,8 +949,14 @@ for i=1:1:numberOfSynthesizedImages
                 end
             end
 
-
-            %support for SBML Spatial Level 3 Version 1.0 Draft 0.90
+            if (field_exists_and_true_or_char(options.output,'SBML') || ...
+                field_exists_and_true_or_char(options.output,'SBMLSpatial') || ...
+                    options.output.VCML.writeVCML || ...
+                    options.output.MCellMDL.writeMCellMDL)
+                options = nameModels(primitives, frameworkSBML, models, imgs, options);
+            end
+            
+            %support for SBML Spatial Level 3 Version 1.0 Draft 0.95
             if field_exists_and_true_or_char(options.output,'SBMLSpatial')
                 if check_if_SBML_output_supported( models )
                     instance2SBML3_mod(primitives,frameworkSBML, ...
@@ -928,13 +971,24 @@ for i=1:1:numberOfSynthesizedImages
             % Support for Virtual Cell version 7.0.0_build_11
             if options.output.VCML.writeVCML
                 if check_if_SBML_output_supported( models )
-                    instance2VCML(models, imgs, ...
+                    instance2VCML(primitives, frameworkSBML, ...
+                        models, imgs, ...
                         options, [outdir filesep 'cell.vcml']);
                 else
                     warning('Cannot generate VCML file');
                 end
             end
 
+            % Support for MCell version 3.4
+            if options.output.MCellMDL.writeMCellMDL
+                if check_if_SBML_output_supported( models )
+                    instance2MCellMDL(primitives, frameworkSBML, ...
+                        models, imgs, ...
+                        options, [outdir filesep 'cell.mdl']);
+                else
+                    warning('Cannot generate MCellMDL file');
+                end
+            end
         end
 
         if field_exists_and_true(options.output,'OMETIFF')
@@ -962,6 +1016,45 @@ for i=1:1:numberOfSynthesizedImages
             parameters.list_of_channel_labels = list_of_channel_labels;
 
             answer = tif2ometiff( list_of_input_images, output_filename, parameters );
+        end
+
+        if field_exists_and_true(options.output,'indexedimage')
+            list_of_input_images = {};
+            list_of_channel_labels = {};
+
+            indexed_image_padded = padarray(indexed_image, ones(1, ndims(indexed_image)), 0);
+            list_of_input_images{1} = [ options.temporary_results filesep ...
+                'indexedimagepadded.tif' ] ;
+            img2tif( indexed_image_padded, list_of_input_images{1} );
+            parameters.PhysicalSizeX = options.resolution.objects(1);
+            parameters.PhysicalSizeY = options.resolution.objects(2);
+            parameters.PhysicalSizeZ = options.resolution.objects(3);
+            list_of_channel_labels{1} = ['channel' num2str(1)];
+            parameters.list_of_channel_labels = list_of_channel_labels;
+            
+            output_filename = [outdir filesep ...
+                'indexedimagepadded.ome.tif'];
+
+            answer = tif2ometiff( list_of_input_images, output_filename, parameters );
+            
+            if (~field_exists_and_true(options,'cubicOverride'))
+                indexed_image_cubic = AdjustResolutions(indexed_image,options.resolution.objects,options.resolution.cubic,false);
+                indexed_image_cubic = round(indexed_image_cubic);
+                if (~field_exists_and_true(options,'cubicOverride'))
+                    img2tif( indexed_image_cubic, [ outdir filesep 'indexedcubic.tif'], compression, true) ;
+                    imwrite( reshape_contrast(single(indexed_image_cubic), -1), [ outdir filesep 'indexedcubic.png']) ;
+                end
+                
+                indexed_image_cubic_padded = padarray(indexed_image_cubic, ones(1, ndims(indexed_image_cubic)), 0);
+                list_of_input_images{1} = [ options.temporary_results filesep ...
+                    'indexedimagecubicpadded.tif' ] ;
+                img2tif( indexed_image_cubic_padded, list_of_input_images{1} );
+
+                output_filename = [outdir filesep ...
+                    'indexedimagecubicpadded.ome.tif'];
+                
+                answer = tif2ometiff( list_of_input_images, output_filename, parameters );
+            end
         end
     end
 
@@ -995,73 +1088,4 @@ fclose( fileID );
 %icaoberg 7/1/2013
 disp( 'Finished synthesis' );
 answer = true;
-end
-
-function answer = check_if_SBML_output_supported( models )
-
-answer = true;
-for k=1:1:length(models)
-    if isfield(models{1}, 'proteinModel') && ~strcmpi(models{1}.proteinModel.class, 'vesicle' ) && ~strcmpi(models{1}.proteinModel.type, 'gmm' )
-        answer = false;
-    end
-end
-end%check_if_SBML_output_supported
-
-function answer = field_exists_and_true( options, field, alltrue )
-% FIELD_EXISTS_AND_TRUE Returns true if field exists and evaluates to true.
-%
-% List Of Input Arguments  Descriptions
-% -----------------------  ------------
-% options                  A structure
-% field                    A string specifying the field to check
-% alltrue                  (optional) Boolean flag that indicates whether a true result requires the field to be all true (alltrue == true, Matlab's default behavior) or any true (alltrue == false). Default is true.
-
-if nargin < 3
-    alltrue = true;
-end
-
-answer = isfield(options,field);
-if alltrue
-    answer = answer && options.(field);
-else
-    answer = answer && any(options.(field));
-end
-
-end
-
-function answer = true_or_char( value, alltrue )
-% TRUE_OR_CHAR Returns true if value either evaluates to true or is a char array.
-%
-% List Of Input Arguments  Descriptions
-% -----------------------  ------------
-% value                    A string specifying the field to check
-% alltrue                  (optional) Boolean flag that indicates whether a true result requires the field to be all true (alltrue == true, Matlab's default behavior) or any true (alltrue == false). Default is true.
-
-if nargin < 2
-    alltrue = true;
-end
-
-if alltrue
-    answer = ~isempty(value) && (ischar(value) || value);
-else
-    answer = ~isempty(value) && (ischar(value) || any(value));
-end
-
-end
-
-function answer = field_exists_and_true_or_char( options, field, alltrue )
-% FIELD_EXISTS_AND_TRUE_OR_CHAR Returns true if field exists and either evaluates to true or is a char array.
-%
-% List Of Input Arguments  Descriptions
-% -----------------------  ------------
-% options                  A structure
-% field                    A string specifying the field to check
-% alltrue                  (optional) Boolean flag that indicates whether a true result requires the field to be all true (alltrue == true, Matlab's default behavior) or any true (alltrue == false). Default is true.
-
-if nargin < 3
-    alltrue = true;
-end
-
-answer = isfield(options,field);
-answer = answer && true_or_char(options.(field), alltrue);
 end
