@@ -8,7 +8,8 @@ usage: run_mcell_simulations.sh --help | [--dry_run] [--mode <mode>] [--cluster_
 EOF
 }
 
-directory_of_simulations=()
+#directory_of_simulations=()
+declare -a directory_of_simulations
 dry_run=0
 mode="local"
 n_seeds=1
@@ -211,7 +212,9 @@ while (( "$#" )); do
         esac
         
     else
-        directory_of_simulations+=("$1")
+        shopt -s nullglob
+        directory_of_simulations+=($1)
+        shopt -u nullglob
         shift
         
     #else
@@ -220,29 +223,39 @@ while (( "$#" )); do
     fi
 done
 
-mcell_scripts=($(find "${directory_of_simulations[@]}" -regex '.*/cell\(\.main\)?\.\(mdl\|mcell\)' | sort))
-n_mcell_scripts="${#mcell_scripts[@]}"
+mcell_main_scripts=()
+for i in $(seq 0 $(expr ${#directory_of_simulations[@]} - 1)); do
+    mcell_main_scripts+=($(find "${directory_of_simulations[i]}" -regex '.*/cell\(\.main\)?\.\(mdl\|mcell\)' | sort))
+done
+n_mcell_main_scripts="${#mcell_main_scripts[@]}"
+
 if (( $keep_existing_results )) ; then
     # Do not run scripts with react_data or viz_data subdirectories
     shopt -s globstar
-    for i in $(seq 0 $(expr $n_mcell_scripts - 1)); do
-        mcell_script="${mcell_scripts[${i}]}"
+    for i in $(seq 0 $(expr $n_mcell_main_scripts - 1)); do
+        mcell_script="${mcell_main_scripts[${i}]}"
         mcell_script_dir="'${mcell_script}'/cell\(\.main\)?\.\(mdl\|mcell\)//"
         mcell_script_react_data_pattern="${mcell_script_dir}react_data/**/*.dat"
         mcell_script_viz_data_pattern="${mcell_script_dir}viz_data/**/*.dat"
+        
+        shopt -s nullglob
+        mcell_script_react_data_files=($mcell_script_react_data_pattern)
+        mcell_script_viz_data_files=($mcell_script_viz_data_pattern)
+        shopt -u nullglob
+        
         # FIXME: This might break with spaces in filenames
-        for f in $mcell_script_react_data_pattern ; do
-            unset mcell_scripts[$i]
+        for f in "${mcell_script_react_data_files[@]}" ; do
+            unset mcell_main_scripts[$i]
             break
         done
-        for f in $mcell_script_viz_data_pattern ; do
-            unset mcell_scripts[$i]
+        for f in "${mcell_script_viz_data_files[@]}" ; do
+            unset mcell_main_scripts[$i]
             break
         done
     done
-    mcell_scripts=("${mcell_scripts[@]}")
+    mcell_main_scripts=("${mcell_main_scripts[@]}")
 fi
-n_mcell_scripts="${#mcell_scripts[@]}"
+n_mcell_main_scripts="${#mcell_main_scripts[@]}"
 case "$mode" in
     slurm)
     slurm_output_base='${SLURM_SUBMIT_DIR}/slurm_job.${SLURM_JOBID}.${HOST}.${USER}'
@@ -268,7 +281,7 @@ tempdir="${HOME}/tmp"
 if [ ! -e "${tempdir}" ]; then
     mkdir "${tempdir}"
 fi
-let n_mcell_commands="$n_mcell_scripts * $n_seeds"
+let n_mcell_commands="$n_mcell_main_scripts * $n_seeds"
 case "$mode" in
     local)
         let n_mcell_commands_per_job=n_mcell_commands
@@ -287,8 +300,8 @@ execute_command_suffix=""
 if [ "$ignore_errors" = 1 ]; then
     execute_command_suffix=" || :"
 fi
-for i in $(seq 0 $(expr $n_mcell_scripts - 1)); do
-    mcell_script="${mcell_scripts[${i}]}"
+for i in $(seq 0 $(expr $n_mcell_main_scripts - 1)); do
+    mcell_script="${mcell_main_scripts[${i}]}"
     for j in $(seq 0 $(expr $n_seeds - 1)); do
         if (( $n_mcell_commands_done % $n_mcell_commands_per_job == 0 )) ; then
             tempfilename=$(mktemp "--tmpdir=${tempdir}")

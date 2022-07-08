@@ -104,13 +104,8 @@ def generate_and_simulate_info(**kw):
     raise NotImplementedError # Debug
     """
     
-    def call_if_not_dry_run(func, *args, capture_output=False, **kw2):
+    def call_if_not_dry_run(func, *args, **kw2):
         kw2 = dict(kw2)
-        # Requires Python 3.7
-        # kw2['capture_output'] = capture_output
-        if capture_output:
-            kw2['stdout'] = subprocess.PIPE
-            kw2['encoding'] = 'utf8'
         # print('kw2'); print(kw2) # Debug
         if dry_run:
             arg_str = str(', '.join([repr(x) for x in args] + [f"'{k}': {repr(v)}" for k, v in kw2.items()]))
@@ -130,7 +125,13 @@ def generate_and_simulate_info(**kw):
         if not any([isinstance(args, x) for x in [list, tuple]):
             args = (args,)
         """
-        return call_if_not_dry_run(run, args, capture_output=capture_output, **kw2)
+        # Requires Python 3.7
+        # kw2['capture_output'] = capture_output
+        if capture_output:
+            kw2['stdout'] = subprocess.PIPE
+            kw2['stderr'] = subprocess.PIPE
+            kw2['encoding'] = 'utf8'
+        return call_if_not_dry_run(run, args, **kw2)
     sbatch_output_program = re.compile(r'Submitted batch job ([0-9]+)')
     def get_sbatch_job_ids(job_submission_command_result):
         result = [sbatch_output_program.fullmatch(x) for x in job_submission_command_result.stdout.strip().splitlines()]
@@ -354,7 +355,14 @@ def generate_and_simulate(**kw):
             print('generation_command_result.stdout:')
             print(generation_command_result.stdout)
             print()
+            print('generation_command_result.stderr:')
+            print(generation_command_result.stderr)
+            print()
             # raise NotImplementedError # Debug
+            
+            if generation_command_result.returncode != 0:
+                sys.exit('generation_command failed')
+                # raise subprocess.CalledProcessError('generation_command failed')
             
             if kw[cluster_mode_option] == 'slurm':
                 wait_for_jobs(get_sbatch_job_ids(generation_command_result))
@@ -397,6 +405,13 @@ def generate_and_simulate(**kw):
             print('simulation_command_result.stdout:')
             print(simulation_command_result.stdout)
             print()
+            print('simulation_command_result.stderr:')
+            print(simulation_command_result.stderr)
+            print()
+            
+            if simulation_command_result.returncode != 0:
+                sys.exit('simulation_command failed')
+                # raise subprocess.CalledProcessError('simulation_command failed')
             
             # Wait
             if kw[cluster_mode_option] == 'slurm':
@@ -438,45 +453,17 @@ def n_vesicles_format(x):
         raise argparse.ArgumentTypeError('n_vesicles must be an empty list or a list of two non-negative integers with the second entry greater than or equal to the first')
     return x
 
-substitutions_dict = {}
-def path_with_substitution(value, substitution_key_set=set()):
-    placeholders_pattern = '\{(' + '|'.join(substitution_key_set) + ')\}'
-    x_placeholders = re.findall(placeholders_pattern, value)
-    if not set(x_placeholders).issubset(substitution_key_set):
-        placeholders_doc = '{' + ', '.join(['\'{' + x + '}\'' for x in sorted(substitution_key_set)]) + '}'
-        raise argparse.ArgumentTypeError(f'Argument must be an existing path or glob pattern matching at least one existing path with optional placeholders {placeholders_doc} indicating paths relative to the CellOrganizer installation (given {repr(value)})')
-    # value = value.format(**substitutions_dict)
-    # value = existing_path(value)
-    return value
-def path_substitution(value, substitution_key_set=set()):
-    substitutions_dict2 = {}
-    print('substitutions_dict'); pprint.pprint(substitutions_dict) # Debug
-    print('substitution_key_set'); pprint.pprint(substitution_key_set) # Debug
-    for x in substitution_key_set:
-        if x in substitutions_dict:
-            substitutions_dict2[x] = substitutions_dict[x]
-    # print(''); pprint.pprint() # Debug
-    print('substitutions_dict2'); pprint.pprint(substitutions_dict2) # Debug
-    print('value before'); pprint.pprint(value) # Debug
-    if isinstance(value, list):
-        value = [x.format(**substitutions_dict2) for x in value]
-    else:
-        value = value.format(**substitutions_dict2)
-    print('value after'); pprint.pprint(value) # Debug
-    # value = existing_path(value)
-    return value
-
 
 if __name__ == '__main__':
     
     # Parse options
-    substitution_key_set = {'cellorganizer', 'models', 'data', 'applications'}
-    path_with_substitution_gas = lambda x: path_with_substitution(x, substitution_key_set)
-    paths_with_substitution_gas = lambda x: [path_with_substitution(y, substitution_key_set) for y in x]
+    substitution_key_set = bsf.cellorganizer_substitution_key_set
+    path_with_substitution = bsf.cellorganizer_path_with_substitution
+    paths_with_substitution = bsf.cellorganizer_path_with_substitution
     
     parser = argparse.ArgumentParser(description='Generate multiple unique geometries, run simulations in them, and analyze the results for a given MCell- or Virtual Cell-format simulation description.')
     
-    parser.add_argument('reaction_network_file', type=path_with_substitution_gas, help='Either a path of a single VCML file or a glob pattern for a single collection of MCell MDL files')
+    parser.add_argument('reaction_network_file', type=path_with_substitution, help='Either a path of a single VCML file or a glob pattern for a single collection of MCell MDL files')
     
     parser.add_argument('output_dir', type=pathlib.Path, help='The path of a directory into which intermediate and final results will be written')
     
@@ -513,10 +500,10 @@ if __name__ == '__main__':
     
     # framework_model_default = '{models}/3D/spharm/lamp2.mat'
     framework_model_default = '{models}/3D/spharm/lamp2.demo3D52.mat'
-    parser.add_argument('--framework_model', type=path_with_substitution_gas, default=framework_model_default, help="The path of a single CellOrganizer framework model (cell and nucleus shapes)")
+    parser.add_argument('--framework_model', type=path_with_substitution, default=framework_model_default, help="The path of a single CellOrganizer framework model (cell and nucleus shapes)")
     
     # parser.add_argument('--vesicle_models', type=existing_path, nargs='*', default=['{models}/3D/tfr.mat'], help='A list of paths of CellOrganizer vesicle models')
-    parser.add_argument('--vesicle_models', type=paths_with_substitution_gas, nargs='*', default=['{models}/3D/tfr.mat'], help='A list of paths of CellOrganizer vesicle models')
+    parser.add_argument('--vesicle_models', type=paths_with_substitution, nargs='*', default=['{models}/3D/tfr.mat'], help='A list of paths of CellOrganizer vesicle models')
     
     parser.add_argument('--synthesis', type=str, choices=['framework', 'all'], default='framework', help="`'all'` to synthesize framework and vesicles or `'framework'` to ignore the vesicle model")
     
@@ -529,13 +516,6 @@ if __name__ == '__main__':
         * A value of `[]` samples the number of vesicles from the model's object count distribution
         * An array of length two containing the minimum and maximum number of objects to be sampled uniformly
         """.strip())
-    
-    parser.add_argument('--framework_min_clearance', type=float, default=-math.inf, help='double specifying the minimum distance in μm to impose between nucleus and cell after synthesis. -inf to disable. Currently only used for framework meshes assuming corresponding vertices by instance2MCellMDL. Default is -inf.')
-    
-    parser.add_argument('--framework_clearance_n_max_filter_rounds', type=positive_int, default=1, help='integer specifying the number of rounds of maximum filter to apply to the projections of cell vertices onto nucleus normals among the immediate neighbors of each vertex. 0 to disable. Currently only used for framework meshes assuming corresponding vertices by instance2MCellMDL. Default is 1.')
-    
-    intersecting_mesh_object_policy_default = 'ignore'
-    parser.add_argument('--intersecting_mesh_object_policy', type=str, default=intersecting_mesh_object_policy_default, help='''string specifying policy for checking framework and objects for intersection and whether to remove objects or reject the synthesized cell entirely. Currently untested for values other than 'ignore'. Currently only used for framework meshes assuming corresponding vertices by instance2MCellMDL. Default is 'ignore'.''')
     
     parser.add_argument('--vesicle_volume_scale', type=positive_float, default=1, help='Factor by which to scale each vesicle after synthesis')
     
@@ -565,10 +545,15 @@ if __name__ == '__main__':
     
     parser.add_argument('--simulation_seed_offset', type=int, default=500578, help='Offset used to produce seed for MCell random number generator')
     
+    parser.add_argument('--framework_min_clearance', type=float, default=-math.inf, help='double specifying the minimum distance in μm to impose between nucleus and cell after synthesis. -inf to disable. Currently only used for framework meshes assuming corresponding vertices by instance2MCellMDL. Default is -inf.')
+    
+    parser.add_argument('--framework_clearance_n_max_filter_rounds', type=positive_int, default=1, help='integer specifying the number of rounds of maximum filter to apply to the projections of cell vertices onto nucleus normals among the immediate neighbors of each vertex. 0 to disable. Currently only used for framework meshes assuming corresponding vertices by instance2MCellMDL. Default is 1.')
+    
+    intersecting_mesh_object_policy_default = 'ignore'
+    parser.add_argument('--intersecting_mesh_object_policy', type=str, default=intersecting_mesh_object_policy_default, help='''string specifying policy for checking framework and objects for intersection and whether to remove objects or reject the synthesized cell entirely. Currently untested for values other than 'ignore'. Currently only used for framework meshes assuming corresponding vertices by instance2MCellMDL. Default is 'ignore'.''')
+    
     # print('dir(parser)'); pprint.pprint(dir(parser)) # Debug
     # print('dir(parser._actions)'); pprint.pprint(dir(parser._actions)) # Debug
-    
-    args_to_substitute = [x.dest for x in parser._actions if x.type in (path_with_substitution_gas, paths_with_substitution_gas)]
     
     argv = sys.argv
     argv = remove_prepended_arguments(argv)
@@ -579,15 +564,7 @@ if __name__ == '__main__':
     args = parser.parse_args(argv[1:])
     args_vars = vars(args)
     
-    substitutions_dict['cellorganizer'] = str(args_vars['cellorganizer'])
-    for subdir in substitution_key_set - {'cellorganizer'}:
-        substitutions_dict[subdir] = os.path.join(substitutions_dict['cellorganizer'], subdir)
-    
-    print('substitutions_dict'); pprint.pprint(substitutions_dict) # Debug
-    for arg in args_to_substitute:
-        print(f'args_vars[{repr(arg)}] before', args_vars[arg]) # Debug
-        args_vars[arg] = path_substitution(args_vars[arg], substitution_key_set)
-        print(f'args_vars[{repr(arg)}] after', args_vars[arg]) # Debug
+    bsf.cellorganizer_path_substitutions(parser, args_vars)
     
     # raise NotImplementedError # Debug
     

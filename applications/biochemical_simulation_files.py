@@ -12,6 +12,7 @@ import re
 from math import *
 from itertools import product
 import struct
+import pprint
 
 import numpy as np
 import pandas as pd
@@ -200,6 +201,66 @@ temp2 = [float(x) for x in float_pattern_test_input.split()]
 temp3 = [x == y or (isnan(x) and isnan(y)) for x, y in zip(temp1, temp2)]
 assert(temp3)
 
+cellorganizer_substitution_key_set = {'cellorganizer', 'models', 'data', 'applications'}
+def cellorganizer_substitutions_dict_func(cellorganizer_path):
+    result = {}
+    result['cellorganizer'] = cellorganizer_path
+    for subdir in cellorganizer_substitution_key_set - {'cellorganizer'}:
+        result[subdir] = os.path.join(result['cellorganizer'], subdir)
+    return result
+
+def path_with_substitution(value, substitution_key_set=set()):
+    placeholders_pattern = '\{(' + '|'.join(substitution_key_set) + ')\}'
+    x_placeholders = re.findall(placeholders_pattern, value)
+    if not set(x_placeholders).issubset(substitution_key_set):
+        placeholders_doc = '{' + ', '.join(['\'{' + x + '}\'' for x in sorted(substitution_key_set)]) + '}'
+        raise argparse.ArgumentTypeError(f'Argument must be an existing path or glob pattern matching at least one existing path with optional placeholders {placeholders_doc} indicating paths relative to the CellOrganizer installation (given {repr(value)})')
+    # value = value.format(**substitutions_dict)
+    # value = existing_path(value)
+    return value
+
+cellorganizer_path_with_substitution = lambda x: path_with_substitution(x, cellorganizer_substitution_key_set)
+cellorganizer_paths_with_substitution = lambda x: [path_with_substitution(y, cellorganizer_substitution_key_set) for y in x]
+
+def path_substitution_dict(substitutions_dict, substitution_key_set=set()):
+    if not isinstance(substitution_key_set, set):
+        substitution_key_set = set(substitution_key_set)
+    substitutions_dict2 = {}
+    for x in substitution_key_set:
+        if x in substitutions_dict:
+            substitutions_dict2[x] = substitutions_dict[x]
+    return substitutions_dict2
+
+def path_substitution(value, substitutions_dict, substitution_key_set=set()):
+    substitutions_dict2 = path_substitution_dict(substitutions_dict, substitution_key_set)
+    if isinstance(value, list):
+        value = [x.format(**substitutions_dict2) for x in value]
+    else:
+        value = value.format(**substitutions_dict2)
+    # value = existing_path(value)
+    return value
+
+def cellorganizer_path_substitutions(parser, args_vars):
+    '''
+    Performs path substitution on args_vars in place where parser._actions[*].type is in (cellorganizer_path_with_substitution, cellorganizer_paths_with_substitution)
+    '''
+    substitution_key_set = cellorganizer_substitution_key_set
+    substitutions_dict = cellorganizer_substitutions_dict_func(str(args_vars['cellorganizer']))
+    
+    substitutions_dict2 = path_substitution_dict(substitutions_dict, substitution_key_set)
+    
+    args_to_substitute = [x.dest for x in parser._actions if x.type in (cellorganizer_path_with_substitution, cellorganizer_paths_with_substitution)]
+    # args_vars = {x: y for x, y in args_vars.items()}
+    for arg in args_to_substitute:
+        value = args_vars[arg]
+        if isinstance(value, list):
+            value = [x.format(**substitutions_dict2) for x in value]
+        else:
+            value = value.format(**substitutions_dict2)
+        args_vars[arg] = value
+    # return args_vars
+
+
 def filename_sort_key(given_string):
     '''
     Splits on path separators, then whitespace, then finds floats, then splits on underscores and periods.
@@ -207,27 +268,22 @@ def filename_sort_key(given_string):
     
     given_string = os.path.normpath(given_string)
     fields = list(os.path.split(given_string))
-    # print('given_string'); print(given_string) # Debug
-    # print('fields'); print(fields) # Debug
     
     while True:
         temp1, temp2 = os.path.split(fields[0])
         if len(temp1) == 0 or len(temp2) == 0:
             break
         fields = [temp1, temp2] + fields[1:]
-    # print('fields'); print(fields) # Debug
     
     fields2 = []
     for field in fields:
         field_fields = field.split()
         fields2.extend(field_fields)
     fields = fields2
-    # print('fields'); print(fields) # Debug
     
     fields2 = []
     for field in fields:
         field_fields = []
-        # print('field'); print(field) # Debug
         while len(field) > 0:
             search_result = float_pattern_program.search(field)
             if search_result is None:
@@ -239,9 +295,7 @@ def filename_sort_key(given_string):
                 field_fields.append(search_result.group(0))
                 field = field[search_result.end():]
         fields2.extend(field_fields)
-        # print('field_fields'); print(field_fields) # Debug
     fields = fields2
-    # print('fields'); print(fields) # Debug
     
     delimiters = ('_', '.')
     
@@ -255,7 +309,6 @@ def filename_sort_key(given_string):
                 fields3 = filter(lambda x: len(x) > 0, fields3)
                 fields2.extend(fields3)
         fields = fields2
-    # print('fields'); print(fields) # Debug
     
     fields2 = []
     for field in fields:
@@ -266,7 +319,6 @@ def filename_sort_key(given_string):
         else:
             fields2.append(field)
     fields = fields2
-    # print('fields'); print(fields) # Debug
     
     # raise NotImplementedError
     
