@@ -234,9 +234,9 @@ if (( $keep_existing_results )) ; then
     shopt -s globstar
     for i in $(seq 0 $(expr $n_mcell_main_scripts - 1)); do
         mcell_script="${mcell_main_scripts[${i}]}"
-        mcell_script_dir="'${mcell_script}'/cell\(\.main\)?\.\(mdl\|mcell\)//"
-        mcell_script_react_data_pattern="${mcell_script_dir}react_data/**/*.dat"
-        mcell_script_viz_data_pattern="${mcell_script_dir}viz_data/**/*.dat"
+        mcell_script_dir=$(dirname "${mcell_script}")
+        mcell_script_react_data_pattern="${mcell_script_dir}/react_data/**/*.dat"
+        mcell_script_viz_data_pattern="${mcell_script_dir}/viz_data/**/*.dat"
         
         shopt -s nullglob
         mcell_script_react_data_files=($mcell_script_react_data_pattern)
@@ -244,6 +244,7 @@ if (( $keep_existing_results )) ; then
         shopt -u nullglob
         
         # FIXME: This might break with spaces in filenames
+        # FIXME: Use something like chunk_start.m to ensure each simulation is run at most once
         for f in "${mcell_script_react_data_files[@]}" ; do
             unset mcell_main_scripts[$i]
             break
@@ -256,6 +257,7 @@ if (( $keep_existing_results )) ; then
     mcell_main_scripts=("${mcell_main_scripts[@]}")
 fi
 n_mcell_main_scripts="${#mcell_main_scripts[@]}"
+
 case "$mode" in
     slurm)
     slurm_output_base='${SLURM_SUBMIT_DIR}/slurm_job.${SLURM_JOBID}.${HOST}.${USER}'

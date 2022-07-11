@@ -42,10 +42,6 @@ run_simulations=1
 run_analysis=1
 
 
-# Debug
-n_images_to_synthesize=1
-overwrite_simulations=1
-
 ###########################################################################
 # DO NOT MODIFY THIS BLOCK
 

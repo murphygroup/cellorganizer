@@ -162,7 +162,7 @@ function exit_code_to_boolean()
 
 #echo '@@@@@@@@@@@@ DEBUG exiting early' ; exit 1 # Debug
 
-run_simulations_successful=''
+generate_and_simulate_successful=0
 if not_zero run_simulations; then
     args=()
     args+=("$reaction_network_pattern")
@@ -215,7 +215,7 @@ if not_zero run_simulations; then
 fi
 
 # Analyze results, create figures and tables
-if [[ $(not_zero run_simulations_successful) && $(not_zero run_analysis) ]]; then
+if (( generate_and_simulate_successful && run_analysis )); then
     cd "$co_apps"
     args=()
     args+=("$reaction_network_pattern")
