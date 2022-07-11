@@ -279,6 +279,7 @@ def generate_and_simulate(**kw):
     generation_args_kw_not_for_matlab.add(cluster_mode_option)
     generation_args_kw_not_for_matlab.add('cluster_partition')
     generation_args_kw_not_for_matlab.add('matlab_setup')
+    generation_args_kw_not_for_matlab.add('matlab_location')
     generation_args_kw_not_for_matlab.add('generation_cluster_jobs')
     generation_args_kw_not_for_matlab.add('generation_cluster_memory')
     generation_args_kw_not_for_matlab.add('generation_cluster_exclusive')
@@ -331,6 +332,7 @@ def generate_and_simulate(**kw):
     if len(kw['matlab_setup']) > 0:
         matlab_cd_setup = f"{matlab_cd_setup} ; {kw['matlab_setup']}"
     generation_bash_command.extend(['--matlab_setup', matlab_cd_setup])
+    generation_bash_command.extend(['--matlab_location', kw['matlab_location']])
     generation_bash_command.extend([generation_matlab_command])
     generation_bash_command = [repr(x).lower() if isinstance(x, bool) else x for x in generation_bash_command]
     generation_bash_command = [x if isinstance(x, str) else repr(x) for x in generation_bash_command]
@@ -486,6 +488,8 @@ if __name__ == '__main__':
     # matlab_setup_default = '/bin/bash /etc/bashrc ; module load matlab-9.7'
     matlab_setup_default = '/bin/bash /etc/bashrc ; source "{{cellorganizer}}/module_if_available.sh" ; module_if_available load matlab-9.7'
     parser.add_argument('--matlab_setup', type=script_with_substitution, default=matlab_setup_default, help='Bash command to set up Matlab')
+    
+    parser.add_argument('--matlab_location', type=str, default='matlab', help='Bash command to run Matlab')
     
     parser.add_argument('--generation_cluster_jobs', type=positive_int, default=4, help='Number of geometry generation jobs to run')
     
