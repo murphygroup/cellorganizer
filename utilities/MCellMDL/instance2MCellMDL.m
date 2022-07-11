@@ -271,6 +271,11 @@ write_modified_meshes = false;
 write_unmodified_meshes = true % Debug
 write_modified_meshes = true % Debug
 
+function mesh_savepath_write(given_mesh, output_filename_root)
+    given_mesh_with_objects = struct('vertices', given_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', given_mesh.faces)));
+    write_wobj(given_mesh_with_objects, [savepath_dir filesep output_filename_root '.obj']);
+end
+
 options.output.remove_mesh_intersections = true;
 remove_mesh_intersections = options.output.remove_mesh_intersections;
 if remove_mesh_intersections
@@ -298,8 +303,7 @@ if remove_mesh_intersections
             end
             fprintf( options.fileID, '%s\n', 'Saving nucleus mesh .obj file after removeMeshIntersections call' );
     
-            nucleus_mesh_with_objects = struct('vertices', nucleus_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', nucleus_mesh.faces)));
-            write_wobj(nucleus_mesh_with_objects, [savepath_dir filesep output_filename_root '.obj']);
+            mesh_savepath_write(nucleus_mesh, output_filename_root);
         end
         
         output_filename_root = 'cell';
@@ -316,8 +320,7 @@ if remove_mesh_intersections
             end
             fprintf( options.fileID, '%s\n', 'Saving cell mesh .obj file after removeMeshIntersections call' );
     
-            cell_mesh_with_objects = struct('vertices', cell_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', cell_mesh.faces)));
-            write_wobj(cell_mesh_with_objects, [savepath_dir filesep output_filename_root '.obj']);
+            mesh_savepath_write(cell_mesh, output_filename_root);
         end
     end
     
@@ -362,8 +365,7 @@ if remove_mesh_intersections
             end
             fprintf( options.fileID, '%s\n', 'Saving nucleus mesh .obj file after removeMeshIntersections call' );
     
-            nucleus_mesh_with_objects = struct('vertices', nucleus_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', nucleus_mesh.faces)));
-            write_wobj(nucleus_mesh_with_objects, [savepath_dir filesep output_filename_root '.obj']);
+            mesh_savepath_write(nucleus_mesh, output_filename_root);
         end
         
         output_filename_root = 'cell';
@@ -380,8 +382,7 @@ if remove_mesh_intersections
             end
             fprintf( options.fileID, '%s\n', 'Saving cell mesh .obj file after removeMeshIntersections call' );
     
-            cell_mesh_with_objects = struct('vertices', cell_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', cell_mesh.faces)));
-            write_wobj(cell_mesh_with_objects, [savepath_dir filesep output_filename_root '.obj']);
+            mesh_savepath_write(cell_mesh, output_filename_root);
         end
     end
 end
@@ -908,6 +909,94 @@ info.meshData = meshData;
 for i = 1:length(info.meshData)
     info.meshData(i).list = rmfield(meshData(i).list, {'mesh', 'img'});
 end
+
+meshData_info = meshDataInfo(meshData);
+meshData_flat = meshData_info.meshData_flat;
+nucleus_mesh_index = meshData_info.nucleus_mesh_index;
+cell_mesh_index = meshData_info.cell_mesh_index;
+ec_mesh_index = meshData_info.ec_mesh_index;
+info.meshData_flat = meshData_flat;
+info.meshData_flat = num2cell(info.meshData_flat);
+for i = 1:length(info.meshData_flat)
+    info.meshData_flat{i} = rmfield(info.meshData_flat{i}, {'mesh', 'img'});
+end
+info.meshData_flat = cell2mat(info.meshData_flat);
+info.nucleus_mesh_index = nucleus_mesh_index;
+info.cell_mesh_index = cell_mesh_index;
+info.ec_mesh_index = ec_mesh_index;
+
+info.geometry_info = struct();
+% info.geometry_info.models = geometry_info.models;
+% % info.geometry_info.imgs = geometry_info.imgs;
+% % info.geometry_info.meshes = geometry_info.meshes;
+% % info.geometry_info.meshData = geometry_info.meshData;
+% info.geometry_info.dim_chars = geometry_info.dim_chars;
+% info.geometry_info.sign_chars = geometry_info.sign_chars;
+% info.geometry_info.connectivity = geometry_info.connectivity;
+% info.geometry_info.connectivity_se = geometry_info.connectivity_se;
+% info.geometry_info.avogadro_constant = geometry_info.avogadro_constant;
+% info.geometry_info.avogadro_constant_value_expression = geometry_info.avogadro_constant_value_expression;
+% info.geometry_info.avogadro_constant_units = geometry_info.avogadro_constant_units;
+% % info.geometry_info.get_compartment_pair_string = geometry_info.get_compartment_pair_string;
+% % info.geometry_info.separate_compartment_images = geometry_info.separate_compartment_images;
+% % info.geometry_info.combine_compartment_images = geometry_info.combine_compartment_images;
+% % info.geometry_info.get_compartment_image_boundary_value = geometry_info.get_compartment_image_boundary_value;
+% % info.geometry_info.crop_compartment_image = geometry_info.crop_compartment_image;
+% % info.geometry_info.combine_resize_compartment_images = geometry_info.combine_resize_compartment_images;
+info.geometry_info.model_names = geometry_info.model_names;
+% info.geometry_info.model_cytonuclearflags = geometry_info.model_cytonuclearflags;
+info.geometry_info.model_names_translated = geometry_info.model_names_translated;
+info.geometry_info.name_map = geometry_info.name_map;
+info.geometry_info.framework_compartment_names = geometry_info.framework_compartment_names;
+% % info.geometry_info.is_framework_compartment_name_function = geometry_info.is_framework_compartment_name_function;
+% % info.geometry_info.named_imgs = geometry_info.named_imgs;
+% info.geometry_info.named_imgs_volumes = geometry_info.named_imgs_volumes;
+% info.geometry_info.named_imgs_exclusive_volumes = geometry_info.named_imgs_exclusive_volumes;
+% info.geometry_info.named_imgs_cytonuclearflags = geometry_info.named_imgs_cytonuclearflags;
+info.geometry_info.names = geometry_info.names;
+% % info.geometry_info.all_compartments_image_before_downsampling = geometry_info.all_compartments_image_before_downsampling;
+% % info.geometry_info.all_compartments_image = geometry_info.all_compartments_image;
+% % info.geometry_info.named_imgs_before_downsampling = geometry_info.named_imgs_before_downsampling;
+% info.geometry_info.resolution_single_before_downsampling = geometry_info.resolution_single_before_downsampling;
+% info.geometry_info.resolution = geometry_info.resolution;
+% info.geometry_info.resolution_single = geometry_info.resolution_single;
+info.geometry_info.adjacent_pairs = geometry_info.adjacent_pairs;
+info.geometry_info.names_sorted = geometry_info.names_sorted;
+info.geometry_info.n_compartments = geometry_info.n_compartments;
+info.geometry_info.all_compartment_volumes = geometry_info.all_compartment_volumes;
+info.geometry_info.all_compartment_exclusive_volumes = geometry_info.all_compartment_exclusive_volumes;
+info.geometry_info.all_compartment_indices = geometry_info.all_compartment_indices;
+% info.geometry_info.n_network_info_compartments = geometry_info.n_network_info_compartments;
+% info.geometry_info.network_info_compartments_keys = geometry_info.network_info_compartments_keys;
+% info.geometry_info.network_info_compartments_keys_indices_map = geometry_info.network_info_compartments_keys_indices_map;
+% info.geometry_info.network_info_adjacency_max_degree = geometry_info.network_info_adjacency_max_degree;
+% info.geometry_info.network_info_adjacency_matrix = geometry_info.network_info_adjacency_matrix;
+% info.geometry_info.network_info_adjacency_matrices = geometry_info.network_info_adjacency_matrices;
+% % info.geometry_info.is_network_info_compartment_pair_adjacent = geometry_info.is_network_info_compartment_pair_adjacent;
+% info.geometry_info.adjacent_pairs_max_degree = geometry_info.adjacent_pairs_max_degree;
+% info.geometry_info.adjacent_pairs_matrix = geometry_info.adjacent_pairs_matrix;
+% info.geometry_info.adjacent_pairs_matrices = geometry_info.adjacent_pairs_matrices;
+% % info.geometry_info.is_compartment_pair_adjacent = geometry_info.is_compartment_pair_adjacent;
+% info.geometry_info.all_compartments_objects = geometry_info.all_compartments_objects;
+% % info.geometry_info.all_compartments_objects_image = geometry_info.all_compartments_objects_image;
+info.geometry_info.all_compartments_objects_names = geometry_info.all_compartments_objects_names;
+info.geometry_info.all_compartments_objects_names_to_compartment_names = geometry_info.all_compartments_objects_names_to_compartment_names;
+info.geometry_info.all_compartments_objects_indices = geometry_info.all_compartments_objects_indices;
+info.geometry_info.n_compartments_objects = geometry_info.n_compartments_objects;
+info.geometry_info.object_adjacent_pairs = geometry_info.object_adjacent_pairs;
+% % info.geometry_info.getAdjacentValues = geometry_info.getAdjacentValues;
+% % info.geometry_info.getAdjacentCompartments = geometry_info.getAdjacentCompartments;
+% info.geometry_info.all_compartment_data = geometry_info.all_compartment_data;
+% info.geometry_info.all_object_data = geometry_info.all_object_data;
+% info.geometry_info.all_object_membrane_data = geometry_info.all_object_membrane_data;
+% info.geometry_info.all_membrane_data = geometry_info.all_membrane_data;
+info.geometry_info.all_membrane_names = geometry_info.all_membrane_names;
+% % info.geometry_info.is_membrane_function = geometry_info.is_membrane_function;
+% % info.geometry_info.species_index_to_name_function = geometry_info.species_index_to_name_function;
+% % info.geometry_info.translateWithDefaultIdentity = geometry_info.translateWithDefaultIdentity;
+% % info.geometry_info.parameterReferenceBase = geometry_info.parameterReferenceBase;
+% % info.geometry_info.evaluateExpression = geometry_info.evaluateExpression;
+
 fprintfln(info_file_handle, jsonencode(info));
 fclose(info_file_handle);
 
@@ -955,6 +1044,7 @@ if savepaths.isKey(section)
             item_name = single_meshData_list_item.name;
             item_type = single_meshData_list_item.type;
             item_mesh = single_meshData_list_item.mesh;
+            mesh_savepath_write(item_mesh, ['mcell_', item_name]);
             switch item_type
                 case 'triangle mesh'
                     oprintfln();
