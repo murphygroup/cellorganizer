@@ -529,19 +529,19 @@ if __name__ == '__main__':
     
     parser.add_argument('--translations', type=str, nargs='*', default=['cell', 'CP', 'nuc', 'NU', 'nucleus', 'NU', 'lamp2_mat_tfr_mat', 'EN', 'CP_EC', 'PM', 'CP_EN', 'EM', 'CP_NU', 'NM'], help='List of strings of even length where the first of each pair is to be replaced by the second in compartment names in CellOrganizer-generated VCML, MCell MDL, and SBML')
     
-    parser.add_argument('--simulation_end_time', type=positive_float, default=4000, help='Time at which to end simulation in seconds')
+    parser.add_argument('--simulation_end_time', type=positive_float, default=4000, help='Time at which to end simulation in seconds. Only implemented for VCell.')
     
-    parser.add_argument('--simulation_default_time_step', type=positive_float, default=1e0, help='Initial time step size in seconds for selected simulation method')
+    parser.add_argument('--simulation_default_time_step', type=positive_float, default=1e0, help='Initial time step size in seconds for selected simulation method. Only implemented for VCell.')
     
-    parser.add_argument('--simulation_max_time_step', type=positive_float, default=4, help='Maximum time step size in seconds')
+    parser.add_argument('--simulation_max_time_step', type=positive_float, default=4, help='Maximum time step size in seconds. Only implemented for VCell.')
     
-    parser.add_argument('--simulation_output_time_step', type=positive_float, default=100, help='Output time step size in seconds. Output format varies by simulation method.')
+    parser.add_argument('--simulation_output_time_step', type=positive_float, default=100, help='Output time step size in seconds. Output format varies by simulation method. Only implemented for VCell.')
     
     parser.add_argument('--simulation_absolute_tolerance', type=positive_float, default=1e-8, help="VCML-specific integrator's absolute error tolerance")
     
     parser.add_argument('--simulation_relative_tolerance', type=positive_float, default=1e-8, help="VCML-specific integrator's relative error tolerance")
     
-    parser.add_argument('--simulation_interaction_radius', type=positive_float, default=0.03, help='MCell-specific maximum distance for bimolecular reactions to be simulated')
+    parser.add_argument('--simulation_interaction_radius', type=positive_float, default=0.03, help='MCell-specific maximum distance for bimolecular reactions to be simulated. Not implemented.')
     
     parser.add_argument('--simulation_seed_offset', type=int, default=500578, help='Offset used to produce seed for MCell random number generator')
     
