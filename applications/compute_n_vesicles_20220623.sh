@@ -22,6 +22,6 @@ n_vesicles_min = 1
 #n_vesicles_min = ceil(n_vesicles_max / 10)
 print(f'{n_vesicles_min} {n_vesicles_max}')
 END_HEREDOC
-n_vesicles=$(python3.6 - <<< "${n_vesicles_python}")
+n_vesicles=$(python3 - <<< "${n_vesicles_python}")
 n_vesicles=(${n_vesicles})
 

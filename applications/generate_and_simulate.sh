@@ -207,7 +207,7 @@ if not_zero run_simulations; then
     append_option_with_value_if_def args simulation_seed_offset
     (
         set -o pipefail
-        python3.6 -m IPython --pdb -- generate_and_simulate.py "${args[@]}" \
+        python3 -m IPython --pdb -- generate_and_simulate.py "${args[@]}" \
             2>&1 | tee generate_and_simulate.py.${timestamp}.log
     )
     generate_and_simulate_exit_code="$?"
@@ -232,7 +232,7 @@ if (( generate_and_simulate_successful && run_analysis )); then
     append_option_with_value_if_def args simulation_end_time
     (
         set -o pipefail
-        python3.6 -m IPython --pdb -- generate_and_simulate_analysis.py "${args[@]}" \
+        python3 -m IPython --pdb -- generate_and_simulate_analysis.py "${args[@]}" \
             2>&1 | tee generate_and_simulate_analysis.py.${timestamp}.log
     )
     generate_and_simulate_analysis_exit_code="$?"
