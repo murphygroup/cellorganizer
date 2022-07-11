@@ -76,6 +76,8 @@ echo "Beginning at $timestamp_pretty"
 
 #echo "\$@=$@"
 
+bash "${cellorganizer}/module_if_available.sh" load python36
+
 # Generate geometries and run simulations
 
 if [ ! -a "$output_dir" ]; then

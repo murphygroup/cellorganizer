@@ -4,7 +4,12 @@
 # Copyright 2021-2022 Murphy Lab, CMU
 
 # Determine the range of the number of vesicles from some collected data
-module load python36
+# Define cellorganizer in your script before calling this script
+if [ ! -v "cellorganizer" ]; then
+    echo "Please set shell variable cellorganizer to the path of your CellOrganizer installation" >&2
+    exit 1
+fi
+source "${cellorganizer}/module_if_available.sh" ; module_if_available load python36
 read -r -d '' n_vesicles_python <<-'END_HEREDOC'
 from math import *
 '''Computed from data from these 102 samples ('generate_simulation_instances_min.20201006').'''

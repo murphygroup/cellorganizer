@@ -327,7 +327,9 @@ def generate_and_simulate(**kw):
             generation_bash_command.extend(['--cluster_exclusive'])
         generation_bash_command.extend(['--cluster_memory', kw['generation_cluster_memory']])
         generation_bash_command.extend(['--cluster_jobs', kw['generation_cluster_jobs']])
-    matlab_cd_setup = ' '.join(['cd', kw['cellorganizer'], ';', kw['matlab_setup']])
+    matlab_cd_setup = f"cd {kw['cellorganizer']}"
+    if len(kw['matlab_setup']) > 0:
+        matlab_cd_setup = f"{matlab_cd_setup} ; {kw['matlab_setup']}"
     generation_bash_command.extend(['--matlab_setup', matlab_cd_setup])
     generation_bash_command.extend([generation_matlab_command])
     generation_bash_command = [repr(x).lower() if isinstance(x, bool) else x for x in generation_bash_command]
@@ -459,7 +461,8 @@ if __name__ == '__main__':
     # Parse options
     substitution_key_set = bsf.cellorganizer_substitution_key_set
     path_with_substitution = bsf.cellorganizer_path_with_substitution
-    paths_with_substitution = bsf.cellorganizer_path_with_substitution
+    paths_with_substitution = bsf.cellorganizer_paths_with_substitution
+    script_with_substitution = bsf.cellorganizer_path_with_substitution
     
     parser = argparse.ArgumentParser(description='Generate multiple unique geometries, run simulations in them, and analyze the results for a given MCell- or Virtual Cell-format simulation description.')
     
@@ -480,8 +483,9 @@ if __name__ == '__main__':
     parser.add_argument('--cluster_partition', type=str, default=cluster_partition_default, help='Cluster partition on which to queue jobs')
     
     # matlab_setup_default = 'module load matlab-9.7'
-    matlab_setup_default = '/bin/bash /etc/bashrc ; module load matlab-9.7'
-    parser.add_argument('--matlab_setup', type=str, default=matlab_setup_default, help='Bash command to set up Matlab')
+    # matlab_setup_default = '/bin/bash /etc/bashrc ; module load matlab-9.7'
+    matlab_setup_default = '/bin/bash /etc/bashrc ; source "{{cellorganizer}}/module_if_available.sh" ; module_if_available load matlab-9.7'
+    parser.add_argument('--matlab_setup', type=script_with_substitution, default=matlab_setup_default, help='Bash command to set up Matlab')
     
     parser.add_argument('--generation_cluster_jobs', type=positive_int, default=4, help='Number of geometry generation jobs to run')
     
@@ -498,12 +502,12 @@ if __name__ == '__main__':
     
     parser.add_argument('--simulation_cluster_exclusive', action='store_true', help='Run only one simulation job per node')
     
-    # framework_model_default = '{models}/3D/spharm/lamp2.mat'
-    framework_model_default = '{models}/3D/spharm/lamp2.demo3D52.mat'
+    # framework_model_default = '{{models}}/3D/spharm/lamp2.mat'
+    framework_model_default = '{{models}}/3D/spharm/lamp2.demo3D52.mat'
     parser.add_argument('--framework_model', type=path_with_substitution, default=framework_model_default, help="The path of a single CellOrganizer framework model (cell and nucleus shapes)")
     
-    # parser.add_argument('--vesicle_models', type=existing_path, nargs='*', default=['{models}/3D/tfr.mat'], help='A list of paths of CellOrganizer vesicle models')
-    parser.add_argument('--vesicle_models', type=paths_with_substitution, nargs='*', default=['{models}/3D/tfr.mat'], help='A list of paths of CellOrganizer vesicle models')
+    # parser.add_argument('--vesicle_models', type=existing_path, nargs='*', default=['{{models}}/3D/tfr.mat'], help='A list of paths of CellOrganizer vesicle models')
+    parser.add_argument('--vesicle_models', type=paths_with_substitution, nargs='*', default=['{{models}}/3D/tfr.mat'], help='A list of paths of CellOrganizer vesicle models')
     
     parser.add_argument('--synthesis', type=str, choices=['framework', 'all'], default='framework', help="`'all'` to synthesize framework and vesicles or `'framework'` to ignore the vesicle model")
     

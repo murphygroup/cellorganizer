@@ -20,8 +20,7 @@ cluster_memory=""
 cluster_jobs=1
 cluster_exclusive=0
 matlab_location="matlab"
-# matlab_location="matlab_8.6"
-matlab_setup=":"
+matlab_setup=""
 # matlab_setup="module load matlab-9.7"
 
 option_pattern='^--[[A-Za-z0-9_\-]\+$'
@@ -192,7 +191,12 @@ while (( "$#" )); do
 done
 
 
-matlab_bash_command="${matlab_setup} ; time ${matlab_location} -nosplash -nodesktop -singleCompThread -r \"try; setup; ${matlab_script}; catch err; disp(getReport(err, 'extended')); end; exit\""
+matlab_bash_command=""
+if [ -n "$matlab_setup" ]; then
+    matlab_bash_command+="${matlab_setup} ; "
+fi
+matlab_bash_command+="time ${matlab_location} -nosplash -nodesktop -singleCompThread -r \"try; setup; ${matlab_script}; catch err; disp(getReport(err, 'extended')); end; exit\""
+
 case "$mode" in
     local)
         execute_command "${matlab_bash_command}"
