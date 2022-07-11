@@ -1,5 +1,5 @@
 function [ mesh1_mod, mesh2_mod, meshes_intersect, meshes_n_intersections ] = adjustMeshPairSpacing( mesh1, mesh2, options_output )
-%REMOVEMESHINTERSECTIONS Adjust a set of triangle meshes to enforce clearance.
+%ADJUSTMESHPAIRSPACING Adjust a set of triangle meshes to enforce clearance.
 %
 % Inputs
 % ------

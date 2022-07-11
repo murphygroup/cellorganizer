@@ -265,9 +265,63 @@ mcell_effective_width_string = 'eff_width';
 
 use_image_adjacency = options.output.NET.use_image_adjacency;
 
+write_unmodified_meshes = false;
+write_modified_meshes = false;
+
+write_unmodified_meshes = true % Debug
+write_modified_meshes = true % Debug
+
 options.output.remove_mesh_intersections = true;
 remove_mesh_intersections = options.output.remove_mesh_intersections;
 if remove_mesh_intersections
+    % write_modified_meshes = write_modified_meshes & field_exists_and_true(options.output,'meshes');
+    if write_modified_meshes % Debug
+        meshData_info = meshDataInfo(meshData);
+        meshData_flat = meshData_info.meshData_flat;
+        nucleus_mesh_index = meshData_info.nucleus_mesh_index;
+        cell_mesh_index = meshData_info.cell_mesh_index;
+        ec_mesh_index = meshData_info.ec_mesh_index;
+        nucleus_mesh = meshData_flat(nucleus_mesh_index).mesh;
+        cell_mesh = meshData_flat(cell_mesh_index).mesh;
+        
+        output_filename_root = 'nucleus';
+        % Scale mesh vertices to have units of um (no longer dependent on options.output.meshes)
+        if ( options.nucmesh_cubic )
+            output_filename_root = [output_filename_root '_cubic'];
+        end
+        output_filename_root = [output_filename_root '_unadjusted'];
+    
+        % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
+        if field_exists_and_true(options.output,'meshes')
+            if options.verbose
+                disp( 'Saving nucleus mesh .obj file after removeMeshIntersections call' );
+            end
+            fprintf( options.fileID, '%s\n', 'Saving nucleus mesh .obj file after removeMeshIntersections call' );
+    
+            nucleus_mesh_with_objects = struct('vertices', nucleus_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', nucleus_mesh.faces)));
+            write_wobj(nucleus_mesh_with_objects, [savepath_dir filesep output_filename_root '.obj']);
+        end
+        
+        output_filename_root = 'cell';
+        % Scale mesh vertices to have units of um (no longer dependent on options.output.meshes)
+        if ( options.cellmesh_cubic )
+            output_filename_root = [output_filename_root '_cubic'];
+        end
+        output_filename_root = [output_filename_root '_unadjusted'];
+    
+        % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
+        if field_exists_and_true(options.output,'meshes')
+            if options.verbose
+                disp( 'Saving cell mesh .obj file after removeMeshIntersections call' );
+            end
+            fprintf( options.fileID, '%s\n', 'Saving cell mesh .obj file after removeMeshIntersections call' );
+    
+            cell_mesh_with_objects = struct('vertices', cell_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', cell_mesh.faces)));
+            write_wobj(cell_mesh_with_objects, [savepath_dir filesep output_filename_root '.obj']);
+        end
+    end
+    
+    
     min_clearance = 0;
     % min_clearance = options.oobbuffer;
     try
@@ -280,6 +334,54 @@ if remove_mesh_intersections
             return;
         else
             rethrow(ME);
+        end
+    end
+    
+    
+    % write_modified_meshes = write_modified_meshes & field_exists_and_true(options.output,'meshes');
+    if write_modified_meshes % Debug
+        meshData_info = meshDataInfo(meshData);
+        meshData_flat = meshData_info.meshData_flat;
+        nucleus_mesh_index = meshData_info.nucleus_mesh_index;
+        cell_mesh_index = meshData_info.cell_mesh_index;
+        ec_mesh_index = meshData_info.ec_mesh_index;
+        nucleus_mesh = meshData_flat(nucleus_mesh_index).mesh;
+        cell_mesh = meshData_flat(cell_mesh_index).mesh;
+        
+        output_filename_root = 'nucleus';
+        % Scale mesh vertices to have units of um (no longer dependent on options.output.meshes)
+        if ( options.nucmesh_cubic )
+            output_filename_root = [output_filename_root '_cubic'];
+        end
+        output_filename_root = [output_filename_root '_adjusted'];
+    
+        % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
+        if field_exists_and_true(options.output,'meshes')
+            if options.verbose
+                disp( 'Saving nucleus mesh .obj file after removeMeshIntersections call' );
+            end
+            fprintf( options.fileID, '%s\n', 'Saving nucleus mesh .obj file after removeMeshIntersections call' );
+    
+            nucleus_mesh_with_objects = struct('vertices', nucleus_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', nucleus_mesh.faces)));
+            write_wobj(nucleus_mesh_with_objects, [savepath_dir filesep output_filename_root '.obj']);
+        end
+        
+        output_filename_root = 'cell';
+        % Scale mesh vertices to have units of um (no longer dependent on options.output.meshes)
+        if ( options.cellmesh_cubic )
+            output_filename_root = [output_filename_root '_cubic'];
+        end
+        output_filename_root = [output_filename_root '_adjusted'];
+    
+        % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
+        if field_exists_and_true(options.output,'meshes')
+            if options.verbose
+                disp( 'Saving cell mesh .obj file after removeMeshIntersections call' );
+            end
+            fprintf( options.fileID, '%s\n', 'Saving cell mesh .obj file after removeMeshIntersections call' );
+    
+            cell_mesh_with_objects = struct('vertices', cell_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', cell_mesh.faces)));
+            write_wobj(cell_mesh_with_objects, [savepath_dir filesep output_filename_root '.obj']);
         end
     end
 end
