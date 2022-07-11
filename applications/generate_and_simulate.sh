@@ -171,6 +171,7 @@ if not_zero run_simulations; then
     append_option_if_def_true args overwrite overwrite_simulations
     append_option_with_value_if_def args cellorganizer
     append_option_with_value_if_def args matlab_setup
+    append_option_with_value_if_def args cluster_mode
     append_option_with_value_if_def args cluster_partition
     append_option_with_value_if_def args generation_cluster_jobs
     append_option_with_value_if_def args generation_cluster_memory
