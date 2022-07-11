@@ -20,8 +20,8 @@ vesicle_model='{models}/3D/tfr.mat'
 # Not using vesicles for now
 unset vesicle_model # Debug
 n_images_to_synthesize=5
-cluster_mode='slurm'
-cluster_mode='local' # Debug
+#cluster_mode='slurm'
+cluster_mode='local'
 generation_cluster_jobs=2
 
 synthesis='framework'
@@ -36,7 +36,15 @@ echo "n_vesicles='${n_vesicles[@]}'" # Debug
 
 simulation_end_time=4000
 
-run_analysis=0
+#run_simulations=0
+run_simulations=1
+#run_analysis=0
+run_analysis=1
+
+
+# Debug
+n_images_to_synthesize=1
+overwrite_simulations=1
 
 ###########################################################################
 # DO NOT MODIFY THIS BLOCK

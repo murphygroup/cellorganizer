@@ -59,9 +59,6 @@ cd "$co_apps"
 timestamp_pretty=$(date -u "+%Y-%m-%d %H:%M:%S %Z")
 timestamp="${timestamp_pretty//[: -]/}"
 echo "Beginning at $timestamp_pretty"
-#echo "output_dir=${output_dir}" # Debug
-#echo "timestamp=${timestamp}" # Debug
-#exit 1 # Debug
 
 
 # debug settings
@@ -78,7 +75,6 @@ echo "Beginning at $timestamp_pretty"
 
 
 #echo "\$@=$@"
-#echo 'Not implemented' ; exit 1 # Debug
 
 # Generate geometries and run simulations
 
@@ -104,7 +100,6 @@ function append_option_if_def_true()
 {
     # Argument 1 is array name to which option should be appended
     # Argument 2 is option name to be appended
-    #echo "In append_option_if_def_true" "$@" # Debug
     local arg1_name arg2_name arg2
     arg1_name="$1"
     arg2_name="$2"
@@ -112,19 +107,9 @@ function append_option_if_def_true()
     arg1_name="${arg1_name//[^A-Za-z0-9_]/}"
     arg2_name="${arg2_name//[^A-Za-z0-9_]/}"
     arg2="$arg2_name"
-    #echo "arg2_name='${arg2_name}'" # Debug
-    #echo "arg2='${!arg2_name}'" # Debug
     if [[ -v "$arg2_name" && "${!arg2_name}" != "0" ]]; then
-        #echo "arg2='${arg2[@]}'" # Debug
         eval "${arg1_name}+=(\"--\${arg2_name}\")"
     fi
-    #local arg1_deref
-    #local arg1_deref=$(eval echo "\${$1[@]}") # Debug
-    #echo "arg1_deref='${arg1_deref[@]}'" # Debug
-    #echo '@@@@@@@@@@@@ DEBUG exiting early' ;  exit 1 # Debug
-    #if [ "$arg2_name" = 'n_vesicles' ]; then
-        #echo '@@@@@@@@@@@@ DEBUG exiting early' ;  exit 1 # Debug
-    #fi
 }
 
 function echo_value_if_def()
@@ -145,12 +130,10 @@ function echo_value_if_def()
 }
 #unset asdf ; echo "asdf='$asdf'" ; echo_value_if_def asdf ; asdf='123' ; echo "asdf='$asdf'" ; echo_value_if_def asdf ; asdf='123' ; echo "asdf='$asdf'" ; echo_value_if_def asdf qwerty ; exit 1  # Debug
 #echo "synthesis='$synthesis'" ; echo_value_if_def synthesis ; echo_value_if_def synthesis synthesis_renamed ; exit 1  # Debug
-#exit 1 # Debug
 function append_option_with_value_if_def()
 {
     # Argument 1 is array name to which option should be appended
     # Argument 2 is option name to be appended
-    #echo "In append_option_with_value_if_def" "$@" # Debug
     local arg1_name arg2_name arg2
     arg1_name="$1"
     arg2_name="$2"
@@ -158,38 +141,34 @@ function append_option_with_value_if_def()
     arg1_name="${arg1_name//[^A-Za-z0-9_]/}"
     arg2_name="${arg2_name//[^A-Za-z0-9_]/}"
     arg2="$arg2_name[@]"
-    #echo "arg2_name='${arg2_name[@]}'" # Debug
     if [[ -v "$arg2_name" ]]; then
-        #arg2="${!arg2}"
         arg2=("${!arg2}")
-        #echo "arg2='${arg2[@]}'" # Debug
         eval "${arg1_name}+=(\"--\${arg2_name}\")"
         eval "${arg1_name}+=(\"\${arg2[@]}\")"
     fi
-    #local arg1_deref
-    #local arg1_deref=$(eval echo "\${$1[@]}") # Debug
-    #echo "arg1_deref='${arg1_deref[@]}'" # Debug
-    #echo '@@@@@@@@@@@@ DEBUG exiting early' ;  exit 1 # Debug
-    #if [ "$arg2_name" = 'n_vesicles' ]; then
-        #echo '@@@@@@@@@@@@ DEBUG exiting early' ;  exit 1 # Debug
-    #fi
 }
 
-function not_false()
+function not_zero()
 {
     [[ ! -v "$1" || "${!1}" -ne "0" ]]
 }
-#unset asdf ; echo "asdf='$asdf'" ; not_false asdf ; echo "$?" ; asdf='0' ; echo "asdf='$asdf'" ; not_false asdf ; echo "$?" ; asdf='123' ; echo "asdf='$asdf'" ; not_false asdf ; echo "$?" ; exit 1  # Debug
+#unset asdf ; echo "asdf='$asdf'" ; not_zero asdf ; echo "$?" ; asdf='0' ; echo "asdf='$asdf'" ; not_zero asdf ; echo "$?" ; asdf='123' ; echo "asdf='$asdf'" ; not_zero asdf ; echo "$?" ; exit 1  # Debug
 
-#echo '@@@@@@@@@@@@ DEBUG exiting early' ;  exit 1 # Debug
+function exit_code_to_boolean()
+{
+    [[ "$1" -ne "0" ]]
+    echo "$?"
+}
 
-#if (( $run_simulations )); then
-if not_false run_simulations; then
+#echo '@@@@@@@@@@@@ DEBUG exiting early' ; exit 1 # Debug
+
+run_simulations_successful=''
+if not_zero run_simulations; then
     args=()
     args+=("$reaction_network_pattern")
     args+=("$output_dir")
     append_option_if_def_true args dry_run
-    append_option_if_def_true args overwrite_simulations overwrite
+    append_option_if_def_true args overwrite overwrite_simulations
     append_option_with_value_if_def args cellorganizer
     append_option_with_value_if_def args matlab_setup
     append_option_with_value_if_def args cluster_partition
@@ -223,26 +202,39 @@ if not_false run_simulations; then
     append_option_with_value_if_def args simulation_relative_tolerance
     append_option_with_value_if_def args simulation_interaction_radius
     append_option_with_value_if_def args simulation_seed_offset
-    echo "args='${args[@]}'" # Debug
-    #echo '@@@@@@@@@@@@ DEBUG exiting early' ;  exit 1 # Debug
-    python3.6 -m IPython --pdb -- generate_and_simulate.py "${args[@]}" \
-        2>&1 | tee generate_and_simulate.py.${timestamp}.log
+    (
+        set -o pipefail
+        python3.6 -m IPython --pdb -- generate_and_simulate.py "${args[@]}" \
+            2>&1 | tee generate_and_simulate.py.${timestamp}.log
+    )
+    generate_and_simulate_exit_code="$?"
+    generate_and_simulate_successful=$(exit_code_to_boolean "$generate_and_simulate_exit_code")
+    if (( ! generate_and_simulate_successful )); then
+        echo 'generate_and_simulate.py failed' ; exit 1
+    fi
 fi
 
 # Analyze results, create figures and tables
-#if (( $RUN_ANALYSIS )); then
-if not_false run_analysis; then
+if [[ $(not_zero run_simulations_successful) && $(not_zero run_analysis) ]]; then
     cd "$co_apps"
     args=()
     args+=("$reaction_network_pattern")
     args+=("$output_dir")
     append_option_if_def_true args dry_run
-    append_option_if_def_true args overwrite_analysis overwrite
+    append_option_if_def_true args overwrite overwrite_analysis
     append_option_with_value_if_def args cellorganizer
     append_option_with_value_if_def args synthesis
     append_option_with_value_if_def args downsampling
     append_option_with_value_if_def args vcml_relative_downsampling
     append_option_with_value_if_def args simulation_end_time
-    python3.6 -m IPython --pdb -- generate_and_simulate_analysis.py "${args[@]}" \
-        2>&1 | tee generate_and_simulate_analysis.py.${timestamp}.log
+    (
+        set -o pipefail
+        python3.6 -m IPython --pdb -- generate_and_simulate_analysis.py "${args[@]}" \
+            2>&1 | tee generate_and_simulate_analysis.py.${timestamp}.log
+    )
+    generate_and_simulate_analysis_exit_code="$?"
+    generate_and_simulate_analysis_successful=$(exit_code_to_boolean "$generate_and_simulate_analysis_exit_code")
+    if (( ! generate_and_simulate_analysis_successful )); then
+        echo 'generate_and_simulate_analysis.py failed' ; exit 1
+    fi
 fi
