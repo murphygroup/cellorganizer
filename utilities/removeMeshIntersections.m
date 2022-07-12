@@ -48,21 +48,17 @@ remove_on_framework_intersection = strcmp(intersecting_mesh_object_policy, 'remo
 reject_on_any_intersection = strcmp(intersecting_mesh_object_policy, 'reject');
 reject_on_framework_intersection = strcmp(intersecting_mesh_object_policy, 'reject_framework')
 
-% Put all meshes into a flat struct array for ease of processing
-meshData_flat = repmat(setfield(meshData(1).list(1), 'super_name', ''), 0, 1);
-meshData_flat_names = {};
-meshData_flat_subnames = {};
-for i = 1:length(meshData)
-    for j = 1:length(meshData(i).list)
-        meshData_flat_names{end + 1} = meshData(i).name;
-        meshData_flat_subnames{end + 1} = meshData(i).list(j).name;
-        meshData_flat(end + 1) = setfield(meshData(i).list(j), 'super_name', meshData_flat_names{end});
-    end
-end
+meshData_info = meshDataInfo(meshData);
+meshData_flat = meshData_info.meshData_flat;
+meshData_flat_names = meshData_info.meshData_flat_names;
+meshData_flat_subnames = meshData_info.meshData_flat_subnames;
+meshData_flat_framework_mask = meshData_info.meshData_flat_framework_mask;
+meshData_flat_domain_mask = meshData_info.meshData_flat_domain_mask;
+meshData_flat_boundaries_mask = meshData_info.meshData_flat_boundaries_mask;
+nucleus_mesh_index = meshData_info.nucleus_mesh_index;
+cell_mesh_index = meshData_info.cell_mesh_index;
+ec_mesh_index = meshData_info.ec_mesh_index;
 
-meshData_flat_framework_mask = strcmp(meshData_flat_names, 'frameworkMesh');
-meshData_flat_domain_mask = strcmp(meshData_flat_names, 'domainMesh');
-meshData_flat_boundaries_mask = meshData_flat_framework_mask | meshData_flat_domain_mask;
 meshData_flat_keep_mask = true(1, length(meshData_flat));
 meshData_flat_essential_mask = false(1, length(meshData_flat));
 if reject_on_framework_intersection
@@ -83,10 +79,8 @@ if remove_on_any_intersection
     meshData_flat_to_start = meshData_flat_to_start | true;
 end
 
-nucleus_mesh_index = find(strcmp(meshData_flat_names, 'frameworkMesh') & strcmp(meshData_flat_subnames, 'NU'));
 nucleus_mesh = meshData_flat(nucleus_mesh_index).mesh;
 nucleus_mesh_adjacency = logical(meshAdjacencyMatrix(nucleus_mesh.faces));
-cell_mesh_index = find(strcmp(meshData_flat_names, 'frameworkMesh') & strcmp(meshData_flat_subnames, 'CP'));
 cell_mesh = meshData_flat(cell_mesh_index).mesh;
 
 options_output = options.output;
@@ -97,6 +91,10 @@ options_output = options.output;
 
 meshData_flat(nucleus_mesh_index).mesh = nucleus_mesh_mod;
 meshData_flat(cell_mesh_index).mesh = cell_mesh_mod;
+
+meshData_flat_modified_mask(nucleus_mesh_index) = true;
+meshData_flat_modified_mask(cell_mesh_index) = true;
+
 
 %{
 if min_clearance > -inf

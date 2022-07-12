@@ -76,6 +76,8 @@ echo "Beginning at $timestamp_pretty"
 
 #echo "\$@=$@"
 
+bash "${cellorganizer}/module_if_available.sh" load python36
+
 # Generate geometries and run simulations
 
 if [ ! -a "$output_dir" ]; then
@@ -162,7 +164,7 @@ function exit_code_to_boolean()
 
 #echo '@@@@@@@@@@@@ DEBUG exiting early' ; exit 1 # Debug
 
-run_simulations_successful=''
+generate_and_simulate_successful=0
 if not_zero run_simulations; then
     args=()
     args+=("$reaction_network_pattern")
@@ -171,6 +173,7 @@ if not_zero run_simulations; then
     append_option_if_def_true args overwrite overwrite_simulations
     append_option_with_value_if_def args cellorganizer
     append_option_with_value_if_def args matlab_setup
+    append_option_with_value_if_def args cluster_mode
     append_option_with_value_if_def args cluster_partition
     append_option_with_value_if_def args generation_cluster_jobs
     append_option_with_value_if_def args generation_cluster_memory
@@ -204,7 +207,7 @@ if not_zero run_simulations; then
     append_option_with_value_if_def args simulation_seed_offset
     (
         set -o pipefail
-        python3.6 -m IPython --pdb -- generate_and_simulate.py "${args[@]}" \
+        python3 -m IPython --pdb -- generate_and_simulate.py "${args[@]}" \
             2>&1 | tee generate_and_simulate.py.${timestamp}.log
     )
     generate_and_simulate_exit_code="$?"
@@ -215,7 +218,7 @@ if not_zero run_simulations; then
 fi
 
 # Analyze results, create figures and tables
-if [[ $(not_zero run_simulations_successful) && $(not_zero run_analysis) ]]; then
+if (( generate_and_simulate_successful && run_analysis )); then
     cd "$co_apps"
     args=()
     args+=("$reaction_network_pattern")
@@ -229,7 +232,7 @@ if [[ $(not_zero run_simulations_successful) && $(not_zero run_analysis) ]]; the
     append_option_with_value_if_def args simulation_end_time
     (
         set -o pipefail
-        python3.6 -m IPython --pdb -- generate_and_simulate_analysis.py "${args[@]}" \
+        python3 -m IPython --pdb -- generate_and_simulate_analysis.py "${args[@]}" \
             2>&1 | tee generate_and_simulate_analysis.py.${timestamp}.log
     )
     generate_and_simulate_analysis_exit_code="$?"

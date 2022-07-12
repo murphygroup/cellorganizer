@@ -53,6 +53,7 @@ use_individual_meshes = options.output.use_individual_meshes;
 model_names = options.output.model_names;
 
 
+%{
 warning(warning_id, 'This should be done further upstream in createSBMLFrameworkstruct so meshes are scaled like objects (see createSBMLstruct3) and then adjusted to output_length_unit here');
 for i = 1:length(meshData)
     for j = 1:length(meshData(i).list)
@@ -64,6 +65,7 @@ for i = 1:length(meshData)
         meshData(i).list(j).resolution = [1, 1, 1];
     end
 end
+%}
 
 meshData(:).source = 'mesh';
 %{

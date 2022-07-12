@@ -210,10 +210,10 @@ def cellorganizer_substitutions_dict_func(cellorganizer_path):
     return result
 
 def path_with_substitution(value, substitution_key_set=set()):
-    placeholders_pattern = '\{(' + '|'.join(substitution_key_set) + ')\}'
+    placeholders_pattern = '\{\{(' + '|'.join(substitution_key_set) + ')\}\}'
     x_placeholders = re.findall(placeholders_pattern, value)
     if not set(x_placeholders).issubset(substitution_key_set):
-        placeholders_doc = '{' + ', '.join(['\'{' + x + '}\'' for x in sorted(substitution_key_set)]) + '}'
+        placeholders_doc = '{' + ', '.join(['\'{{' + x + '}}\'' for x in sorted(substitution_key_set)]) + '}'
         raise argparse.ArgumentTypeError(f'Argument must be an existing path or glob pattern matching at least one existing path with optional placeholders {placeholders_doc} indicating paths relative to the CellOrganizer installation (given {repr(value)})')
     # value = value.format(**substitutions_dict)
     # value = existing_path(value)
@@ -231,14 +231,10 @@ def path_substitution_dict(substitutions_dict, substitution_key_set=set()):
             substitutions_dict2[x] = substitutions_dict[x]
     return substitutions_dict2
 
-def path_substitution(value, substitutions_dict, substitution_key_set=set()):
-    substitutions_dict2 = path_substitution_dict(substitutions_dict, substitution_key_set)
-    if isinstance(value, list):
-        value = [x.format(**substitutions_dict2) for x in value]
-    else:
-        value = value.format(**substitutions_dict2)
-    # value = existing_path(value)
-    return value
+def template_replace(s, d):
+    for x, y in d.items():
+        s = s.replace('{{' + x + '}}', y)
+    return s
 
 def cellorganizer_path_substitutions(parser, args_vars):
     '''
@@ -254,9 +250,9 @@ def cellorganizer_path_substitutions(parser, args_vars):
     for arg in args_to_substitute:
         value = args_vars[arg]
         if isinstance(value, list):
-            value = [x.format(**substitutions_dict2) for x in value]
+            value = [template_replace(x, substitutions_dict2) for x in value]
         else:
-            value = value.format(**substitutions_dict2)
+            value = template_replace(value, substitutions_dict2)
         args_vars[arg] = value
     # return args_vars
 

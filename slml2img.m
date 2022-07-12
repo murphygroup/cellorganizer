@@ -685,6 +685,9 @@ for i=1:1:numberOfSynthesizedImages
             img2tif( indexed_image, [ outdir filesep 'indexed.tif'], compression, true) ;
             imwrite( reshape_contrast(single(indexed_image), -1), [ outdir filesep 'indexed.png']) ;
         end
+        
+        resolution_cubic_to_objects = options.resolution.objects ./ options.resolution.cubic
+        resolution_to_um = resolution_cubic_to_objects .* options.resolution.cubic
 
         %icaoberg 10/9/2012
         if strcmpi( synthesis, 'nucleus' ) || strcmpi( synthesis, ...
@@ -717,34 +720,6 @@ for i=1:1:numberOfSynthesizedImages
                     [],shiftvector);
             end
             clear image;
-
-            output_filename_root = 'nucleus';
-            % Scale mesh vertices to have units of um (no longer dependent on options.output.meshes)
-            if (isstruct(options.nucmesh) && ...
-                    ~field_exists_and_true(options,'cubicOverride') && ...
-                    isfield(options.resolution,'objects') && ...
-                    isfield(options.resolution,'cubic'))
-                options.nucmesh_cubic = true;
-                % xruan 05/21/2019 also adjust resolution for meshes
-                options.nucmesh.vertices = options.nucmesh.vertices .* repmat(options.resolution.objects ./ options.resolution.cubic, size(options.nucmesh.vertices, 1), 1);
-                output_filename_root = [output_filename_root '_cubic'];
-            end
-
-            % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
-            if field_exists_and_true(options.output,'meshes')
-                if options.verbose
-                    disp( 'Saving nucleus mesh .obj file' );
-                end
-                fprintf( fileID, '%s\n', 'Saving nucleus mesh .obj file' );
-
-                if isstruct(options.nucmesh)
-                    output_mesh = options.nucmesh;
-                else
-                    output_mesh = struct('vertices', zeros(0, 3), 'faces', zeros(0, 3, 'uint8'));
-                end
-                nucmesh_with_objects = struct('vertices', output_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', output_mesh.faces)));
-                write_wobj(nucmesh_with_objects, [outdir filesep output_filename_root '.obj']);
-            end
         end
 
         %cell membrane
@@ -777,36 +752,10 @@ for i=1:1:numberOfSynthesizedImages
             end
             clear image;
 
-            output_filename_root = 'cell';
-            % Scale mesh vertices to have units of um (no longer dependent on options.output.meshes)
-            if (isstruct(options.cellmesh) && ...
-                    ~field_exists_and_true(options,'cubicOverride') && ...
-                    isfield(options.resolution,'objects') && ...
-                    isfield(options.resolution,'cubic'))
-                options.cellmesh_cubic = true;
-                % xruan 05/21/2019 also adjust resolution for meshes
-                options.cellmesh.vertices = options.cellmesh.vertices .* repmat(options.resolution.objects ./ options.resolution.cubic, size(options.cellmesh.vertices, 1), 1);
-                output_filename_root = [output_filename_root '_cubic'];
-            end
-            
-            % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
-            if field_exists_and_true(options.output,'meshes')
-                if options.verbose
-                    disp( 'Saving cell mesh .obj file' );
-                end
-                fprintf( fileID, '%s\n', 'Saving cell mesh .obj file' );
-
-                if isstruct(options.cellmesh)
-                    output_mesh = options.cellmesh;
-                else
-                    output_mesh = struct('vertices', zeros(0, 3), 'faces', zeros(0, 3, 'uint8'));
-                end
-                cellmesh_with_objects = struct('vertices', output_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', output_mesh.faces)));
-                write_wobj(cellmesh_with_objects, [outdir filesep output_filename_root '.obj']);
-            end
         end
 
         if field_exists_and_true_or_char(options.output,'tifimages') || ...
+                field_exists_and_true(options.output,'meshes') || ...
                 field_exists_and_true_or_char(options.output,'blenderfile') || ...
                 field_exists_and_true_or_char(options.output,'SBML') || ...
                 field_exists_and_true_or_char(options.output,'SBMLSpatial') || ...
@@ -829,13 +778,54 @@ for i=1:1:numberOfSynthesizedImages
                     
                     % xruan 05/21/2019 also adjust resolution for meshes
                     if isfield(options, 'nucmesh')
-                        options.nucmesh.vertices = options.nucmesh.vertices .* repmat(options.resolution.objects ./ options.resolution.cubic, size(options.nucmesh.vertices, 1), 1);
+                        options.nucmesh.vertices = options.nucmesh.vertices .* repmat(resolution_cubic_to_objects, size(options.nucmesh.vertices, 1), 1);
+                        options.nucmesh_cubic = true;
                     end
                     if isfield(options, 'cellmesh')
-                        options.cellmesh.vertices = options.cellmesh.vertices .* repmat(options.resolution.objects ./ options.resolution.cubic, size(options.cellmesh.vertices, 1), 1);
+                        options.cellmesh.vertices = options.cellmesh.vertices .* repmat(resolution_cubic_to_objects, size(options.cellmesh.vertices, 1), 1);
+                        options.cellmesh_cubic = true;
                     end
                 end
 
+                if field_exists_and_true(options.output,'meshes')
+                    % Write meshes generated directly by the model, not isosurface like options.output.blenderfile
+                    % Nucleus
+                    if options.verbose
+                        disp( 'Saving nucleus mesh .obj file' );
+                    end
+                    fprintf( fileID, '%s\n', 'Saving nucleus mesh .obj file' );
+                    output_filename_root = 'nucleus';
+                    if (isstruct(options.nucmesh) && ...
+                            field_exists_and_true(options,'cellmesh_cubic'))
+                        output_filename_root = [output_filename_root '_cubic'];
+                    end
+                    if isstruct(options.nucmesh)
+                        output_mesh = options.nucmesh;
+                    else
+                        output_mesh = struct('vertices', zeros(0, 3), 'faces', zeros(0, 3, 'uint8'));
+                    end
+                    nucmesh_with_objects = struct('vertices', output_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', output_mesh.faces)));
+                    write_wobj(nucmesh_with_objects, [outdir filesep output_filename_root '.obj']);
+                    
+                    % Cell
+                    if options.verbose
+                        disp( 'Saving cell mesh .obj file' );
+                    end
+                    fprintf( fileID, '%s\n', 'Saving cell mesh .obj file' );
+                    output_filename_root = 'cell';
+                    if (isstruct(options.cellmesh) && ...
+                            field_exists_and_true(options,'cellmesh_cubic'))
+                        output_filename_root = [output_filename_root '_cubic'];
+                    end
+                    if isstruct(options.cellmesh)
+                        output_mesh = options.cellmesh;
+                    else
+                        output_mesh = struct('vertices', zeros(0, 3), 'faces', zeros(0, 3, 'uint8'));
+                    end
+                    cellmesh_with_objects = struct('vertices', output_mesh.vertices, 'objects', struct('type', 'f', 'data', struct('vertices', output_mesh.faces)));
+                    write_wobj(cellmesh_with_objects, [outdir filesep output_filename_root '.obj']);
+                end
+                
                 if field_exists_and_true_or_char(options.output,'SBML')
                     frameworkSBML = createSBMLFrameworkstruct(imgs(1:min(2,end)),models,options);
                 else
@@ -847,7 +837,25 @@ for i=1:1:numberOfSynthesizedImages
                     for j = 1:length(frameworkSBML.list)
                         frameworkSBML.list(j).resolution = options.resolution.cubic;
                     end
+                    % Scale to micron resolution here instead of in convertCSGToMesh (previously affected only callers of convertCSGToMesh, i.e., instance2SBML3_mod and instance2MCellMDL, now affects all users of frameworkSBML below this loop).
+                    % Impacts:
+                    % * instance2SBML_mod (not being maintained, TODO: check)
+                    % * nameModels (not impacted; does not use frameworkSBML as it ignores meshData argument)
+                    % * instance2SBML3_mod (not impacted; meshes not used before convertCSGToMesh call)
+                    % * instance2VCML (not impacted; only uses frameworkSBML by passing meshData argument to readNetworkIntoGeometry, which does not use meshData resolution fields)
+                    % * instance2MCellMDL (not impacted; meshes not used before convertCSGToMesh call)
+                    for j = 1:length(frameworkSBML)
+                        for k = 1:length(frameworkSBML(j).list)
+                            single_frameworkSBML_list_item_resolution = frameworkSBML(j).list(k).resolution;
+                            % single_frameworkSBML_list_item_resolution = resolution_before_downsampling;
+                            if isfield(frameworkSBML(j).list(k), 'mesh')
+                                frameworkSBML(j).list(k).mesh.vertices = frameworkSBML(j).list(k).mesh.vertices .* repmat(single_frameworkSBML_list_item_resolution, size(frameworkSBML(j).list(k).mesh.vertices, 1), 1);
+                            end
+                            frameworkSBML(j).list(k).resolution = [1, 1, 1];
+                        end
+                    end
                 end
+                dbstack, frameworkSBML % Debug
             end
 
             %D. Sullivan 4/26/14

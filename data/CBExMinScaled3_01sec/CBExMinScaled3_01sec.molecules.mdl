@@ -1,0 +1,25 @@
+DEFINE_MOLECULES
+{
+  mind_adp
+  {
+    DIFFUSION_CONSTANT_3D = 2.5e-8 * spatial_scale^-2
+  }
+  mind_atp
+  {
+    DIFFUSION_CONSTANT_3D = 2.5e-8 * spatial_scale^-2
+  }
+  mine
+  {
+    DIFFUSION_CONSTANT_3D = 2.5e-8 * spatial_scale^-2
+    CUSTOM_TIME_STEP = dte
+  }
+  mind_m
+  {
+    DIFFUSION_CONSTANT_2D = 0 * spatial_scale^-2
+  }
+  minde_m
+  {
+    DIFFUSION_CONSTANT_2D = 0 * spatial_scale^-2
+  }
+}
+
