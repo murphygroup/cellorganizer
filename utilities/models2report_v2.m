@@ -325,54 +325,88 @@ if param.includeprot
         models_ShapeModel{2} = models{2}.proteinModel.spharm_obj_model.cellShapeModel;
         consolidated_model=compare_shape_space_spharm_obj(models_ShapeModel,fileID,param);
         header2html(fileID, 'Spharm Model Comparison');
-        total_variation=consolidated_model.total_variation;
-        text2html(fileID, ['Total_Variation=''%s'';\n', total_variation]);
-        %spatial model comparision
-        models_SpatialModel{1}=models{1}.proteinModel.spharm_obj_model.spatial;
-        models_SpatialModel{2}=models{2}.proteinModel.spharm_obj_model.spatial;
-        compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
-        %clique percolation
-        spatial_a1.normdists=models_SpatialModel{1}.normdists(1:length(spatial1.normdists)/2);
-        spatial_a1.anglesphi=models_SpatialModel{1}.anglesphi(1:length(spatial1.anglesphi)/2);
-        spatial_a1.anglestheta=models_SpatialModel{1}.anglestheta(1:length(spatial1.anglestheta)/2);
-        spatial_a2.normdists=models_SpatialModel{1}.normdists(length(spatial1.normdists)/2+1:end);
-        spatial_a2.anglesphi=models_SpatialModel{1}.anglesphi(length(spatial1.anglesphi)/2+1:end);
-        spatial_a2.anglestheta=models_SpatialModel{1}.anglestheta(length(spatial1.anglestheta)/2+1:end);
         
-        spatial_b1.normdists=models_SpatialModel{2}.normdists(1:length(spatial1.normdists)/2);
-        spatial_b1.anglesphi=models_SpatialModel{2}.anglesphi(1:length(spatial1.anglesphi)/2);
-        spatial_b1.anglestheta=models_SpatialModel{2}.anglestheta(1:length(spatial1.anglestheta)/2);
-        spatial_b2.normdists=models_SpatialModel{2}.normdists(length(spatial1.normdists)/2+1:end);
-        spatial_b2.anglesphi=models_SpatialModel{2}.anglesphi(length(spatial1.anglesphi)/2+1:end);
-        spatial_b2.anglestheta=models_SpatialModel{2}.anglestheta(length(spatial1.anglestheta)/2+1:end);
-        
-        models_comparison{1}=spatial_a1;
-        models_comparison{2}=spatial_a2;
-        a1_a2=clique_percolation(models_comparison);
-        models_comparison{1}=spatial_b1;
-        models_comparison{2}=spatial_b2;
-        b1_b2=clique_percolation(models_comparison);
-        models_comparison{1}=spatial_a1;
-        models_comparison{2}=spatial_b1;
-        a1_b1=clique_percolation(models_comparison);
-        models_comparison{1}=spatial_a2;
-        models_comparison{2}=spatial_b2;
-        a2_b2=clique_percolation(models_comparison);
-        models_comparison{1}=spatial_a1;
-        models_comparison{2}=spatial_b2;
-        a1_b2=clique_percolation(models_comparison);
-        models_comparison{1}=spatial_a2;
-        models_comparison{2}=spatial_b1;
-        a2_b1=clique_percolation(models_comparison);
-        
-        
-        text2html(fileID, ['KL Divergence between first half of model1 and second half of model1=''%s'';\n', a1_a2]);
-        text2html(fileID, ['KL Divergence between first half of model2 and second half of model2=''%s'';\n', b1_b2]);
-        text2html(fileID, ['KL Divergence between first half of model1 and first half of model1=''%s'';\n', a1_b1]);
-        text2html(fileID, ['KL Divergence between second half of model1 and second half of model2=''%s'';\n', a2_b2]);
-        text2html(fileID, ['KL Divergence between first half of model1 and second half of model2=''%s'';\n', a1_b2]);
-        text2html(fileID, ['KL Divergence between second half of model1 and first half of model2=''%s'';\n', a2_b1]);
-        
+        try
+            total_variation=consolidated_model.total_variation;
+            text2html(fileID, ['Total_Variation=''%s'';\n', total_variation]);
+            %spatial model comparision
+            models_SpatialModel{1}=models{1}.proteinModel.spharm_obj_model.spatial;
+            models_SpatialModel{2}=models{2}.proteinModel.spharm_obj_model.spatial;
+            compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
+            %clique percolation
+            spatial_a1.normdists=models_SpatialModel{1}.normdists(1:length(spatial1.normdists)/2);
+            spatial_a1.anglesphi=models_SpatialModel{1}.anglesphi(1:length(spatial1.anglesphi)/2);
+            spatial_a1.anglestheta=models_SpatialModel{1}.anglestheta(1:length(spatial1.anglestheta)/2);
+            spatial_a2.normdists=models_SpatialModel{1}.normdists(length(spatial1.normdists)/2+1:end);
+            spatial_a2.anglesphi=models_SpatialModel{1}.anglesphi(length(spatial1.anglesphi)/2+1:end);
+            spatial_a2.anglestheta=models_SpatialModel{1}.anglestheta(length(spatial1.anglestheta)/2+1:end);
+
+            spatial_b1.normdists=models_SpatialModel{2}.normdists(1:length(spatial1.normdists)/2);
+            spatial_b1.anglesphi=models_SpatialModel{2}.anglesphi(1:length(spatial1.anglesphi)/2);
+            spatial_b1.anglestheta=models_SpatialModel{2}.anglestheta(1:length(spatial1.anglestheta)/2);
+            spatial_b2.normdists=models_SpatialModel{2}.normdists(length(spatial1.normdists)/2+1:end);
+            spatial_b2.anglesphi=models_SpatialModel{2}.anglesphi(length(spatial1.anglesphi)/2+1:end);
+            spatial_b2.anglestheta=models_SpatialModel{2}.anglestheta(length(spatial1.anglestheta)/2+1:end);
+
+            models_comparison{1}=spatial_a1;
+            models_comparison{2}=spatial_a2;
+            a1_a2=clique_percolation(models_comparison);
+            models_comparison{1}=spatial_b1;
+            models_comparison{2}=spatial_b2;
+            b1_b2=clique_percolation(models_comparison);
+            models_comparison{1}=spatial_a1;
+            models_comparison{2}=spatial_b1;
+            a1_b1=clique_percolation(models_comparison);
+            models_comparison{1}=spatial_a2;
+            models_comparison{2}=spatial_b2;
+            a2_b2=clique_percolation(models_comparison);
+            models_comparison{1}=spatial_a1;
+            models_comparison{2}=spatial_b2;
+            a1_b2=clique_percolation(models_comparison);
+            models_comparison{1}=spatial_a2;
+            models_comparison{2}=spatial_b1;
+            a2_b1=clique_percolation(models_comparison);
+
+
+            text2html(fileID, ['KL Divergence between first half of model1 and second half of model1=''%s'';\n', a1_a2]);
+            text2html(fileID, ['KL Divergence between first half of model2 and second half of model2=''%s'';\n', b1_b2]);
+            text2html(fileID, ['KL Divergence between first half of model1 and first half of model1=''%s'';\n', a1_b1]);
+            text2html(fileID, ['KL Divergence between second half of model1 and second half of model2=''%s'';\n', a2_b2]);
+            text2html(fileID, ['KL Divergence between first half of model1 and second half of model2=''%s'';\n', a1_b2]);
+            text2html(fileID, ['KL Divergence between second half of model1 and first half of model2=''%s'';\n', a2_b1]);
+        catch 
+
+    %         compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
+            %clique percolation
+            models_SpatialModel{1}=models{1}.proteinModel.spharm_obj_model.spatial;
+            models_SpatialModel{2}=models{2}.proteinModel.spharm_obj_model.spatial;
+            d1 = length(models_SpatialModel{1}.normdists);
+            d2 = length(models_SpatialModel{2}.normdists);
+
+            normdists=horzcat(models_SpatialModel{1}.normdists, models_SpatialModel{2}.normdists);
+            anglestheta=horzcat(models_SpatialModel{1}.anglestheta, models_SpatialModel{2}.anglestheta);
+            anglesphi=horzcat(models_SpatialModel{1}.anglesphi, models_SpatialModel{2}.anglesphi);
+
+            [x,y,z]=sph2cart(anglestheta,anglesphi,normdists);
+            
+            
+
+            pos = horzcat(x',y',z');
+            [coeff,score,latent] = pca(pos);
+
+            
+            prob2 = d1/(d1+d2);
+            temp = zeros(1, d1+d2);
+            for i=1:(d1+d2)
+                Idx = knnsearch(pos, pos(i, :), 'K', 9);
+                prob1 = sum(Idx(2:end) < d1)/8;
+                temp(i)=prob1.*log((prob1 + 1e-7)/prob2) + (1-prob1).*log((1-prob1+ 1e-7)/(1-prob2));
+            end
+
+            text2html(fileID, sprintf('Spatial distribution comparison score between model%d and model%d: %.4f;\n', j, length(models), mean(temp)));
+            KL_div = show_spatial_distribution_v2(models_SpatialModel,fileID);
+%             p_val = spatial_permutation_test(KL_div, x(d1+1:end), y(d1+1:end), z(d1+1:end));
+        end
     end
 end
 
