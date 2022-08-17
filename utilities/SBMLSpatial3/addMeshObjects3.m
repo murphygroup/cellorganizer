@@ -255,4 +255,3 @@ for i = 1:length(meshData)
         k = k + 1;
     end
 end
-

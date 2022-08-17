@@ -4,11 +4,13 @@ function [ KLD ] = clique_percolation( models)
 spatial1=models{1};
 spatial2=models{2};
 
-for a=1:floor(min(length(spatial1.normdists),length(spatial2.normdists))/20)
-    for b=1:floor(min(length(spatial1.normdists),length(spatial2.normdists))/20)
-        normdists=horzcat(spatial1.normdists((b-1)*20+1:(b-1)*20+20),spatial2.normdists((a-1)*20+1:(a-1)*20+20));
-        anglestheta=horzcat(spatial1.anglestheta((b-1)*20+1:(b-1)*20+20),spatial2.anglestheta((a-1)*20+1:(a-1)*20+20));
-        anglesphi=horzcat(spatial1.anglesphi((b-1)*20+1:(b-1)*20+20),spatial2.anglesphi((a-1)*20+1:(a-1)*20+20));
+graphSize = 50;
+
+for a=1:floor(min(length(spatial1.normdists),length(spatial2.normdists))/graphSize)
+    for b=1:floor(min(length(spatial1.normdists),length(spatial2.normdists))/graphSize)
+        normdists=horzcat(spatial1.normdists((b-1)*graphSize+1:(b-1)*graphSize+graphSize),spatial2.normdists((a-1)*graphSize+1:(a-1)*graphSize+graphSize));
+        anglestheta=horzcat(spatial1.anglestheta((b-1)*graphSize+1:(b-1)*graphSize+graphSize),spatial2.anglestheta((a-1)*graphSize+1:(a-1)*graphSize+graphSize));
+        anglesphi=horzcat(spatial1.anglesphi((b-1)*graphSize+1:(b-1)*graphSize+graphSize),spatial2.anglesphi((a-1)*graphSize+1:(a-1)*graphSize+graphSize));
 
         [x,y,z]=sph2cart(anglestheta,anglesphi,normdists);
         calc_avg=[];
@@ -35,11 +37,20 @@ thresh=mean(calc_avg);
 prob1=[];
 prob2=[];
 
-for a=1:floor(min(length(spatial1.normdists),length(spatial2.normdists))/20)
+% idx1 = randperm(length(spatial1.normdists));
+% spatial1.normdists = spatial1.normdists(idx1);
+% spatial1.anglestheta = spatial1.anglestheta(idx1);
+% spatial1.anglesphi = spatial1.anglesphi(idx1);
+% idx2 = randperm(length(spatial2.normdists));
+% spatial2.normdists = spatial2.normdists(idx2);
+% spatial2.anglestheta = spatial2.anglestheta(idx2);
+% spatial2.anglesphi = spatial2.anglesphi(idx2);
+
+for a=1:floor(min(length(spatial1.normdists),length(spatial2.normdists))/graphSize)
     %for b=1:floor(min(length(spatial1.normdists),length(spatial2.normdists))/20)
-        normdists=horzcat(spatial1.normdists((b-1)*20+1:(b-1)*20+20),spatial2.normdists((a-1)*20+1:(a-1)*20+20));
-        anglestheta=horzcat(spatial1.anglestheta((b-1)*20+1:(b-1)*20+20),spatial2.anglestheta((a-1)*20+1:(a-1)*20+20));
-        anglesphi=horzcat(spatial1.anglesphi((b-1)*20+1:(b-1)*20+20),spatial2.anglesphi((a-1)*20+1:(a-1)*20+20));
+        normdists=horzcat(spatial1.normdists((b-1)*graphSize+1:(b-1)*graphSize+graphSize),spatial2.normdists((a-1)*graphSize+1:(a-1)*graphSize+graphSize));
+        anglestheta=horzcat(spatial1.anglestheta((b-1)*graphSize+1:(b-1)*graphSize+graphSize),spatial2.anglestheta((a-1)*graphSize+1:(a-1)*graphSize+graphSize));
+        anglesphi=horzcat(spatial1.anglesphi((b-1)*graphSize+1:(b-1)*graphSize+graphSize),spatial2.anglesphi((a-1)*graphSize+1:(a-1)*graphSize+graphSize));
 
         [x,y,z]=sph2cart(anglestheta,anglesphi,normdists);
 
@@ -68,31 +79,38 @@ for a=1:floor(min(length(spatial1.normdists),length(spatial2.normdists))/20)
                 end
             end
         end
-       [~,c2,~]=k_clique(3,graph);
+       c2=ELSclique(graph);
        %Traverse cliques
        count1=0;
        count2=0;
-       for k=1:length(c2)
-           clique=c2{k};
-            for l=1:length(clique)
-                if clique(l)<=20
-                    count1=count1+1;
-                else
-                    count2=count2+1;
+       c2 = full(c2);
+       [~, d2] = size(c2);
+       for k=1:d2
+           clique=find(c2(:, k));
+           if length(clique) > 1
+                for l=1:length(clique)
+                    if clique(l)<= v
+                        count1=count1+1;
+                    else
+                        count2=count2+1;
+                    end
                 end
-            end
             prob1(end+1)=count1/(count1+count2);
             prob2(end+1)=count2/(count1+count2);
             count1=0;
             count2=0;
-    
+            end
         end
     %end
 end
 
 %KL Divergence
-KLD=KLDiv(prob1',prob2');
-
+% KLD1=KLDiv(prob1',prob2');
+prob1 = prob1 + 1e-7;
+prob2 = ones(size(prob1))/2;
+% prob1 = prob1/sum(prob1);
+% prob2 = prob2/sum(prob2);
+KLD = mean(prob1.*log(prob1./prob2) + (1-prob1).*log((1-prob1)./(1-prob2)))
 end
 
 

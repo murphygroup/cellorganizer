@@ -320,64 +320,17 @@ if param.includeprot
 %SPHARM_OBJ_MODEL COMPARISON
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if strcmpi(models{1}.proteinModel.type,'spharm_obj')
-        header2html(fileID, 'Spharm Model Comparison');
-
-        for i=1:length(models)
-            models_ShapeModel{i} = models{i}.proteinModel.spharm_obj_model.cellShapeModel;
-        end
-        consolidated_model=compare_shape_space_spharm_obj(models_ShapeModel,fileID,param);
         
-        reducedSPHARMVec=compare_shape_model_spharm_obj(models_ShapeModel, param, fileID);
-%         total_variation=consolidated_model.total_variation;
-%         text2html(fileID, ['Total_Variation=''%s'';\n', total_variation]);
-
-        for j=1:length(models)-1
+        models_ShapeModel{1} = models{1}.proteinModel.spharm_obj_model.cellShapeModel;
+        models_ShapeModel{2} = models{2}.proteinModel.spharm_obj_model.cellShapeModel;
+        consolidated_model=compare_shape_space_spharm_obj(models_ShapeModel,fileID,param);
+        header2html(fileID, 'Spharm Model Comparison');
+        total_variation=consolidated_model.total_variation;
+        text2html(fileID, ['Total_Variation=''%s'';\n', total_variation]);
         %spatial model comparision
-            models_SpatialModel{1}=models{j}.proteinModel.spharm_obj_model.spatial;
-            models_SpatialModel{2}=models{end}.proteinModel.spharm_obj_model.spatial;
-
-
-
-
-            header2html(fileID, 'Spatial Model Comparison');
-    %         compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
-            %clique percolation
-            d1 = length(models_SpatialModel{1}.normdists);
-            d2 = length(models_SpatialModel{2}.normdists);
-
-            normdists=horzcat(models_SpatialModel{1}.normdists, models_SpatialModel{2}.normdists);
-            anglestheta=horzcat(models_SpatialModel{1}.anglestheta, models_SpatialModel{2}.anglestheta);
-            anglesphi=horzcat(models_SpatialModel{1}.anglesphi, models_SpatialModel{2}.anglesphi);
-
-            [x,y,z]=sph2cart(anglestheta,anglesphi,normdists);
-            
-            
-
-            pos = horzcat(x',y',z');
-            [coeff,score,latent] = pca(pos);
-
-            
-            prob2 = d1/(d1+d2);
-            temp = zeros(1, d1+d2);
-            for i=1:(d1+d2)
-                Idx = knnsearch(pos, pos(i, :), 'K', 9);
-                prob1 = sum(Idx(2:end) < d1)/8;
-                temp(i)=prob1.*log((prob1 + 1e-7)/prob2) + (1-prob1).*log((1-prob1+ 1e-7)/(1-prob2));
-            end
-
-            text2html(fileID, sprintf('Spatial distribution comparison score between model%d and model%d: %.4f;\n', j, length(models), mean(temp)));
-            KL_div = show_spatial_distribution(models_SpatialModel,fileID);
-            p_val = spatial_permutation_test(KL_div, x(d1+1:end), y(d1+1:end), z(d1+1:end));
-            text2html(fileID, sprintf('P value of hape spatial distribution divergence: %.4f;\n', p_val));
-
-            p_val = permutation_test(mean(temp), pos(d1+1:end,:));
-        end
-
-        X = [ones(length(reducedSPHARMVec{end}), 1) pos(length(reducedSPHARMVec{j})+1:end, :)];
-        B = X\reducedSPHARMVec{end}(:, 1);
-        yCalc = X*B;
-        sq1 = 1 - sum((reducedSPHARMVec{end}(:, 1) - yCalc).^2)/sum((reducedSPHARMVec{end}(:, 1) - mean(reducedSPHARMVec{end}(:, 1))).^2);
-        text2html(fileID, sprintf('R2: %.4f;\n', sq1));
+        models_SpatialModel{1}=models{1}.proteinModel.spharm_obj_model.spatial;
+        models_SpatialModel{2}=models{2}.proteinModel.spharm_obj_model.spatial;
+        compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
     end
 end
 
