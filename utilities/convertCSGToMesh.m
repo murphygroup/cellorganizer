@@ -53,6 +53,7 @@ use_individual_meshes = options.output.use_individual_meshes;
 model_names = options.output.model_names;
 
 
+%{
 warning(warning_id, 'This should be done further upstream in createSBMLFrameworkstruct so meshes are scaled like objects (see createSBMLstruct3) and then adjusted to output_length_unit here');
 for i = 1:length(meshData)
     for j = 1:length(meshData(i).list)
@@ -64,6 +65,7 @@ for i = 1:length(meshData)
         meshData(i).list(j).resolution = [1, 1, 1];
     end
 end
+%}
 
 meshData(:).source = 'mesh';
 %{
@@ -83,13 +85,19 @@ for i = 1:length(CSGdata_fieldnames)
     CSGdata_list_lengths(i) = length(single_CSGdata.list);
 end
 CSGdata_list_lengths_cumsum = [0, cumsum(CSGdata_list_lengths(1:end-1))];
+    
 for i = 1:length(CSGdata_fieldnames)
     CSGdata_fieldname = CSGdata_fieldnames{i};
     single_CSGdata = CSGdata.(CSGdata_fieldname);
     object_name = '';
     object_name_is_EC = strcmp(CSGdata_fieldname, 'EC');
     
-    single_meshData = struct('name', 'modelMesh', 'source', 'CSG', 'list', struct('type', {}, 'name', {}, 'ordinal', {}, 'mesh', {}, 'resolution', {}, 'img', {}));
+    meshData_name = 'modelMesh';
+    if object_name_is_EC
+        meshData_name = 'domainMesh';
+    end
+    
+    single_meshData = struct('name', meshData_name, 'source', 'CSG', 'list', struct('type', {}, 'name', {}, 'ordinal', {}, 'mesh', {}, 'resolution', {}, 'img', {}));
     
     object_img = [];
     switch CSGdata_fieldname
@@ -110,6 +118,7 @@ for i = 1:length(CSGdata_fieldnames)
         otherwise
             warning(warning_id, 'CSGdata contains unrecognized field "%s"', CSGdata_fieldname);
     end
+    
     if isempty(object_name)
         continue;
     end
@@ -136,6 +145,7 @@ for i = 1:length(CSGdata_fieldnames)
                 warning(warning_id, 'Check cube');
                 item_mesh.vertices = item_mesh.vertices - 0.5;
                 item_mesh.vertices = item_mesh.vertices * 2;
+                item_mesh = rmfield(item_mesh, 'edges');
             % case 'sphere (disabled)'
             case 'sphere'
                 %{
@@ -159,6 +169,7 @@ for i = 1:length(CSGdata_fieldnames)
             if size(item_mesh.faces,2) == 4
                 item_mesh.faces = [item_mesh.faces(:, 1:3); item_mesh.faces(:, [1, 3, 4])];
             end
+            % fprintf('*** convertCSGToMesh: item_mesh.vertices mean = %s, std = %s\n', num2str(mean(item_mesh.vertices, 1)), num2str(std(item_mesh.vertices, 0, 1)));
             item_mesh.vertices = item_mesh.vertices .* repmat(single_CSGdata_list_item.scale, size(item_mesh.vertices, 1), 1);
             item_mesh.vertices = item_mesh.vertices * single_CSGdata_list_item.rotationmatrix(1:3, 1:3)';
             item_mesh.vertices = item_mesh.vertices + repmat(single_CSGdata_list_item.position, size(item_mesh.vertices, 1), 1);

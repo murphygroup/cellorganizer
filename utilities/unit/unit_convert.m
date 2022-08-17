@@ -137,144 +137,153 @@ function varargout = unit_convert(varargin)
 %version: 2017.08.08
 %2018-12-31 Taraz Buck - Removed "M" for mile, added "mol" for mole and "M" for molar.
 %2019-03-02 Taraz Buck - Added "angstrom" for angstrom.
-%% SETUP
-opt = sub_setup(nargout,varargin{:}); %parse options
-%% SHOW UNIT REPORT, STOP IF NO CONVERSION REQUESTED
-if opt.report; sub_report(opt); end
-if opt.list;   sub_list(opt);   end
-if opt.help;   sub_help(opt);   end
-if isequal(opt.in,'none'); return; end
-%% DIMENSION LOOKUP AND CONVERSION FACTOR
-%find the units in and out, and their conversion factor from base
-%until all are kind.name
-if opt.verb; disp('== INPUT UNIT PARSING ==='); end
-opt.in = sub_lookup2kind(opt,opt.in);
-opt.in = sub_lookup2dims(opt,opt.in);
-if opt.verb; disp('== OUTPUT UNIT PARSING =='); end
-opt.ud = sub_lookup2kind(opt,opt.ud);
-opt.ud = sub_lookup2dims(opt,opt.ud);
-if opt.verb; disp('============'); end
-opt.conv = opt.in.size/opt.ud.size;
-%check unit dimensions match
-sub_check_units(opt);
-%% SPECIAL HANDLING OF TEMPERATURE
-%warn if converting temperature without the abstemp option
-[nin,pin] = sub_str2np(opt.in.dims);
-if isequal(nin,{'temperature'}) && isequal(pin,1) && ~opt.abstemp && ~opt.reltemp
-    warning([mfilename ':abstemp'],'This will convert the scale of temperatures, not absolute temperatures. You may want the ''abstemp'' option.');
-end
-%convert absolute temperatures, if requested
-if opt.abstemp; opt = sub_temp_convert(opt); end
-%% ASSIGN OUTPUT
-if nargout
-    resu.out = rmfield(opt.ud,{'nam','pow'});
-    resu.in  = rmfield(opt.in,{'nam','pow'});
-    resu.conv = opt.conv;
-    if opt.abstemp
-        resu.in.amt = opt.in.size;
-        resu.out.amt = opt.ud.size;
-    else
-        resu.in.amt = opt.amt;
-        resu.out.amt = opt.amt.*resu.conv;
+
+    %% SETUP
+    opt = sub_setup(nargout,varargin{:}); %parse options
+    %% SHOW UNIT REPORT, STOP IF NO CONVERSION REQUESTED
+    if opt.report; sub_report(opt); end
+    if opt.list;   sub_list(opt);   end
+    if opt.help;   sub_help(opt);   end
+    if isequal(opt.in,'none'); return; end
+    %% DIMENSION LOOKUP AND CONVERSION FACTOR
+    %find the units in and out, and their conversion factor from base
+    %until all are kind.name
+    if opt.verb; disp('== INPUT UNIT PARSING ==='); end
+    opt.in = sub_lookup2kind(opt,opt.in);
+    opt.in = sub_lookup2dims(opt,opt.in);
+    if opt.verb; disp('== OUTPUT UNIT PARSING =='); end
+    opt.ud = sub_lookup2kind(opt,opt.ud);
+    opt.ud = sub_lookup2dims(opt,opt.ud);
+    if opt.verb; disp('============'); end
+    opt.conv = opt.in.size/opt.ud.size;
+    %check unit dimensions match
+    sub_check_units(opt);
+    %% SPECIAL HANDLING OF TEMPERATURE
+    %warn if converting temperature without the abstemp option
+    [nin,pin] = sub_str2np(opt.in.dims);
+    if isequal(nin,{'temperature'}) && isequal(pin,1) && ~opt.abstemp && ~opt.reltemp
+        warning([mfilename ':abstemp'],'This will convert the scale of temperatures, not absolute temperatures. You may want the ''abstemp'' option.');
     end
-    if ~isempty(opt.newunit); resu.customUnits = opt.newunit; end
-    varargout{1} = resu.out.amt;
-    varargout{2} = resu;
-    varargout{3} = orderfields(opt);
+    %convert absolute temperatures, if requested
+    if opt.abstemp; opt = sub_temp_convert(opt); end
+    %% ASSIGN OUTPUT
+    if nargout
+        resu.out = rmfield(opt.ud,{'nam','pow'});
+        resu.in  = rmfield(opt.in,{'nam','pow'});
+        resu.conv = opt.conv;
+        if opt.abstemp
+            resu.in.amt = opt.in.size;
+            resu.out.amt = opt.ud.size;
+        else
+            resu.in.amt = opt.amt;
+            resu.out.amt = opt.amt.*resu.conv;
+        end
+        if ~isempty(opt.newunit); resu.customUnits = opt.newunit; end
+        varargout{1} = resu.out.amt;
+        varargout{2} = resu;
+        varargout{3} = orderfields(opt);
+    end
+    if ~nargout || opt.show; sub_show_units(opt); end
 end
-if ~nargout || opt.show; sub_show_units(opt); end
-end
+
+
+
+
 %% SUBROUTINES : SETUP
 function opt = sub_setup(nout,varargin)
-%extract options from input
-opts = {'show','verb','detail','report','list','help','abstemp','reltemp','eng'};
-for i=1:numel(opts)
-    opt.(opts{i}) = false;
-end
-%by default, show is true if no outputs from unit
-if ~nout; opt.show = true; end
-opt.newunit = [];
-keep = true(size(varargin));
-for i=1:numel(varargin)
-    %deal with new units (defined as structures)
-    if isstruct(varargin{i})
-        N = varargin{i};
-        rqfields = {'name','size','expr'};
-        found = isfield(N,rqfields);
-        if ~all(found)
-            disp(rqfields(~found));
-            error('new units must have the above fields');
-        end
-        if ~isfield(N,'symb'); N.symb = ''; end
-        if isempty(opt.newunit); opt.newunit = N;
-        else                     opt.newunit = [opt.newunit N];
-        end
-        keep(i) = false;
-        continue;
+    %extract options from input
+    opts = {'show','verb','detail','report','list','help','abstemp','reltemp','eng'};
+    for i=1:numel(opts)
+        opt.(opts{i}) = false;
     end
-    
-    if isnumeric(varargin{i}); continue; end %skip numbers
-    switch varargin{i}
-        case opts; opt.(varargin{i}) = true; keep(i) = false;
+    %by default, show is true if no outputs from unit
+    if ~nout; opt.show = true; end
+    opt.newunit = [];
+    keep = true(size(varargin));
+    for i=1:numel(varargin)
+        %deal with new units (defined as structures)
+        if isstruct(varargin{i})
+            N = varargin{i};
+            rqfields = {'name','size','expr'};
+            found = isfield(N,rqfields);
+            if ~all(found)
+                disp(rqfields(~found));
+                error('new units must have the above fields');
+            end
+            if ~isfield(N,'symb'); N.symb = ''; end
+            if isempty(opt.newunit); opt.newunit = N;
+            else                     opt.newunit = [opt.newunit N];
+            end
+            keep(i) = false;
+            continue;
+        end
+        
+        if isnumeric(varargin{i}); continue; end %skip numbers
+        switch varargin{i}
+            case opts; opt.(varargin{i}) = true; keep(i) = false;
+        end
+    end
+    if opt.detail; opt.verb = true; end
+    varargin = varargin(keep);
+    %any numeric inputs assigned to amt, and removed
+    tf = cellfun(@isnumeric,varargin);
+    switch sum(tf)
+        case 0; opt.amt = 1;
+        case 1; opt.amt = varargin{tf}; varargin = varargin(~tf);
+        otherwise; error('can only accept one numeric input');
+    end
+    %remainder should be two units (strings)
+    switch numel(varargin)
+        case 0 %only allow this if using the "report" or "list" options
+            if opt.report || opt.list || opt.help; opt.in = 'none'; opt.ud = 'none';
+            else error('input must contain at least one input');
+            end
+        case 1
+            error('only one unit input received, require two');
+        case 2
+            opt.in = varargin{1};
+            opt.ud = varargin{2};
+        otherwise
+            disp('BAD INPUTS');
+            disp(char(varargin));
+            error('can only accept up to two units');
+    end
+    %check incompatible options
+    if opt.abstemp && opt.reltemp; error('cannot use options ''abstemp'' and ''reltemp'' together'); end
+    %check inputs are correct form
+    if ~ischar(opt.in); error('first input must be a string'); end
+    if ~ischar(opt.ud); error('second input must be a string'); end
+    if ~isnumeric(opt.amt); error('third input must be a number or option'); end
+    if numel(size(opt.in))>2 || size(opt.in,1)>1 || any(size(opt.in)==0)
+        error('first input must be a 1xn string, cannot be empty');
+    end
+    if numel(size(opt.ud))>2 || size(opt.ud,1)>1 || any(size(opt.ud)==0)
+        error('second input must be a 1xn string, cannot be empty');
+    end
+    opt = sub_setup_prefix(opt);      %list of prefixes, e.g. M = mega = 1E6
+    opt = sub_setup_constant(opt);    %constants, e.g. g=9.81m/s
+    opt = sub_setup_kind(opt);        %kinds of unit, e.g. mass.
+    opt = sub_setup_unit(opt);        %all base units with scale, eg lb, kg, g
+    opt = sub_setup_newunit(opt);     %add custom units provided by user
+    if opt.report
+        opt.verb = false;
+        opt.detail = false;
     end
 end
-if opt.detail; opt.verb = true; end
-varargin = varargin(keep);
-%any numeric inputs assigned to amt, and removed
-tf = cellfun(@isnumeric,varargin);
-switch sum(tf)
-    case 0; opt.amt = 1;
-    case 1; opt.amt = varargin{tf}; varargin = varargin(~tf);
-    otherwise; error('can only accept one numeric input');
-end
-%remainder should be two units (strings)
-switch numel(varargin)
-    case 0 %only allow this if using the "report" or "list" options
-        if opt.report || opt.list || opt.help; opt.in = 'none'; opt.ud = 'none';
-        else error('input must contain at least one input');
-        end
-    case 1
-        error('only one unit input received, require two');
-    case 2
-        opt.in = varargin{1};
-        opt.ud = varargin{2};
-    otherwise
-        disp('BAD INPUTS');
-        disp(char(varargin));
-        error('can only accept up to two units');
-end
-%check incompatible options
-if opt.abstemp && opt.reltemp; error('cannot use options ''abstemp'' and ''reltemp'' together'); end
-%check inputs are correct form
-if ~ischar(opt.in); error('first input must be a string'); end
-if ~ischar(opt.ud); error('second input must be a string'); end
-if ~isnumeric(opt.amt); error('third input must be a number or option'); end
-if numel(size(opt.in))>2 || size(opt.in,1)>1 || any(size(opt.in)==0)
-    error('first input must be a 1xn string, cannot be empty');
-end
-if numel(size(opt.ud))>2 || size(opt.ud,1)>1 || any(size(opt.ud)==0)
-    error('second input must be a 1xn string, cannot be empty');
-end
-opt = sub_setup_prefix(opt);      %list of prefixes, e.g. M = mega = 1E6
-opt = sub_setup_constant(opt);    %constants, e.g. g=9.81m/s
-opt = sub_setup_kind(opt);        %kinds of unit, e.g. mass.
-opt = sub_setup_unit(opt);        %all base units with scale, eg lb, kg, g
-opt = sub_setup_newunit(opt);     %add custom units provided by user
-if opt.report
-    opt.verb = false;
-    opt.detail = false;
-end
-end
+
+
+
+
 function opt = sub_setup_kind(opt)
-%creates data on "kinds" of unit
-%opt = sub_setup_kind(opt)
-opt.kind = sub_data_kind();
-%opt.kind.dims = sub_simplify(opt.kind.expr);
-%opt.kind.size = ones(size(opt.kind.dims));
-%the subset of kind that is dims
-opt.dims.name = opt.kind.name(opt.kind.isdim);
-opt.dims.unit = opt.kind.unit(opt.kind.isdim);
-opt.dims.numberof = numel(opt.dims.name);
+    %creates data on "kinds" of unit
+    %opt = sub_setup_kind(opt)
+    opt.kind = sub_data_kind();
+    %opt.kind.dims = sub_simplify(opt.kind.expr);
+    %opt.kind.size = ones(size(opt.kind.dims));
+    %the subset of kind that is dims
+    opt.dims.name = opt.kind.name(opt.kind.isdim);
+    opt.dims.unit = opt.kind.unit(opt.kind.isdim);
+    opt.dims.numberof = numel(opt.dims.name);
     function kind = sub_data_kind()
         b = {...
             'mass',              'mass',              'kg',...
@@ -316,35 +325,47 @@ opt.dims.numberof = numel(opt.dims.name);
         %function, because "length/time" is not a unit, but "m/s" is.
     end
 end
+
+
+
+
 function opt = sub_setup_prefix(opt)
-%sets up data on prefixes
-%opt = sub_setup_prefix(opt)
-opt.prefix.symb = 'numcHkMGTPEZY';
-opt.prefix.powr = [-9 -6 -3 -2 2 3 6 9 12 15 18 21 24];
-opt.prefix.name = {'nano','micro','mili','centi','hecto','kilo','mega','giga','tera','peta','exa','zetta','yotta'};
+    %sets up data on prefixes
+    %opt = sub_setup_prefix(opt)
+    opt.prefix.symb = 'numcHkMGTPEZY';
+    opt.prefix.powr = [-9 -6 -3 -2 2 3 6 9 12 15 18 21 24];
+    opt.prefix.name = {'nano','micro','mili','centi','hecto','kilo','mega','giga','tera','peta','exa','zetta','yotta'};
 end
+
+
+
+
 function opt = sub_setup_constant(opt)
-%sets up conversion constants
-%opt = sub_setup_con(opt)
-%standard gravity, as used by e.g. lbf->N conversion
-opt.con.g = 9.80665;
-opt.con.abszero = -273.15;
-opt.con.c = 299792458; %speed of light in m/s
-opt.con.yrJ = 365.25; %julian/astronomy year
-opt.con.yrcal = 365.2425; %gregorian/calendar year
-%temperature conversions
-opt.con.C2K = @(t) t-opt.con.abszero;
-opt.con.C2R = @(t) (t-opt.con.abszero)*1.8;
-opt.con.C2F = @(t) t*1.8 + 32;
-opt.con.K2C = @(t) t+opt.con.abszero;
-opt.con.R2C = @(t) t/1.8+opt.con.abszero;
-opt.con.F2C = @(t) (t-32)/1.8;
+    %sets up conversion constants
+    %opt = sub_setup_con(opt)
+    %standard gravity, as used by e.g. lbf->N conversion
+    opt.con.g = 9.80665;
+    opt.con.abszero = -273.15;
+    opt.con.c = 299792458; %speed of light in m/s
+    opt.con.yrJ = 365.25; %julian/astronomy year
+    opt.con.yrcal = 365.2425; %gregorian/calendar year
+    %temperature conversions
+    opt.con.C2K = @(t) t-opt.con.abszero;
+    opt.con.C2R = @(t) (t-opt.con.abszero)*1.8;
+    opt.con.C2F = @(t) t*1.8 + 32;
+    opt.con.K2C = @(t) t+opt.con.abszero;
+    opt.con.R2C = @(t) t/1.8+opt.con.abszero;
+    opt.con.F2C = @(t) (t-32)/1.8;
 end
+
+
+
+
 function opt = sub_setup_unit(opt)
-%set up data on base units
-%opt = sub_setup_base(opt)
-opt.unit = sub_unit_data();
-opt.unit.numberof = numel(opt.unit.name);
+    %set up data on base units
+    %opt = sub_setup_base(opt)
+    opt.unit = sub_unit_data();
+    opt.unit.numberof = numel(opt.unit.name);
     function out = sub_unit_data()
         b = {'meter',   'm',    1,      'length', ...
             'second',   'sec',  1,      'time', ...
@@ -427,240 +448,273 @@ opt.unit.numberof = numel(opt.unit.name);
         out.expr = b(4:4:end);
     end
 end
+
+
+
+
 function opt = sub_setup_newunit(opt)
-%adds new (custom) units to the set of units
-U = opt.unit;
-pat = 'custom unit "%s" bad format: field "%s" must be a %s\n';
-pat2 = 'custom unit "%s" clashes: field "%s" value "%s" already exists\n';
-for ii = 1:numel(opt.newunit)
-    new = opt.newunit(ii);
-    if ~isfield(new,'symb'); new.symb = ''; end
-    %check the new unit is compatible
-    if ~ischar(new.name);       error(pat,'','name','string'); end
-    if ~ischar(new.expr);       error(pat,new.name,'expr','string'); end
-    if ~ischar(new.symb);       error(pat,new.name,'symb','string'); end
-    if ~isnumeric(new.size);    error(pat,new.name,'size','number'); end
-    
-    %warn about anything being overwritten
-    if ~isempty(new.name) && ismember(new.name,U.name); error(pat2,new.name,'name',new.name); end
-    if ~isempty(new.symb) && ismember(new.symb,U.symb); error(pat2,new.name,'symb',new.symb); end
-    
-    %ud = sub_base_unit(opt,new.expr);
-    U.name{end+1} = new.name;
-    U.symb{end+1} = new.symb;
-    U.size(end+1) = new.size;
-    U.expr{end+1} = new.expr;
-end
-opt.unit = U;
-if (numel(opt.newunit) && opt.show) || opt.verb
-    fprintf('Using %d custom units:\n',numel(opt.newunit));
-    pat = 'name "%s" expression 1 %s = %g x %s\n';
-    for ii=1:numel(opt.newunit)
-        fprintf(pat,...
-            opt.newunit(ii).name,...
-            opt.newunit(ii).symb,...
-            opt.newunit(ii).size,...
-            opt.newunit(ii).expr);
+    %adds new (custom) units to the set of units
+    U = opt.unit;
+    pat = 'custom unit "%s" bad format: field "%s" must be a %s\n';
+    pat2 = 'custom unit "%s" clashes: field "%s" value "%s" already exists\n';
+    for ii = 1:numel(opt.newunit)
+        new = opt.newunit(ii);
+        if ~isfield(new,'symb'); new.symb = ''; end
+        %check the new unit is compatible
+        if ~ischar(new.name);       error(pat,'','name','string'); end
+        if ~ischar(new.expr);       error(pat,new.name,'expr','string'); end
+        if ~ischar(new.symb);       error(pat,new.name,'symb','string'); end
+        if ~isnumeric(new.size);    error(pat,new.name,'size','number'); end
+        
+        %warn about anything being overwritten
+        if ~isempty(new.name) && ismember(new.name,U.name); error(pat2,new.name,'name',new.name); end
+        if ~isempty(new.symb) && ismember(new.symb,U.symb); error(pat2,new.name,'symb',new.symb); end
+        
+        %ud = sub_base_unit(opt,new.expr);
+        U.name{end+1} = new.name;
+        U.symb{end+1} = new.symb;
+        U.size(end+1) = new.size;
+        U.expr{end+1} = new.expr;
     end
-    fprintf('\n');
+    opt.unit = U;
+    if (numel(opt.newunit) && opt.show) || opt.verb
+        fprintf('Using %d custom units:\n',numel(opt.newunit));
+        pat = 'name "%s" expression 1 %s = %g x %s\n';
+        for ii=1:numel(opt.newunit)
+            fprintf(pat,...
+                opt.newunit(ii).name,...
+                opt.newunit(ii).symb,...
+                opt.newunit(ii).size,...
+                opt.newunit(ii).expr);
+        end
+        fprintf('\n');
+    end
 end
-end
+
+
+
+
 %% PARSING OF UNITS AND DIMENSION LOOKUP
+
 function in = sub_lookup2dims(opt,in)
-if opt.verb; disp('--- start lookup from kind to dimensions ---'); end
-if ~isfield(in,'pow')
-    [in.nam,in.pow] = sub_str2np(in.kind);
-end
-if ~isfield(in,'let')
-    in.let = sub_term_type(opt,in.kind);
-end
-v.let = in.let;
-v.pow = in.pow;
-v.nam = in.nam;
-v.siz = nan;
-in = rmfield(in,{'let','pow','nam'});
-while any(v.let~='A')
-    if ~all(v.let=='A' | v.let=='B'); keyboard; end
-    I = find(v.let=='B',1,'first');
-    [tf,loc] = ismember(v.nam{I},opt.kind.name);
-    if ~tf; keyboard; end
-    str = opt.kind.expr{loc};
-    if opt.verb
-        fprintf(['replaced kind with expression "' v.nam{I} '" -> "' str '"\n']);
+    if opt.verb; disp('--- start lookup from kind to dimensions ---'); end
+    if ~isfield(in,'pow')
+        [in.nam,in.pow] = sub_str2np(in.kind);
     end
-    [n,p] = sub_str2np(str);
-    let = sub_term_type(opt,str);
-    v.nam = [v.nam n];
-    v.pow = [v.pow p*v.pow(I)];
-    v.let = [v.let let];
-    v.pow(I) = 0;
-    v = sub_simple(v);
-    if opt.verb; fprintf('%s\n',sub_np2str(v.nam,v.pow)); end
+    if ~isfield(in,'let')
+        in.let = sub_term_type(opt,in.kind);
+    end
+    v.let = in.let;
+    v.pow = in.pow;
+    v.nam = in.nam;
+    v.siz = nan;
+    in = rmfield(in,{'let','pow','nam'});
+    while any(v.let~='A')
+        I = find(v.let=='B',1,'first');
+        [tf,loc] = ismember(v.nam{I},opt.kind.name);
+        str = opt.kind.expr{loc};
+        if opt.verb
+            fprintf(['replaced kind with expression "' v.nam{I} '" -> "' str '"\n']);
+        end
+        [n,p] = sub_str2np(str);
+        let = sub_term_type(opt,str);
+        v.nam = [v.nam n];
+        v.pow = [v.pow p*v.pow(I)];
+        v.let = [v.let let];
+        v.pow(I) = 0;
+        v = sub_simple(v);
+        if opt.verb; fprintf('%s\n',sub_np2str(v.nam,v.pow)); end
+    end
+    if opt.verb; disp('--- lookup to dimensions completed ---'); end
+    [v.nam,order] = sort(v.nam);
+    v.pow = v.pow(order);
+    in.dims = sub_np2str(v.nam,v.pow);
+    [tf,loc] = ismember(v.nam,opt.kind.name);
+    in.nam = v.nam;
+    in.pow = v.pow;
+    in.unit = sub_np2pretty(opt.kind.unit(loc),v.pow);
 end
-if opt.verb; disp('--- lookup to dimensions completed ---'); end
-[v.nam,order] = sort(v.nam);
-v.pow = v.pow(order);
-in.dims = sub_np2str(v.nam,v.pow);
-[tf,loc] = ismember(v.nam,opt.kind.name);
-if ~all(tf); keyboard; end
-in.nam = v.nam;
-in.pow = v.pow;
-in.unit = sub_np2pretty(opt.kind.unit(loc),v.pow);
-end
+
+
+
+
 function in = sub_lookup2kind(opt,str)
-in.orig = str;
-v.siz = 1;
-[v.nam,v.pow] = sub_str2np(str);
-v.let = sub_term_type(opt,str);
-if opt.verb
-    fprintf('Starting unit %s\n',in.orig);
-end
-while ~all(v.let=='A' | v.let=='B')
-    if any(v.let=='I'); keyboard; end
-    v = sub_rem_prefix(opt,v);
-    v = sub_symb2name(opt,v);
-    v = sub_name2expr(opt,v);
-    v = sub_simple(v);
-end
-if opt.verb; disp('--- lookup to kind completed ---'); end
-[v.nam,order] = sort(v.nam);
-v.pow = v.pow(order);
-v.let = v.let(order);
-in.kind = sub_np2str(v.nam,v.pow);
-in.size = v.siz;
-in.nam = v.nam;
-in.pow = v.pow;
-in.let = v.let;
-end
-function v = sub_name2expr(opt,v)
-while any(v.let=='C')
-    I = find(v.let=='C',1,'first');
-    [tf,loc] = ismember(v.nam{I},opt.unit.name);
-    if ~tf; keyboard; end
-    scale = opt.unit.size(loc)^v.pow(I);
-    v.siz = v.siz*scale;
-    %split the new expression into terms and append
-    if opt.verb; old = v.nam{I}; end
-    str = opt.unit.expr{loc};
-    [n,p] = sub_str2np(str);
-    let = sub_term_type(opt,str);
-    v.nam = [v.nam n];
-    v.pow = [v.pow p*v.pow(I)];
-    v.let = [v.let let];
-    %remove the term we just replaced
-    v.nam(I) = [];
-    v.pow(I) = [];
-    v.let(I) = [];
-    v = sub_simple(v);
+    in.orig = str;
+    v.siz = 1;
+    [v.nam,v.pow] = sub_str2np(str);
+    v.let = sub_term_type(opt,str);
     if opt.verb
-        fprintf('replaced %s with expression %s\n',old,str);
-        fprintf('%s x %e\n',sub_np2str(v.nam,v.pow),v.siz);
+        fprintf('Starting unit %s\n',in.orig);
+    end
+    while ~all(v.let=='A' | v.let=='B')
+        v = sub_rem_prefix(opt,v);
+        v = sub_symb2name(opt,v);
+        v = sub_name2expr(opt,v);
+        v = sub_simple(v);
+    end
+    if opt.verb; disp('--- lookup to kind completed ---'); end
+    [v.nam,order] = sort(v.nam);
+    v.pow = v.pow(order);
+    v.let = v.let(order);
+    in.kind = sub_np2str(v.nam,v.pow);
+    in.size = v.siz;
+    in.nam = v.nam;
+    in.pow = v.pow;
+    in.let = v.let;
+end
+
+
+
+
+function v = sub_name2expr(opt,v)
+    while any(v.let=='C')
+        I = find(v.let=='C',1,'first');
+        [tf,loc] = ismember(v.nam{I},opt.unit.name);
+        scale = opt.unit.size(loc)^v.pow(I);
+        v.siz = v.siz*scale;
+        %split the new expression into terms and append
+        if opt.verb; old = v.nam{I}; end
+        str = opt.unit.expr{loc};
+        [n,p] = sub_str2np(str);
+        let = sub_term_type(opt,str);
+        v.nam = [v.nam n];
+        v.pow = [v.pow p*v.pow(I)];
+        v.let = [v.let let];
+        %remove the term we just replaced
+        v.nam(I) = [];
+        v.pow(I) = [];
+        v.let(I) = [];
+        v = sub_simple(v);
+        if opt.verb
+            fprintf('replaced %s with expression %s\n',old,str);
+            fprintf('%s x %e\n',sub_np2str(v.nam,v.pow),v.siz);
+        end
     end
 end
-end
+
+
+
+
 function out = sub_simple(v)
-keep = v.pow~=0;
-v.let = v.let(keep);
-v.pow = v.pow(keep);
-v.nam = v.nam(keep);
-[out.nam,I,J] = unique(v.nam);
-for i=1:numel(out.nam)
-    out.pow(i) = sum(v.pow(J==i));
-end
-if isempty(out.nam)
-    out.pow = [];
-    out.let = '';
-end
-out.let = v.let(I);
+    keep = v.pow~=0;
+    v.let = v.let(keep);
+    v.pow = v.pow(keep);
+    v.nam = v.nam(keep);
+    [out.nam,I,J] = unique(v.nam);
+    for i=1:numel(out.nam)
+        out.pow(i) = sum(v.pow(J==i));
+    end
+    if isempty(out.nam)
+        out.pow = [];
+        out.let = '';
+    end
+    out.let = v.let(I);
     keep = out.pow~=0;
     out.let = out.let(keep);
     out.pow = out.pow(keep);
     out.nam = out.nam(keep);
     out.siz = v.siz;
 end
+
+
+
+
 function v = sub_rem_prefix(opt,v)
-%strip full-name prefixes
-for I = find(ismember(v.let,'EF'))
-    [prestr,pow10] = sub_find_prefix(opt,v.nam{I},'name');
-    v.nam{I} = regexprep(v.nam{I},['^' prestr],'');
-    scale = 10^(pow10*v.pow(I));
-    v.siz = v.siz * scale;
-    v.let(I) = sub_term_type(opt,v.nam{I});
-    v = sub_simple(v);
-end
-%strip letter prefixes
-for I = find(ismember(v.let,'GH'))
-    [prestr,pow10] = sub_find_prefix(opt,v.nam{I},'symb');
-    if opt.verb; fprintf('removing prefix %s\n',prestr); end
-    v.nam{I} = regexprep(v.nam{I},['^' prestr],'');
-    scale = 10^(pow10*v.pow(I));
-    v.siz = v.siz * scale;
-    v.let(I) = sub_term_type(opt,v.nam{I});
-    v = sub_simple(v);
-end
-if opt.verb; fprintf('%s x %g\n',sub_np2str(v.nam,v.pow),v.siz); end
+    %strip full-name prefixes
+    % for I = find(ismember(v.let,'EF'))
+    while true
+        prefix_indices = find(ismember(v.let,'EF'));
+        if length(prefix_indices) == 0; break; end
+        I = prefix_indices(1);
+        [prestr,pow10] = sub_find_prefix(opt,v.nam{I},'name');
+        v.nam{I} = regexprep(v.nam{I},['^' prestr],'');
+        scale = 10^(pow10*v.pow(I));
+        v.siz = v.siz * scale;
+        v.let(I) = sub_term_type(opt,v.nam{I});
+        v = sub_simple(v);
+    end
+    %strip letter prefixes
+    % for I = find(ismember(v.let,'GH'))
+    while true
+        prefix_indices = find(ismember(v.let,'GH'));
+        if length(prefix_indices) == 0; break; end
+        I = prefix_indices(1);
+        [prestr,pow10] = sub_find_prefix(opt,v.nam{I},'symb');
+        if opt.verb; fprintf('removing prefix %s\n',prestr); end
+        v.nam{I} = regexprep(v.nam{I},['^' prestr],'');
+        scale = 10^(pow10*v.pow(I));
+        v.siz = v.siz * scale;
+        v.let(I) = sub_term_type(opt,v.nam{I});
+        v = sub_simple(v);
+    end
+    if opt.verb; fprintf('%s x %g\n',sub_np2str(v.nam,v.pow),v.siz); end
     function [strud,pow10] = sub_find_prefix(opt,str,name_or_symb)
-    switch name_or_symb
-        case 'name'; from = opt.prefix.name;
-        case 'symb'; from = cellstr(opt.prefix.symb');
-    end
-    to = opt.prefix.powr;
-    for i=1:numel(from)
-        pat = ['^' from{i}];
-        if ~isempty(regexp(str,pat,'once'))
-            strud = from{i};
-            pow10 = to(i);
-            return
+        switch name_or_symb
+            case 'name'; from = opt.prefix.name;
+            case 'symb'; from = cellstr(opt.prefix.symb');
+        end
+        to = opt.prefix.powr;
+        for i=1:numel(from)
+            pat = ['^' from{i}];
+            if ~isempty(regexp(str,pat,'once'))
+                strud = from{i};
+                pow10 = to(i);
+                return
+            end
         end
     end
-    if ~exist('strud','var'); keyboard; end
-    end
 end
+
+
+
+
 function v = sub_symb2name(opt,v)
-while any(v.let=='D')
-    if any(v.let=='I'); keyboard; end
-    I = find(v.let=='D');
-    [tf,loc] = ismember(v.nam(I),opt.unit.symb);
-    if opt.verb
-        for i=1:numel(I)
-            fprintf(...
-                'replacing symb %s with name %s\n',...
-                v.nam{I(i)},opt.unit.name{loc(i)});
+    while any(v.let=='D')
+        I = find(v.let=='D');
+        [tf,loc] = ismember(v.nam(I),opt.unit.symb);
+        if opt.verb
+            for i=1:numel(I)
+                fprintf(...
+                    'replacing symb %s with name %s\n',...
+                    v.nam{I(i)},opt.unit.name{loc(i)});
+            end
         end
+        v.nam(I) = opt.unit.name(loc);
+        v.let(I) = 'C';
+        v = sub_simple(v);
+        if opt.verb; fprintf('%s x %e\n',sub_np2str(v.nam,v.pow),v.siz); end
     end
-    if ~all(tf); keyboard; end
-    v.nam(I) = opt.unit.name(loc);
-    v.let(I) = 'C';
-    v = sub_simple(v);
-    if opt.verb; fprintf('%s x %e\n',sub_np2str(v.nam,v.pow),v.siz); end
 end
-end
+
+
+
+
 function let = sub_term_type(opt,str)
-%let = sub_term_type(opt,str)
-%assign each term a letter code determining its type
-%if more than one code applies, the first is used
-%A dims.name
-%B kind.name
-%C base.name
-%D base.symb
-%E prefix name + base.name
-%F prefix name + base.symb
-%G prefix symb + base.name
-%H prefix symb + base.symb
-%I other (error)
-if iscell(str); n = str;
-else;           n = sub_str2np(str);
-end
-let = repmat('I',[1 numel(n)]);
-for i=1:numel(n)
-    let(i) = sub_term_single(opt,n{i});
-end
-if isempty(n); let = ''; return; end
-if any(let=='I')
-    disp('BAD UNITS');
-    fprintf(1,'"%s"\n',n{let=='I'});
-    error('could not parse the units shown above');
-end
+    %let = sub_term_type(opt,str)
+    %assign each term a letter code determining its type
+    %if more than one code applies, the first is used
+    %A dims.name
+    %B kind.name
+    %C base.name
+    %D base.symb
+    %E prefix name + base.name
+    %F prefix name + base.symb
+    %G prefix symb + base.name
+    %H prefix symb + base.symb
+    %I other (error)
+    if iscell(str); n = str;
+    else;           n = sub_str2np(str);
+    end
+    let = repmat('I',[1 numel(n)]);
+    for i=1:numel(n)
+        let(i) = sub_term_single(opt,n{i});
+    end
+    if isempty(n); let = ''; return; end
+    if any(let=='I')
+        disp('BAD UNITS');
+        fprintf(1,'"%s"\n',n{let=='I'});
+        error('could not parse the units shown above');
+    end
     function letter = sub_term_single(opt,str)
         %catches in order:
         %dims.name, kinds.name, base.name, base.symb
@@ -730,95 +784,102 @@ end
         pat = ['^(' sprintf('%s|',cstr{:}) ')'];
     end
 end
+
+
+
+
 function [n,pow] = sub_str2np(str)
-%splits string str into units n and powers pow
-%[n,pow] = sub_str2np(str)
-%split into terms
-%each term may start with / . * or whitespace \s
-%then a number of letters
-%then some other stuff until the next match
-%TODO get non-greedy flag to work with regexp, so get all terms with one
-%call.
-if isempty(str); n = {}; pow = []; return; end
-%if string starts with 1/unit, replace with /unit
-pat = '^1/[a-z|A-Z|\(|\)]'; if regexp(str,pat); str(1) = ''; end
-pat = '[\.|\*|/|\s+]?[a-z|A-Z|\(|\)]+';
-beg = regexp(str,pat,'start');
-if beg(1)~=1; error('unit should start with a letter or /'); end
-bak = unique([beg(2:end)-1 numel(str)]);
-for i=1:numel(beg)
-    terms{i} = str(beg(i):bak(i)); %#ok<AGROW>
-end
-%catch use of - as separator, discard the -
-terms = regexprep(terms,'-$','');
-%TODO here : add parsing of bracketed terms, so
-%kg/m/s2   = kg1m-1s-2
-%kg/(m/s2) = kg1m-1s+2
-%if a term starts with /, invert the power of all following terms
-%e.g. kg/m.s is kg1m-1s-1.
-%CHANGE 2016.03.18 if a term start with / invert the power of just the
-%following term, not all following terms. so example above
-%kg/m.s is now kg1m-1s1
-pat = '^/';
-pow = double(cellfun('isempty',regexp(terms,pat)));
-pow(pow==0) = -1;
-%pow = cumprod(pow);    %this changes the "all following terms" part.
-terms = regexprep(terms,pat,'');
-%remove leading . and * from each term
-pat = '^[\.|\*|\s+]';
-terms = regexprep(terms,pat,'');
-%parse and remove the units in each term
-pat = '^[a-z|A-Z|\(|\)]+';
-n = regexp(terms,pat,'match','once');
-terms = regexprep(terms,pat,'');
-%each term should now just be a power.
-%remove starting ^ before powers
-terms = regexprep(terms,'^\^','');
-%remove ending .
-terms = regexprep(terms,'\.$','');
-%parse powers term-by-term to catch fractions (/)
-for i=1:numel(terms)
-    if isempty(terms{i}); val(i) = 1; continue; end %#ok<AGROW>
-    if regexp(terms{i},'/')
-        a = regexp(terms{i},'(?<num>.+)/(?<den>.+)','names');
-        val(i) = str2double(a.num)/str2double(a.den); %#ok<AGROW>
-    else
-        val(i) = str2double(terms{i}); %#ok<AGROW>
+    %splits string str into units n and powers pow
+    %[n,pow] = sub_str2np(str)
+    %split into terms
+    %each term may start with / . * or whitespace \s
+    %then a number of letters
+    %then some other stuff until the next match
+    %TODO get non-greedy flag to work with regexp, so get all terms with one
+    %call.
+    if isempty(str); n = {}; pow = []; return; end
+    %if string starts with 1/unit, replace with /unit
+    pat = '^1/[a-z|A-Z|\(|\)]'; if regexp(str,pat); str(1) = ''; end
+    pat = '[\.|\*|/|\s+]?[a-z|A-Z|\(|\)]+';
+    beg = regexp(str,pat,'start');
+    if beg(1)~=1; error('unit should start with a letter or /'); end
+    bak = unique([beg(2:end)-1 numel(str)]);
+    for i=1:numel(beg)
+        terms{i} = str(beg(i):bak(i)); %#ok<AGROW>
     end
-end
-pow = pow .* val;
-%consolidate multiples of the same unit
-if numel(unique(n))<numel(n)
-    
-    [u,~,c] = unique(n);
-    p = [];
-    for i=1:numel(u);
-        p(i) = sum(pow(c==i)); %#ok<AGROW>
+    %catch use of - as separator, discard the -
+    terms = regexprep(terms,'-$','');
+    %TODO here : add parsing of bracketed terms, so
+    %kg/m/s2   = kg1m-1s-2
+    %kg/(m/s2) = kg1m-1s+2
+    %if a term starts with /, invert the power of all following terms
+    %e.g. kg/m.s is kg1m-1s-1.
+    %CHANGE 2016.03.18 if a term start with / invert the power of just the
+    %following term, not all following terms. so example above
+    %kg/m.s is now kg1m-1s1
+    pat = '^/';
+    pow = double(cellfun('isempty',regexp(terms,pat)));
+    pow(pow==0) = -1;
+    %pow = cumprod(pow);    %this changes the "all following terms" part.
+    terms = regexprep(terms,pat,'');
+    %remove leading . and * from each term
+    pat = '^[\.|\*|\s+]';
+    terms = regexprep(terms,pat,'');
+    %parse and remove the units in each term
+    pat = '^[a-z|A-Z|\(|\)]+';
+    n = regexp(terms,pat,'match','once');
+    terms = regexprep(terms,pat,'');
+    %each term should now just be a power.
+    %remove starting ^ before powers
+    terms = regexprep(terms,'^\^','');
+    %remove ending .
+    terms = regexprep(terms,'\.$','');
+    %parse powers term-by-term to catch fractions (/)
+    for i=1:numel(terms)
+        if isempty(terms{i}); val(i) = 1; continue; end %#ok<AGROW>
+        if regexp(terms{i},'/')
+            a = regexp(terms{i},'(?<num>.+)/(?<den>.+)','names');
+            val(i) = str2double(a.num)/str2double(a.den); %#ok<AGROW>
+        else
+            val(i) = str2double(terms{i}); %#ok<AGROW>
+        end
     end
-    n = u;
-    pow = p;
-end
-if any(isnan(pow))
-    I = find(isnan(pow),1,'first');
-    try
+    pow = pow .* val;
+    %consolidate multiples of the same unit
+    if numel(unique(n))<numel(n)
+        
+        [u,~,c] = unique(n);
+        p = [];
+        for i=1:numel(u);
+            p(i) = sum(pow(c==i)); %#ok<AGROW>
+        end
+        n = u;
+        pow = p;
+    end
+    if any(isnan(pow))
+        I = find(isnan(pow),1,'first');
         error('failed to parse %s, cannot parse power of term %s',str,n{I})
-    catch
-        keyboard
     end
-    keyboard;
 end
-end
+
+
+
+
 function str = sub_np2str(n,p)
-str = '';
-for i=1:numel(n)
-    str = [str sprintf('%s%g.',n{i},p(i))];
+    str = '';
+    for i=1:numel(n)
+        str = [str sprintf('%s%g.',n{i},p(i))];
+    end
 end
-end
+
+
+
+
 function str = sub_np2pretty(n,p)
-num = sub_np2nice(n(p>0),p(p>0)); if isempty(num); num = 1; end
-str = num;
-den = sub_np2nice(n(p<0),-p(p<0)); if isempty(den); return; end
-str = [str '/(' den ')'];
+    num = sub_np2nice(n(p>0),p(p>0)); if isempty(num); num = 1; end
+    str = num;
+    den = sub_np2nice(n(p<0),-p(p<0)); if isempty(den); return; end
+    str = [str '/(' den ')'];
     function s = sub_np2nice(a,b)
     s = '';
     for i = 1:numel(a)
@@ -833,93 +894,106 @@ str = [str '/(' den ')'];
     if numel(s); s(1:3) = ''; end
     end
 end
+
+
+
+
 function strud = sub_simplify(str,flag_verb)
-%simplifies the units of str, removing zero-power units
-%str = sub_simplify(str,flag_verb)
-if nargin<2; flag_verb = false; end
-%if cell array, recursively call self
-if iscellstr(str)
-    for i=1:numel(str)
-        strud{i} = sub_simplify(str{i},flag_verb); %#ok<AGROW>
+    %simplifies the units of str, removing zero-power units
+    %str = sub_simplify(str,flag_verb)
+    if nargin<2; flag_verb = false; end
+    %if cell array, recursively call self
+    if iscellstr(str)
+        for i=1:numel(str)
+            strud{i} = sub_simplify(str{i},flag_verb); %#ok<AGROW>
+        end
+        return
     end
-    return
-end
-%simplify expressions
-[n,pow] = sub_str2np(str);
-%remove any with zero power and consolidate into unique names
-keep = pow~=0;
-pow = pow(keep);
-n = n(keep);
-%create string out
-strud = '';
-if ~isempty(n)
-    for u = unique(n)
-        [~,loc] = ismember(u,n);
-        p = sum(pow(loc));
-        strud = [strud u{1} num2str(p) '.']; %#ok<AGROW>
+    %simplify expressions
+    [n,pow] = sub_str2np(str);
+    %remove any with zero power and consolidate into unique names
+    keep = pow~=0;
+    pow = pow(keep);
+    n = n(keep);
+    %create string out
+    strud = '';
+    if ~isempty(n)
+        for u = unique(n)
+            [~,loc] = ismember(u,n);
+            p = sum(pow(loc));
+            strud = [strud u{1} num2str(p) '.']; %#ok<AGROW>
+        end
     end
+    if flag_verb; fprintf(1,'simplify "%s" -> "%s"\n',str,strud); end
 end
-if flag_verb; fprintf(1,'simplify "%s" -> "%s"\n',str,strud); end
-end
+
+
+
+
 function opt = sub_temp_convert(opt)
-%check input is purely temperature
-%unit check has been performed by this point, so know input/output match
-%check unit is just temperature
-pat = '^temperature[\d|\.]+$';
-if isempty(regexp(opt.in.dims,pat,'once')); error('units must be just temperatures when using abstemp option'); end
-if isempty(regexp(opt.ud.dims,pat,'once')); error('units must be just temperatures when using abstemp option'); end
-%check unit is a single temperature (no C/F C*K and so on)
-[nin,pin] = sub_str2np(opt.in.orig);
-[nud,pud] = sub_str2np(opt.ud.orig); %#ok<NASGU>
-if ~isequal(pin,1); error('can only use the "abstemp" option with temperatures to the power of 1'); end
-if numel(nin)>1; error('absolute temperature conversion can only accept a single unit at a time'); end
-if numel(nud)>1; error('absolute temperature conversion can only accept a single unit at a time'); end
-nin = nin{1}; nud = nud{1};
-%express all in Celsius
-switch lower(nin);
-    case {'c','celsius'};   tin = opt.amt;
-    case {'k','kelvin'};    tin = opt.con.K2C(opt.amt);
-    case {'f','farenheit'}; tin = opt.con.F2C(opt.amt);
-    case {'ra','rankine'};  tin = opt.con.R2C(opt.amt);
-    otherwise; error('unknown temperature unit');
+    %check input is purely temperature
+    %unit check has been performed by this point, so know input/output match
+    %check unit is just temperature
+    pat = '^temperature[\d|\.]+$';
+    if isempty(regexp(opt.in.dims,pat,'once')); error('units must be just temperatures when using abstemp option'); end
+    if isempty(regexp(opt.ud.dims,pat,'once')); error('units must be just temperatures when using abstemp option'); end
+    %check unit is a single temperature (no C/F C*K and so on)
+    [nin,pin] = sub_str2np(opt.in.orig);
+    [nud,pud] = sub_str2np(opt.ud.orig); %#ok<NASGU>
+    if ~isequal(pin,1); error('can only use the "abstemp" option with temperatures to the power of 1'); end
+    if numel(nin)>1; error('absolute temperature conversion can only accept a single unit at a time'); end
+    if numel(nud)>1; error('absolute temperature conversion can only accept a single unit at a time'); end
+    nin = nin{1}; nud = nud{1};
+    %express all in Celsius
+    switch lower(nin);
+        case {'c','celsius'};   tin = opt.amt;
+        case {'k','kelvin'};    tin = opt.con.K2C(opt.amt);
+        case {'f','farenheit'}; tin = opt.con.F2C(opt.amt);
+        case {'ra','rankine'};  tin = opt.con.R2C(opt.amt);
+        otherwise; error('unknown temperature unit');
+    end
+    %convert to output units
+    switch lower(nud)
+        case {'c','celsius'};   tud = tin;
+        case {'k','kelvin'};    tud = opt.con.C2K(tin);
+        case {'f','farenheit'}; tud = opt.con.C2F(tin);
+        case {'ra','rankine'};  tud = opt.con.C2R(tin);
+        otherwise; error('unknown temperature unit');
+    end
+    opt.in.size = opt.amt;
+    opt.ud.size = tud;
 end
-%convert to output units
-switch lower(nud)
-    case {'c','celsius'};   tud = tin;
-    case {'k','kelvin'};    tud = opt.con.C2K(tin);
-    case {'f','farenheit'}; tud = opt.con.C2F(tin);
-    case {'ra','rankine'};  tud = opt.con.C2R(tin);
-    otherwise; error('unknown temperature unit');
-end
-opt.in.size = opt.amt;
-opt.ud.size = tud;
-end
+
+
+
+
 %% OUTPUT
+
 function sub_check_units(opt)
-%check that input/output units are the same
-[nin,pin] = sub_str2np(opt.in.dims);
-[nud,pud] = sub_str2np(opt.ud.dims);
-if ~isequal(nin,nud)
-    sub_disp_fromto(opt);
-    error('dimensions in/out do not match');
-end
-if isempty(nin); return; end
-%warn or error on power mismatch
-err = abs(pin - pud);
-worst = max(err);
-tol = [1E-6 1E-3];
-%if all within 1E-6, don't care
-if worst<tol(1); return; end
-%if any worse than 1E-3, error
-if worst>tol(2)
-    sub_disp_fromto(opt);
-    error(['unit powers do not match to within ' num2str(tol(2)) ', worst error ' num2str(worst)]);
-end
-%warn about slight mismatch, but continue
-if worst>=tol(1) && worst<=tol(2)
-    sub_disp_fromto(opt);
-    warning(['unit powers do not match, worst error ' num2str(worst)])
-end
+    %check that input/output units are the same
+    [nin,pin] = sub_str2np(opt.in.dims);
+    [nud,pud] = sub_str2np(opt.ud.dims);
+    if ~isequal(nin,nud)
+        sub_disp_fromto(opt);
+        error('dimensions in/out do not match');
+    end
+    if isempty(nin); return; end
+    %warn or error on power mismatch
+    err = abs(pin - pud);
+    worst = max(err);
+    tol = [1E-6 1E-3];
+    %if all within 1E-6, don't care
+    if worst<tol(1); return; end
+    %if any worse than 1E-3, error
+    if worst>tol(2)
+        sub_disp_fromto(opt);
+        error(['unit powers do not match to within ' num2str(tol(2)) ', worst error ' num2str(worst)]);
+    end
+    %warn about slight mismatch, but continue
+    if worst>=tol(1) && worst<=tol(2)
+        sub_disp_fromto(opt);
+        warning(['unit powers do not match, worst error ' num2str(worst)])
+    end
     function sub_disp_fromto(opt)
         disp(['from unit: ' opt.in.orig])
         disp(['  to unit: ' opt.ud.orig]);
@@ -931,224 +1005,244 @@ end
         disp(['  to dimensions: ' opt.ud.dims]);
     end
 end
+
+
+
+
 function str = sub_pretty_number(opt,num)
-%engineering format, if requested
-%to nearest 1E3 below
-if opt.eng
-    pow = floor(log10(num)/3)*3;
-    str = sprintf('%ge%d',num/(10^pow),pow);
-    return
+    %engineering format, if requested
+    %to nearest 1E3 below
+    if opt.eng
+        pow = floor(log10(num)/3)*3;
+        str = sprintf('%ge%d',num/(10^pow),pow);
+        return
+    end
+    %is it a round fraction ?
+    [n,d] = rat(num);
+    if d==1 && n>0; str = sprintf('%d',n);  return; end
+    if n==1;        str = sprintf('%d/%d',n,d); return; end
+    %is it a pi fraction ?
+    [nr,dr] = rat(num/pi);
+    if dr==1 && nr==1;      str = 'pi';                     return; end
+    if dr==1 && nr>1;       str = sprintf('%gpi',nr);       return; end
+    if nr==1;               str = sprintf('pi/%d',dr);      return; end
+    %is it a pi multiple ?
+    [nr,dr] = rat(num*pi);
+    if nr==1 && dr==1; str = '1/pi';         return; end
+    if dr==1 && nr>1 ; str = sprintf('%d/pi',nr);   return; end
+    if nr==1;   str = sprintf('1/%dpi',dr); return; end
+    %default, g format (if none of the others applied
+    str = sprintf('%G',num);
 end
-%is it a round fraction ?
-[n,d] = rat(num);
-if d==1 && n>0; str = sprintf('%d',n);  return; end
-if n==1;        str = sprintf('%d/%d',n,d); return; end
-%is it a pi fraction ?
-[nr,dr] = rat(num/pi);
-if dr==1 && nr==1;      str = 'pi';                     return; end
-if dr==1 && nr>1;       str = sprintf('%gpi',nr);       return; end
-if nr==1;               str = sprintf('pi/%d',dr);      return; end
-%is it a pi multiple ?
-[nr,dr] = rat(num*pi);
-if nr==1 && dr==1; str = '1/pi';         return; end
-if dr==1 && nr>1 ; str = sprintf('%d/pi',nr);   return; end
-if nr==1;   str = sprintf('1/%dpi',dr); return; end
-%default, g format (if none of the others applied
-str = sprintf('%G',num);
-end
+
+
+
+
 function sub_show_units(opt)
-if opt.abstemp
-    for i=1:numel(opt.in.size)
+    if opt.abstemp
+        for i=1:numel(opt.in.size)
+            fprintf(1,'%s %s\t=\t%s %s\n',...
+                sub_pretty_number(opt,opt.in.size(i)),...
+                opt.in.orig,...
+                sub_pretty_number(opt,opt.ud.size(i)),...
+                opt.ud.orig);
+        end
+        return
+    end
+    v = opt.conv.*opt.amt;
+    for i=1:numel(opt.amt)
         fprintf(1,'%s %s\t=\t%s %s\n',...
-            sub_pretty_number(opt,opt.in.size(i)),...
+            sub_pretty_number(opt,opt.amt(i)),...
             opt.in.orig,...
-            sub_pretty_number(opt,opt.ud.size(i)),...
+            sub_pretty_number(opt,v(i)),...
             opt.ud.orig);
     end
-    return
-end
-v = opt.conv.*opt.amt;
-for i=1:numel(opt.amt)
-    fprintf(1,'%s %s\t=\t%s %s\n',...
-        sub_pretty_number(opt,opt.amt(i)),...
-        opt.in.orig,...
-        sub_pretty_number(opt,v(i)),...
-        opt.ud.orig);
-end
-disp('-');
-fprintf(1,'%s\t=\t%s\tx %s\n',opt.in.orig,opt.ud.orig,sub_pretty_number(opt,opt.conv));
-fprintf(1,'%s\t=\t%s\tx %s\n',opt.ud.orig,opt.in.orig,sub_pretty_number(opt,1/opt.conv));
-disp('-');
-sub_show_dimensions(opt,opt.in,'from');
-disp('-');
-sub_show_dimensions(opt,opt.ud,'to');
-function sub_show_dimensions(opt,in,str)
-if nargin<3; str = ' '; end
-[n,p] = sub_str2np(in.dims);
-ns = opt.kind.name(opt.kind.isdim);
-us = opt.kind.unit(opt.kind.isdim);
-ss = opt.kind.name(opt.kind.isdim);
-ps = zeros(size(ns));
-[tf,loc] = ismember(n,ns);
-if ~all(tf); keyboard; end
-ps(loc) = p;
-fprintf(1,'%-6s: %s\n',str,in.orig);
-    fprintf(1,'scale : x%s %s\n',...
-        sub_pretty_number(opt,in.size),...
-        in.unit);
-    if isempty(in.kind)
-        fprintf(1,'%s : %s\n','kind','nondimensional');
-        fprintf(1,'%s : %s\n','dims','nondimensional');
-    else
-        fprintf(1,'%s : %s\n','kind ',in.kind);
-        fprintf(1,'%s : %s\n','dims ',in.dims);
-    end
-end
-end
-function sub_report(opt)
-clc;
-disp('==================')
-disp('== UNIT REPORT ===');
-disp('==================');
-fprintf('These are the inputs recognised by the function %s\n',mfilename);
-disp('================');
-disp('=== OPTIONS ====');
-disp('================');
-disp(char(setxor(fieldnames(opt),{'amt','prefix','con','kind','dims','unit','in','ud','newunit'})));
-disp(' ');
-disp('================')
-disp('=== PREFIXES ===');
-disp('================')
-for i=1:numel(opt.prefix.symb)
-    fprintf('%c %7s 10E%+d\n',...
-        opt.prefix.symb(i),...
-        opt.prefix.name{i},...
-        opt.prefix.powr(i));
-end
-disp('Each term in a unit expression is allowed a single prefix')
-disp('For example: W, kW, MW, GW, nanoW, megaW')
-disp(' ');
-disp('======================');
-disp('=== KINDS OF UNITS ===');
-disp('======================');
-fprintf('%12s %-5s %-14s\n',...
-    'name','dim?','unit');
-ny = {'no','yes'};
-ny = ny(opt.kind.isdim+1);
-for i=1:numel(opt.kind.name)
-    fprintf('%12s %-5s %-14s\n',...
-        opt.kind.name{i},...
-        ny{i},...
-        opt.kind.unit{i})
-end
-disp('all input units are reduced to a combination of kinds of unit, and then dimensions');
-disp('these are checked against each other to check the from/to dimensions match');
-disp('dim? shows if this is a basic dimension')
-disp('for example "length" is a basic dimension, but "area" is not, as area has dimension length^2')
-disp('all units are reduced to basic dimensions to check if dimensions match');
-disp(' ');
-disp('========================')
-disp('=== UNITS (BY NAME) ====');
-disp('========================')
-fprintf('%16s %5s %15s\n',...
-    'NAME','SYMB','EXPRESSION');
-%sort units by name
-[~,order] = sort(lower(opt.unit.name));
-for i=1:numel(opt.unit.name)
-    fprintf('%16s %5s %8s x %s\n',...
-        opt.unit.name{order(i)},...
-        opt.unit.symb{order(i)},...
-        sub_pretty_number(opt,opt.unit.size(order(i))),...
-        opt.unit.expr{order(i)});
-end
-disp(' ');
-disp('=========================')
-disp('=== UNITS (BY SYMBOL) ===')
-disp('=========================')
-fprintf('%16s %5s %15s\n',...
-    'NAME','SYMB','EXPRESSION');
-%sort units by name
-[~,order] = sort(lower(opt.unit.symb));
-for i=1:numel(opt.unit.name)
-    fprintf('%16s %5s %8s x %s\n',...
-        opt.unit.name{order(i)},...
-        opt.unit.symb{order(i)},...
-        sub_pretty_number(opt,opt.unit.size(order(i))),...
-        opt.unit.expr{order(i)});
-end
-%opt.in = sub_lookup2kind(opt,opt.in);
-%opt.in.symb = opt.in.orig;
-%opt.in = sub_lookup2dims(opt,opt.in);
-%20151021 reintroduce by dimesions
-%find basic dimensions of each kind
-for i=1:numel(opt.kind.name)
-    v.kind = opt.kind.name{i};
-    v = sub_lookup2dims(opt,v);
-    k{i} = v.dims;
-    clear('v');
-end
-%find basic dimensions of each base unit
-for i=1:numel(opt.unit.name)
-    v = sub_lookup2kind(opt,opt.unit.name{i});
-    v = sub_lookup2dims(opt,v);
-    u{i} = v.dims;
-end
-disp(' ');
-disp('=======================')
-disp('=== UNITS (BY TYPE) ===')
-disp('=======================')
-fprintf('%16s %5s   %s\n','NAME','SYMB','EXPRESSION');
-used = false(size(u));
-for i=1:numel(opt.kind.name)
-    fprintf('--- %s ---\n',opt.kind.name{i});
-    for j=1:numel(opt.unit.name)
-        if isequal(k{i},u{j})
-            fprintf('%16s %5s %8s x %s\n',...
-                opt.unit.name{j},...
-                opt.unit.symb{j},...
-                sub_pretty_number(opt,opt.unit.size(j)),...
-                opt.unit.expr{j});
-            used(j) = true;
+    disp('-');
+    fprintf(1,'%s\t=\t%s\tx %s\n',opt.in.orig,opt.ud.orig,sub_pretty_number(opt,opt.conv));
+    fprintf(1,'%s\t=\t%s\tx %s\n',opt.ud.orig,opt.in.orig,sub_pretty_number(opt,1/opt.conv));
+    disp('-');
+    sub_show_dimensions(opt,opt.in,'from');
+    disp('-');
+    sub_show_dimensions(opt,opt.ud,'to');
+    function sub_show_dimensions(opt,in,str)
+        if nargin<3; str = ' '; end
+        [n,p] = sub_str2np(in.dims);
+        ns = opt.kind.name(opt.kind.isdim);
+        us = opt.kind.unit(opt.kind.isdim);
+        ss = opt.kind.name(opt.kind.isdim);
+        ps = zeros(size(ns));
+        [tf,loc] = ismember(n,ns);
+        ps(loc) = p;
+        fprintf(1,'%-6s: %s\n',str,in.orig);
+        fprintf(1,'scale : x%s %s\n',...
+            sub_pretty_number(opt,in.size),...
+            in.unit);
+        if isempty(in.kind)
+            fprintf(1,'%s : %s\n','kind','nondimensional');
+            fprintf(1,'%s : %s\n','dims','nondimensional');
+        else
+            fprintf(1,'%s : %s\n','kind ',in.kind);
+            fprintf(1,'%s : %s\n','dims ',in.dims);
         end
     end
 end
-fprintf(1,'--- %s ---\n','other');
-for j=find(~used)
-    fprintf('%16s %5s %8s x %s\n',...
-        opt.unit.name{j},...
-        opt.unit.symb{j},...
-        sub_pretty_number(opt,opt.unit.size(j)),...
-        opt.unit.expr{j});
+
+
+
+
+function sub_report(opt)
+    clc;
+    disp('==================')
+    disp('== UNIT REPORT ===');
+    disp('==================');
+    fprintf('These are the inputs recognised by the function %s\n',mfilename);
+    disp('================');
+    disp('=== OPTIONS ====');
+    disp('================');
+    disp(char(setxor(fieldnames(opt),{'amt','prefix','con','kind','dims','unit','in','ud','newunit'})));
+    disp(' ');
+    disp('================')
+    disp('=== PREFIXES ===');
+    disp('================')
+    for i=1:numel(opt.prefix.symb)
+        fprintf('%c %7s 10E%+d\n',...
+            opt.prefix.symb(i),...
+            opt.prefix.name{i},...
+            opt.prefix.powr(i));
+    end
+    disp('Each term in a unit expression is allowed a single prefix')
+    disp('For example: W, kW, MW, GW, nanoW, megaW')
+    disp(' ');
+    disp('======================');
+    disp('=== KINDS OF UNITS ===');
+    disp('======================');
+    fprintf('%12s %-5s %-14s\n',...
+        'name','dim?','unit');
+    ny = {'no','yes'};
+    ny = ny(opt.kind.isdim+1);
+    for i=1:numel(opt.kind.name)
+        fprintf('%12s %-5s %-14s\n',...
+            opt.kind.name{i},...
+            ny{i},...
+            opt.kind.unit{i})
+    end
+    disp('all input units are reduced to a combination of kinds of unit, and then dimensions');
+    disp('these are checked against each other to check the from/to dimensions match');
+    disp('dim? shows if this is a basic dimension')
+    disp('for example "length" is a basic dimension, but "area" is not, as area has dimension length^2')
+    disp('all units are reduced to basic dimensions to check if dimensions match');
+    disp(' ');
+    disp('========================')
+    disp('=== UNITS (BY NAME) ====');
+    disp('========================')
+    fprintf('%16s %5s %15s\n',...
+        'NAME','SYMB','EXPRESSION');
+    %sort units by name
+    [~,order] = sort(lower(opt.unit.name));
+    for i=1:numel(opt.unit.name)
+        fprintf('%16s %5s %8s x %s\n',...
+            opt.unit.name{order(i)},...
+            opt.unit.symb{order(i)},...
+            sub_pretty_number(opt,opt.unit.size(order(i))),...
+            opt.unit.expr{order(i)});
+    end
+    disp(' ');
+    disp('=========================')
+    disp('=== UNITS (BY SYMBOL) ===')
+    disp('=========================')
+    fprintf('%16s %5s %15s\n',...
+        'NAME','SYMB','EXPRESSION');
+    %sort units by name
+    [~,order] = sort(lower(opt.unit.symb));
+    for i=1:numel(opt.unit.name)
+        fprintf('%16s %5s %8s x %s\n',...
+            opt.unit.name{order(i)},...
+            opt.unit.symb{order(i)},...
+            sub_pretty_number(opt,opt.unit.size(order(i))),...
+            opt.unit.expr{order(i)});
+    end
+    %opt.in = sub_lookup2kind(opt,opt.in);
+    %opt.in.symb = opt.in.orig;
+    %opt.in = sub_lookup2dims(opt,opt.in);
+    %20151021 reintroduce by dimesions
+    %find basic dimensions of each kind
+    for i=1:numel(opt.kind.name)
+        v.kind = opt.kind.name{i};
+        v = sub_lookup2dims(opt,v);
+        k{i} = v.dims;
+        clear('v');
+    end
+    %find basic dimensions of each base unit
+    for i=1:numel(opt.unit.name)
+        v = sub_lookup2kind(opt,opt.unit.name{i});
+        v = sub_lookup2dims(opt,v);
+        u{i} = v.dims;
+    end
+    disp(' ');
+    disp('=======================')
+    disp('=== UNITS (BY TYPE) ===')
+    disp('=======================')
+    fprintf('%16s %5s   %s\n','NAME','SYMB','EXPRESSION');
+    used = false(size(u));
+    for i=1:numel(opt.kind.name)
+        fprintf('--- %s ---\n',opt.kind.name{i});
+        for j=1:numel(opt.unit.name)
+            if isequal(k{i},u{j})
+                fprintf('%16s %5s %8s x %s\n',...
+                    opt.unit.name{j},...
+                    opt.unit.symb{j},...
+                    sub_pretty_number(opt,opt.unit.size(j)),...
+                    opt.unit.expr{j});
+                used(j) = true;
+            end
+        end
+    end
+    fprintf(1,'--- %s ---\n','other');
+    for j=find(~used)
+        fprintf('%16s %5s %8s x %s\n',...
+            opt.unit.name{j},...
+            opt.unit.symb{j},...
+            sub_pretty_number(opt,opt.unit.size(j)),...
+            opt.unit.expr{j});
+    end
+    disp(' ');
+    disp('all your input units should be from the "SYMB" or "NAME" column above.');
+    disp(' ');
+    disp('terms must be separated by one of *-./ e.g. N-m or m/s')
+    disp('each term may have zero or one prefixes, e.g. kN/m or kg/cm3')
+    disp('each term may have zero or one power, a number, e.g. kg/m3 or lbf*in-2.')
+    disp('powers may be fractions, e.g. kg^1/2 or mm1/4');
+    disp(' ');
+    disp('The expressions in this table are mostly references to the "name" column of other units');
+    disp('a few are references to the kind of unit. These are the units that define that kind');
+    disp('for example, "meter" has an expression of "length", showing it is the defining unit for kind "length"');
 end
-disp(' ');
-disp('all your input units should be from the "SYMB" or "NAME" column above.');
-disp(' ');
-disp('terms must be separated by one of *-./ e.g. N-m or m/s')
-disp('each term may have zero or one prefixes, e.g. kN/m or kg/cm3')
-disp('each term may have zero or one power, a number, e.g. kg/m3 or lbf*in-2.')
-disp('powers may be fractions, e.g. kg^1/2 or mm1/4');
-disp(' ');
-disp('The expressions in this table are mostly references to the "name" column of other units');
-disp('a few are references to the kind of unit. These are the units that define that kind');
-disp('for example, "meter" has an expression of "length", showing it is the defining unit for kind "length"');
-end
+
+
+
+
 function sub_list(opt)
-a = [opt.unit.name opt.unit.symb];
-tf = cellfun(@isempty,a);
-a = a(~tf);
-a = unique(a);
-[~,order] = sort(lower(a));
-a = a(order);
-disp('=========================');
-disp('=== LIST OF ALL UNITS ===');
-disp('=========================');
-disp(char(a));
-disp('=========================');
+    a = [opt.unit.name opt.unit.symb];
+    tf = cellfun(@isempty,a);
+    a = a(~tf);
+    a = unique(a);
+    [~,order] = sort(lower(a));
+    a = a(order);
+    disp('=========================');
+    disp('=== LIST OF ALL UNITS ===');
+    disp('=========================');
+    disp(char(a));
+    disp('=========================');
 end
+
+
+
+
 %% HELP SUBROUTINES
 %these functions don't do anything, an shouldn't be called except via help
 %e.g. help unit>options
 %this section is still WIP
+
 function outputs()
 %== DETAILED OUTPUT HELP ==
 %the function uses nargout to determine the number of outputs requested
@@ -1203,6 +1297,10 @@ function outputs()
 %for documentation and validation purposes
 %[~,~,c] = unit('N',kg.m/s');
 end
+
+
+
+
 function units()
 %=== UNIT DEFINITIONS ==
 %units are divided into three tiers: unit, kind and dims
