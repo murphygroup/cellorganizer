@@ -117,9 +117,6 @@ options.model.spharm_rpdm.segminnucfraction = 0.1;
 
 tic; answer = img2slml( dimensionality, dna, cellm, [], options ); toc,
 
-%Copy to models
-copyfile('lamp2.mat', '../../../models/3D/spharm/lamp2.demo3D52.mat');
-
 options = [];
 options.shape_evolution = 'none';
 options.labels = 'unique';
