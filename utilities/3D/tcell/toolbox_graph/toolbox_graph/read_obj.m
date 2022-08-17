@@ -42,14 +42,12 @@ while 1
     end
     if ~isempty(s) && strcmp(s(1), 'f')
         % face
-        tokens = cellfun(@(x)split(x, '/'), split(s(3:end)), 'UniformOutput', false);
-        faces(:,end+1) = cellfun(@(x)str2double(x(1)), tokens, 'UniformOutput', true);
+        faces(:,end+1) = sscanf(s(3:end), '%d %d %d');
     end
-    if length(s) > 2 && strcmp(s(1:2), 'v ')
+    if ~isempty(s) && strcmp(s(1), 'v')
         % vertex
         vertex(:,end+1) = sscanf(s(3:end), '%f %f %f');
     end
 end
 fclose(fid);
-normal = [];
 

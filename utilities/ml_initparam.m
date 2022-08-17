@@ -1,15 +1,10 @@
-function param = ml_initparam(param,paramdefault,paramrequired,parents)
+function param = ml_initparam(param,paramdefault)
 %TZ_INITPARAM Initialize parameters.
-
-%   PARAM2 = TZ_INITPARAM(PARAM,PARAMDEFAULT,PARAMREQUIRED,PARENTS)
-%   returns the initialized parameter. PARAM and PARAMDEFAULT are both
-%   structures. All fields in PARAM will be kept unchanged in PARAM2. And
-%   all fields in PARAMDEFAULT but not in PARAM will be added to PARAM2.
-%   If a field is a structure, parameter initialization will go down
-%   hierachically. PARAMREQUIRED is an optional struct with empty fields.
-%   If any of these fields is not a field in PARAM, an error is thrown.
-%   PARENTS is for internal use.
-
+%   PARAM2 = TZ_INITPARAM(PARAM,PARAMDEFAULT) returns the initialized 
+%   parameter. PARAM and PARAMDEFAULT are both structures. All fields
+%   in PARAM will be kept unchanged in PARAM2. And all fields in
+%   PARAMDEFAULT but not in PARAM will be added to PARAM2. If a field is a
+%   structure, parameter initialization will go down herachically.
 %   
 %   Example:
 %       param2 =  ml_initparam(struct('t',1,'t2',2),struct('t2',3,'t3',4))
@@ -29,7 +24,7 @@ function param = ml_initparam(param,paramdefault,paramrequired,parents)
 %
 %   See also
 
-% Copyright (C) 2006, 2021  Murphy Lab
+% Copyright (C) 2006  Murphy Lab
 % Carnegie Mellon University
 %
 % This program is free software; you can redistribute it and/or modify
@@ -51,7 +46,6 @@ function param = ml_initparam(param,paramdefault,paramrequired,parents)
 % send email to murphy@cmu.edu
 
 %   18-Nov-2005 Initial write T. Zhao
-%   21-Jul-2021 Added paramrequired and parents arguments T. Buck
 %   Copyright (c) Center for Bioimage Informatics, CMU
 
 if nargin < 2
@@ -63,48 +57,19 @@ if isempty(param)
     return;
 end
 
-if ~exist('paramrequired', 'var')
-    paramrequired = struct();
-end
-
-if ~exist('parents', 'var')
-    parents = '';
-end
-
-requiredParameterNames = fieldnames(paramrequired);
-
-for k=1:length(requiredParameterNames)
-    name = requiredParameterNames{k};
-    full_name = name;
-    if ~isempty(parents)
-        full_name = [parents, '.', full_name];
-    end
-    if ~isfield(param,name)
-        error('%s is required', full_name);
-    end
-end
-
 defaultParameterNames = fieldnames(paramdefault);
 
 for k=1:length(defaultParameterNames)
-    name = defaultParameterNames{k};
-    defaultParameterValue = getfield(paramdefault,name);
-    if ~isfield(param,name)
-        param = setfield(param,name,defaultParameterValue);
+    defaultParameterValue = ...
+        getfield(paramdefault,defaultParameterNames{k});
+    if ~isfield(param,defaultParameterNames{k})
+        param = setfield(param,defaultParameterNames{k}, ...
+            defaultParameterValue);
     else
         if isstruct(defaultParameterValue)
-            parameterValue = getfield(param,name);
-            paramrequired2 = struct();
-            if isfield(paramrequired,name)
-                paramrequired2 = getfield(paramrequired,name);
-            end
-            parents2 = name;
-            if ~isempty(parents)
-                parents2 = [parents, '.', parents2];
-            end
-            param = setfield(param,name,ml_initparam( ...
-                parameterValue,defaultParameterValue, ...
-                paramrequired2, parents2));
+            parameterValue = getfield(param,defaultParameterNames{k});
+            param = setfield(param,defaultParameterNames{k}, ...
+                ml_initparam(parameterValue,defaultParameterValue));
         end
     end
 end

@@ -233,6 +233,14 @@ for i = 1:length(meshData)
             ParaObjectNode.appendChild(object_annotation);
         end
         
+        %Parametric Objects == FV.faces
+        %faces = docNode.createTextNode( mat2SBMLArrayData(FV.faces) );
+        % All meshes share one SpatialPoints, so offset by the number of vertices in previous meshes
+        faces = docNode.createTextNode( [sprintf('\n'), ...
+            mat2SBMLArrayData(FV.faces-1, false), sprintf('\n')] );
+        
+        ParaObjectNode.appendChild(faces);
+        
 
         %List of Parametric Objects
         ListOfParaObjectsNode = docNode.createElement([s,'listOfParametricObjects']);

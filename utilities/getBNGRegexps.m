@@ -188,7 +188,6 @@ net_observables_pattern_list = ['(?:' net_species_def '(?:,' net_species_def ')*
 
 net_species_pattern = ['(?:' net_species_def ')'];
 net_species_concentration = ['(?:' net_expression ')'];
-net_species_count = ['(?:' net_expression ')'];
 
 
 net_reaction_rules_name = ['(?:' string_pattern ':)'];
@@ -215,7 +214,6 @@ patterns.net_molecule_type = net_molecule_type;
 patterns.net_observables_pattern_list = net_observables_pattern_list;
 patterns.net_species_pattern = net_species_pattern;
 patterns.net_species_concentration = net_species_concentration;
-patterns.net_species_count = net_species_count;
 patterns.net_reaction_rules_name = net_reaction_rules_name;
 patterns.net_reaction_rules_rule = net_reaction_rules_rule;
 patterns.net_reaction_rules_rate_constant = net_reaction_rules_rate_constant;

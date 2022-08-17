@@ -748,7 +748,6 @@ switch lower(dimensionality)
             end
             param.outputres = finalres;
         end
-        param.resolution.models = cell(length(models), 1);
         for j=1:1:length(models)
             param.currentmodelnum = j;
             if isfield(models{j}, 'proteinModel')
@@ -760,7 +759,6 @@ switch lower(dimensionality)
                     end
 
                     [img,outres] = model2instance( models{j}.proteinModel, param );
-                    param.resolution.models{j} = outres;
                     %img = ml_bcimg(double(img),[],[]);
 
                     if param.verbose
