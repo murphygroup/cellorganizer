@@ -71,6 +71,7 @@ function model = img2model( dna_images, cell_images, prot_images, options)
 %                            missing for cell, dna or protein (affected
 %                            nuclear hole finding); Ignore cells that
 %                            can't be parameterized
+% August 14, 2022 R.F. Murphy Check for all file lists being empty
 
 model = [];
 
@@ -112,7 +113,12 @@ if strcmp(options.protein.type, 'standardized_map_half-ellipsoid')
 end
 
 disp(' '); print_large_title('Processing images');
-for i = 1:max([length(dna_images),length(cell_images),length(prot_images)])
+numfiles=max([length(dna_images),length(cell_images),length(prot_images)])
+if numfiles==0
+    disp('Input file list(s) empty');
+    return
+end
+for i = 1:numfiles
     paramfiles{i} = [options.paramdir filesep 'param' num2str(i) '.mat'];
     
     tmpfile = [paramfiles{i} '.tmp'];

@@ -34,6 +34,7 @@ function model2info_v2( model, fileID, options )
 %                       SPHARM-RPDM models
 % 2021/03/05 R.F. Murphy modified to use new name for hd values
 % 2021/04/24 R.F. Murphy merged in Serena's show_spatial_distribution
+% 2022/08/15 R.F. Murphy add hausdorff distance plots
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MODEL.NAME %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 header2html( fileID, 'Model name');
@@ -177,6 +178,7 @@ if is_spharm_model( model )
     text2html( fileID, '');
     header2html( fileID, 'SPHARM-RPDM model quality');
 
+    try
     mdl = model.cellShapeModel;
     if isfield(mdl,'hausdorff_distances') 
         if isfield(model,'cellShapeModel') 
@@ -187,9 +189,13 @@ if is_spharm_model( model )
         else if isfield(model,'nuclearShapeModel')
             text2html(fileID,strcat("Nuc:", hd_stats(mdl.hausdorff_distances(1,:))));
             end
-       end
+        end
+        plot_hausdorff_distances(fileID,model)
     end
-
+    catch
+       text2html(fileID,'Unable to display hausdorff distance statistics and plots') 
+    end
+    
     header2html( fileID, 'Additional Figures');
     showevol = true;
     if isfield(options,'shape_evolution')
@@ -348,4 +354,50 @@ hdsd = std(hd);
 outstr = strcat("Hausdorff dist: avg=",num2str(hdavg), ...
     ", sd=", num2str(hdsd), ", min=", num2str(hdmin), " [", num2str(hdmini), ...
     "], max=", num2str(hdmax), " [", num2str(hdmaxi), "]");
+end
+
+function plot_hausdorff_distances(fileID,model)
+
+if isfield(model,'cellShapeModel')
+    f = figure('visible','on');
+    histogram(log10(model.cellShapeModel.hausdorff_distances(1,:)),25,'FaceColor','red')
+    xlabel('Log10 Hausdorff distance between original and SPHARM-RPDM model');
+    ylabel('Frequency')
+    if isfield(model,'nuclearShapeModel')
+        hold on
+        histogram(log10(model.cellShapeModel.hausdorff_distances(2,:)),25,'FaceColor','green')
+        legend('cells','nuclei')
+        saveas( f, 'hausdorff_distance_histogram.png', 'png' );
+        img2html(fileID, 'hausdorff_distance_histogram.png', ...
+        'hausdorff_distance_histogram.png', ...
+        'Hausdorff distances for reconstructions');
+        hold off
+        % now plot scatter of nuclear vs cell
+        f = figure('visible','on');
+        plot(log10(model.cellShapeModel.hausdorff_distances(2,:)), ...
+            log10(model.cellShapeModel.hausdorff_distances(1,:)),'d')
+        xlabel('log10 Hausdorff distance for cell shape')
+        ylabel('log10 Hausdorff distance for nuclear shape')
+        saveas( f, 'hausdorff_distance_scatter.png', 'png' );
+        img2html(fileID, 'hausdorff_distance_scatter.png', ...
+        'hausdorff_distance_scatter.png', ...
+        'Hausdorff distances');
+    else
+        legend('cells')
+        saveas( f, 'hausdorff_distance_histogram.png', 'png' );
+        img2html(fileID, 'hausdorff_distance_histogram.png', ...
+        'hausdorff_distance_histogram.png', ...
+        'Hausdorff distances for reconstructions');
+    end
+elseif isfield(model,'nuclearShapeModel')
+    f = figure('visible','on');
+    histogram(log10(model.cellShapeModel.hausdorff_distances(1,:)),25,'FaceColor','green')
+    xlabel('Log10 Hausdorff distance between original and SPHARM-RPDM model');
+    ylabel('Frequency')
+    legend('nuclei')
+    saveas( f, 'hausdorff_distance_histogram.png', 'png' );
+    img2html(fileID, 'hausdorff_distance_histogram.png', ...
+    'hausdorff_distance_histogram.png', ...
+    'Hausdorff distances for reconstructions');
+end
 end

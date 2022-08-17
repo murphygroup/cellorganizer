@@ -27,6 +27,7 @@ function model = param2model_2D( cell_params, options )
 % send email to murphy@cmu.edu
 %
 % Feb 17, 2018 X. Ruan add code for 2D PCA model
+% 8/14/2022 R.F.Murphy add check for empty file list
 
 disp(upper('Checking if we are training a diffeomorphic model'));
 if (fieldisequal( options, 'nucleus.type', 'diffeomorphic', false)) ...
@@ -50,6 +51,18 @@ end
 
 model.dimensionality = options.dimensionality;
 
+if isempty(cell_params)
+    model = [];
+    warning('Unable to extract parameters from input file list')
+    return
+end
+
+if isempty(cell_params)
+    model = [];
+    warning('Unable to extract parameters')
+    return
+end
+
 %loop through parameterizations until we find one that exists
 c = 1;
 breakflag = false;
@@ -65,12 +78,6 @@ while ~breakflag
         breakflag = true;
     end
     c = c+1;
-end
-
-if isempty(cell_params)
-    model = [];
-    warning('Unable to extract parameters')
-    return
 end
 
 disp('Building generative models from parameterization');

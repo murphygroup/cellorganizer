@@ -7,6 +7,8 @@ function [param_output] = spharm_rpdm_image_parameterization(cur_image, options)
 % 10/9/2020 R.F.Murphy added options for Newton Method tolerances
 % 10/16/2020 R.F.Murphy printout Hausdorff distances and save to param file
 % 12/8/2020 R.F.Murphy fix default NMcost_tol (was string instead of float)
+% 8/11/2022 R.F.Murphy replace calls to EqualAreaParametricMeshNewtonMethod_1 
+% (historical artifact) with calls to EqualAreaParametricMeshNewtonMethod 
 
 if ~exist('options', 'var') || isempty(options)
     options = [];
@@ -117,7 +119,7 @@ if ~is_good && ~is_good_1
     end
     options_in.initialization_method = 'pca';
     tStart_2 = tic;
-    [sph_verts_2, cost_mat_2, is_success_2] = EqualAreaParametricMeshNewtonMethod_1(vertices_2, faces_2, [], options_in);  
+    [sph_verts_2, cost_mat_2, is_success_2] = EqualAreaParametricMeshNewtonMethod(vertices_2, faces_2, [], options_in);  
     execute_time_2 = toc(tStart_2);    
     [is_good_2, hd_2] = spherical_parameterization_quality_check(sph_verts_2, vertices_2, faces_2);
     if is_success_2 || (~is_success_2 && min(hd, hd_1) > hd_2)
@@ -148,7 +150,7 @@ if ~is_good && ~is_good_1 && ~is_good_2
     options_in.initialization_method = 'graph_diameter';
     options_in.max_iter = options.NMretry_maxiterbig;
     tStart_3 = tic;
-    [sph_verts_3, cost_mat_3, is_success_3] = EqualAreaParametricMeshNewtonMethod_1(vertices_3, faces_3, [], options_in);  
+    [sph_verts_3, cost_mat_3, is_success_3] = EqualAreaParametricMeshNewtonMethod(vertices_3, faces_3, [], options_in);  
     execute_time_3 = toc(tStart_3);    
     [is_good_3, hd_3] = spherical_parameterization_quality_check(sph_verts_3, vertices_3, faces_3);
     if is_success_3 || (~is_success_3 && min([hd, hd_1, hd_2]) > hd_3)

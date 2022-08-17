@@ -34,7 +34,12 @@ function [m_x_out, cost_mat, is_success] = EqualAreaParametricMeshNewtonMethod(.
 % if not use box constrained admm
 % 05/03/2018 use stricter criterion for bast_largr_diff
 % 09/21/2018 check matlab version to decide whether to use lsminnorm or not
-%
+%% these 4 changes got reverted by Khaled's change below
+% 10/16/2020 R.F.Murphy disable MaxIter increase and add to verbose output
+% 10/22/2020 R.F.Murphy initialize m_x_best_bu
+% 12/4/2020 R.F. Murphy disable singular matrix warnings
+% 2/1/2021 R.F. Murphy fix error when number of iter is less than 21
+%%
 % ------------------------------------------------------------------------
 % Modifications June 2021 by Khaled Khairy: khaled.khairy@stjude.org
 % St. Jude Children's Research Hospital
@@ -52,9 +57,14 @@ function [m_x_out, cost_mat, is_success] = EqualAreaParametricMeshNewtonMethod(.
 %       * Vectorization of for loop
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+% 8/10/2022 R.F.Murphy reinstate changes from 10/16/2020 through 2/1/2021
+%                   also set debug and verbose flags from par
 
-debug = false;
-verbose = true;%false;
+warning('off','MATLAB:singularMatrix')
+warning('off','MATLAB:nearlySingularMatrix')
+
+default_par.debug = false;
+default_par.verbose = false;
 % Initialize parameter
 default_par.max_active = 500;
 default_par.print_itn  = -2;
@@ -85,6 +95,8 @@ if nargin < 4
     par = struct();
 end
 par = process_options_structure(default_par, par);
+
+verbose = par.verbose;
 
 jacobi_cond_tol = par.jacobi_cond_tol;
 lsq_bound = par.lsq_bound;
@@ -232,13 +244,15 @@ inequal_mat = reshape(constr_ineq', [], 1);
 [c_hat, active, activity, n_active] = activate_initial(c_hat, inequal_mat, ineq_high, no_activation);
 
 MaxIter = par.max_iter;
+% 8/10/2022 reinstate commenting out of this increase
 % may change MaxIter if nvert is very large
-MaxIter = max(MaxIter, ceil(nvert / 50));
+%MaxIter = max(MaxIter, ceil(nvert / 50));
 best_largr = 100000;
 largr_last = best_largr;
 best_largr_bu = best_largr;
 best_largr_diff = 10;
 m_x_best = m_x;
+m_x_best_bu = m_x;
 cost_mat = zeros(MaxIter, 3);
 obj_val = 1000000;
 lambda_t_c_hat = 1e5;
@@ -260,6 +274,10 @@ large = 900000000;
 %check plot flag for KK
 if ~isfield(par, 'plot_flag_nm')
     par.plot_flag_nm = 0;
+end
+if verbose
+    fprintf("In EqualAreaParametricMeshNewtonMethod, MaxIter=%f\n",MaxIter);
+    fprintf("Iter,nwtnstep,actkeep,gamma,ngradZ,csqrsum,cost,ineghigh,largrdiff\n");
 end
 for iter = 1 : MaxIter
     if par.plot_flag_nm == 1
@@ -370,13 +388,13 @@ for iter = 1 : MaxIter
     inactivated = 0;
     for i = n_active : -1 : 1
         if m_lambda(nface - 1 + i) < 0 && c_hat(nface - 1 + i) > -par.ineq_low
-            [c_hat, flag, activity, active, n_active] = inactivate(nface, c_hat, activity, active, n_active, i);
+            [c_hat, flag, activity, active, n_active] = inactivate(nface, c_hat, activity, active, n_active, i, verbose);
             inactivated = inactivated + flag;
         end
     end
     
     if inactivated > 0
-        [c_hat, active, activity, n_active, flag] = activate(act_keep, m_x_try, faces, c_hat, activity, active, n_active, "in_out");
+        [c_hat, active, activity, n_active, flag] = activate(act_keep, m_x_try, faces, c_hat, activity, active, n_active, "in_out", verbose);
         toc;
         continue;
     end
@@ -407,7 +425,7 @@ for iter = 1 : MaxIter
     
     [c_hat, active, activity, n_active, flag] = ...
         activate(act_keep, m_x_try, faces, c_hat, activity, active,...
-        n_active, "newton");
+        n_active, "newton", verbose);
     
     % activated = activated + flag;
     
@@ -437,14 +455,24 @@ for iter = 1 : MaxIter
         end
     end
     % 06/25/2018 add check of previous iteration for cost
-    if iter > 2 && ((cost_mat(iter -1, 3) < 10 * par.cost_tol && cost < par.cost_tol) || (largr > 0 && abs(cost_mat(iter-1, 1) - cost_mat(iter-2, 1)) < 10 * par.largr_tol && abs(largr_diff) < par.largr_tol))
-        cost_mat(iter + 1 : end, :) = [];
-        m_x_best = m_x;
-        break;
+    if iter > 2
+        if (...
+        (cost_mat(iter -1, 3) < (10 * par.cost_tol) && cost < par.cost_tol)...
+        ||...
+        (largr > 0 && ...
+        abs(cost_mat(iter-1, 1) - cost_mat(iter-2, 1)) < (10 * par.largr_tol) &&...
+        abs(largr_diff) < par.largr_tol)...
+        )
+            cost_mat(iter + 1 : end, :) = [];
+            m_x_best = m_x;
+            if verbose fprintf("\n"); end
+            fprintf("Exiting with acceptable cost after %d iterations",iter);
+            break;
+        end
     end
     %     toc;
     
-    if debug && rem(iter, 1000) == 0
+    if par.debug && rem(iter, 1000) == 0
         save('workspace.mat')
     end
 end
@@ -461,19 +489,29 @@ else
     m_x = m_x_best;
 end
 % 05/05/2018 use largargian seq as a criterion
-if sum(abs(cost_mat(end-20:end, 1) - cost_mat(end, 1)) < 1e-4) < 14
-    is_success = false;
-    m_x = m_x_best_bu;
-else
+%if sum(abs(cost_mat(end-20:end, 1) - cost_mat(end, 1)) < 1e-4) < 14
+% check if enough iterations gave small enough change in cost_mat
+if size(cost_mat,1) > 20
+    last20 = abs(cost_mat(end-20:end,1) - cost_mat(end,1));
+    last20notnan = find(~isnan(last20));
+    if sum(last20(last20notnan)<1e-4) < 14
+        is_success = false;
+        m_x = m_x_best_bu;
+    else
+        m_x = m_x_best;
+    end
     m_x = m_x_best;
 end
 
 
 if verbose, disp('Optimization complete!'); end
 
-if debug
+if par.debug
     save('workspace.mat')
 end
+
+warning('on','MATLAB:singularMatrix')
+warning('on','MATLAB:nearlySingularMatrix')
 
 end
 
@@ -654,13 +692,15 @@ A(nface, :) = [];
 end
 
 
-function [c_hat, active, activity, n_active, flag] = activate(act, m_x_try, faces, c_hat, activity, active, n_active, info)
+function [c_hat, active, activity, n_active, flag] = activate(act, m_x_try, faces, c_hat, activity, active, n_active, info, verbose)
 no_activation = -1;
 flag = 0;
 if act == no_activation
     return;
 end
-fprintf("\n]]] %s : constraint %d -> level %d ", info, act, activity(act) + 1);
+if verbose
+    fprintf("\n]]] %s : constraint %d -> level %d ", info, act, activity(act) + 1);
+end
 activity(act) = activity(act) + 1;
 if activity(act) ~= 3
     return;
@@ -680,18 +720,22 @@ active = [active(1 : i - 1), act, active(i:end)];
 c_hat = [c_hat(1 : nface - 1 + i - 1); one_inequality(m_x_try, faces, act); c_hat(nface - 1 + i : end)];
 n_active = n_active + 1;
 
-fprintf(">>> %s activates constraint %d (pos %d); now active: %d\n                                                 ",  ...
+if verbose
+    fprintf(">>> %s activates constraint %d (pos %d); now active: %d\n                                                 ",  ...
     info, act, i, n_active);
+end
 
 flag = 1;
 
 end
 
 
-function [c_hat, flag, activity, active, n_active] = inactivate(nface, c_hat, activity, active, n_active, pos)
+function [c_hat, flag, activity, active, n_active] = inactivate(nface, c_hat, activity, active, n_active, pos, verbose)
 
 flag = 0;
-fprintf('\n[[[ constraint %d -> level %d ;          ', active(pos), activity(active(pos)) - 1);
+if verbose
+    fprintf('\n[[[ constraint %d -> level %d ;          ', active(pos), activity(active(pos)) - 1);
+end
 
 activity(active(pos)) = activity(active(pos)) - 1;
 if activity(active(pos)) ~= 3
@@ -700,7 +744,9 @@ end
 
 activity(active(pos)) = 2;
 n_active = n_active - 1;
-fprintf('<<< inactivate constraint %d at position %d; now active: %d\n', active(pos), pos, n_active);
+if verbose
+    fprintf('<<< inactivate constraint %d at position %d; now active: %d\n', active(pos), pos, n_active);
+end
 
 c_hat(nface - 1 + pos) = [];
 active(pos) = [];
@@ -793,8 +839,8 @@ end
 
 if verbose, fprintf(" %6.0e %10.6f %8.1e %8.1e", bad_m, f_m, m_rho,  m);end
 
-[c_hat, active, activity, n_active, flag_l] = activate(act_keep_l, m_x_try, faces, c_hat, activity, active, n_active, "left");
-[c_hat, active, activity, n_active, flag_r] = activate(act_keep_r, m_x_try, faces, c_hat, activity, active, n_active, "right");
+[c_hat, active, activity, n_active, flag_l] = activate(act_keep_l, m_x_try, faces, c_hat, activity, active, n_active, "left", verbose);
+[c_hat, active, activity, n_active, flag_r] = activate(act_keep_r, m_x_try, faces, c_hat, activity, active, n_active, "right", verbose);
 % fprintf('\n%d %d %d %d\n', act_keep_l, act_keep_r, flag_l, flag_r);
 if flag_l || flag_r
     flag = 1;
