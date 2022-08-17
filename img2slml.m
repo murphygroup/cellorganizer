@@ -156,6 +156,8 @@ function answer = img2slml( varargin )
 %
 % For additional information visit http://www.cellorganizer.org or
 % send email to cellorganizer@compbio.cmu.edu
+%
+% 8/15/2022 R.F. Murphy add cputime to logging
 
 answer = false;
 
@@ -166,6 +168,7 @@ end
 logfile = datestr(datetime('now', 'TimeZone', 'local'), 'yyyymmddHHMMSS.FFF'); %#ok<AGROW>
 logfile = [ pwd filesep 'log' filesep logfile, '.log' ];
 diary( logfile )
+tstart=cputime;
 
 if isdeployed
     disp('Running deployed version of img2slml');
@@ -338,6 +341,7 @@ else
     model = clean_up_and_wrap_up_model( model, param );
     answer = clean_up( param );
 end%3D
+print_underlined_text(['Elapsed time used by img2slml= ' num2str(cputime-tstart)])
 diary off
 end%img2slml
 
