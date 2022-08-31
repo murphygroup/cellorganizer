@@ -66,6 +66,12 @@ catch exception
     disp(msgText);
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% slml2slml %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+try
+    mcc -m spharm_rpdm_image_parameterization
+
+
 % Remove all unnecessary files.
 delete mccExcludedFiles.log
 delete readme.txt

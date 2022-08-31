@@ -1,4 +1,4 @@
-function [param_output] = spharm_rpdm_image_parameterization(cur_image, options)
+function [param_output] = spharm_rpdm_image_parameterization(varargin)
 % extract spharm from image. 
 % use SPHARM-sphericial_parameterization_xr for spherical parameterization
 % created: 09/14/2018 Xiongtao Ruan
@@ -9,6 +9,57 @@ function [param_output] = spharm_rpdm_image_parameterization(cur_image, options)
 % 12/8/2020 R.F.Murphy fix default NMcost_tol (was string instead of float)
 % 8/11/2022 R.F.Murphy replace calls to EqualAreaParametricMeshNewtonMethod_1 
 % (historical artifact) with calls to EqualAreaParametricMeshNewtonMethod 
+% 8/20/2022 Ted use this as deployed version
+
+if isdeployed
+    disp('Running deployed version of spharm_rpdm_image_parameterization');
+    %getting info read into matlab
+    %when method is deployed
+    if length(varargin) == 1
+        text_file = varargin{1};
+    else
+        error('Deployed function takes only 1 argument. Exiting method.');
+        return
+    end
+    
+    [filepath, name, ext] = fileparts(text_file);
+    
+    if ~exist(text_file, 'file')
+        warning('Input file does not exist. Exiting method.');
+        return
+    end
+    
+    disp(['Attempting to read input file ' text_file]);
+    fid = fopen(text_file, 'r' );
+    
+    disp('Evaluating lines from input file');
+    while ~feof(fid)
+        line = fgets(fid);
+        disp(line);
+        try
+            eval(line);
+        catch err
+            disp('Unable to parse line');
+            getReport(err)
+            return
+        end
+    end
+    fclose(fid);
+    if ~exist('options', 'var')
+        options = {};
+    end
+
+
+    %read in image
+    img = ml_readimage(cur_image);
+    cur_image = loadImage(img, options.downsampling);
+
+else
+
+    cur_image = varagin{1};
+    options = varagin{2};
+
+end
 
 if ~exist('options', 'var') || isempty(options)
     options = [];
@@ -217,5 +268,10 @@ if false && options.debug
     figure_filename = sprintf('%spdm_reconst_illustration_%d%s', figure_dir, compute_id, suffix);
     export_fig(figure_filename, '-opengl', '-png', '-a1', ['-r', num2str(dpi)]);
 end
+
+if isdeployed
+    disp('saving parameterizations...');
+    output_dir = join([options.deployedOut, '/param_output.mat']);
+    save(output_dir, 'param_output');
 
 end

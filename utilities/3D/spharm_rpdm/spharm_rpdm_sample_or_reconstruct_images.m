@@ -37,6 +37,15 @@ function result = spharm_rpdm_sample_or_reconstruct_images( model, options )
 % 05/20/2019 if the imageSize was not set, use the bounding box as image
 % size
 
+if isdeployed
+    disp('Running deployed version of spharm_rpdm_sample_or_reconstruct_images...');
+
+    
+    
+    
+
+end
+
 rpdm_model = model.cellShapeModel;
 train_score = rpdm_model.train_score;
 train_coeff = rpdm_model.train_coeff;
