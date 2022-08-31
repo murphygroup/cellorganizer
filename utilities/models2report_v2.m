@@ -321,6 +321,7 @@ if param.includeprot
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if strcmpi(models{1}.proteinModel.type,'spharm_obj')
         header2html(fileID, 'Spharm Model Comparison');
+
         for i=1:length(models)
             models_ShapeModel{i} = models{i}.proteinModel.spharm_obj_model.cellShapeModel;
         end
@@ -341,7 +342,6 @@ if param.includeprot
             header2html(fileID, 'Spatial Model Comparison');
     %         compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
             %clique percolation
-
             d1 = length(models_SpatialModel{1}.normdists);
             d2 = length(models_SpatialModel{2}.normdists);
 
