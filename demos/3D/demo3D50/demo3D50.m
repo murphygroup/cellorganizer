@@ -117,6 +117,8 @@ dimensionality = '3D';
 options.documentation.description = 'This model has been trained using demo3D50 from CellOrganizer';
 options.model.spharm_rpdm.segminnucfraction = 0.1;
 
+
+options.spharm_rpdm.output_dir = './lol';
 %% this is the main function call
 % the 2nd, 3rd, and 4th, arguments to img2slml are the list of nuclear or
 % DNA images, the list of cell membrane images, and the list of cell masks

@@ -36,15 +36,59 @@ function result = spharm_rpdm_sample_or_reconstruct_images( model, options )
 % xruan 05/09/2019 add synthesis resolution
 % 05/20/2019 if the imageSize was not set, use the bounding box as image
 % size
+% 8/20/2022 Ted make this function deployable as a binary to be used in
+% Docker containers
 
-if isdeployed
-    disp('Running deployed version of spharm_rpdm_sample_or_reconstruct_images...');
-
-    
-    
-    
-
-end
+% if isdeployed
+%     disp('Running deployed version of spharm_rpdm_sample_or_reconstruct_images...');
+% 
+%     %getting info read into matlab
+%     %when method is deployed
+%     if length(varargin) == 1
+%         text_file = varargin{1};
+%         
+%         [filepath, name, ext] = fileparts(text_file);
+%     
+%         
+%         if ~exist(text_file, 'file')
+%             warning('Input file does not exist. Exiting method.');
+%             return
+%         end
+%     
+%         disp(['Attempting to read input file ' text_file]);
+%         fid = fopen(text_file, 'r' );
+% 
+%         disp('Evaluating lines from input file');
+%         while ~feof(fid)
+%             line = fgets(fid);
+%             disp(line);
+%             try
+%                 eval(line);
+%             catch err
+%                 disp('Unable to parse line');
+%                 getReport(err)
+%                 return
+%             end
+%         end
+%         fclose(fid);
+%         if ~exist('options', 'var')
+%             options = {};
+%         end
+% 
+%         model = load(model_path);
+% 
+%     else
+%         model = varargin{1};
+%         options = varargin{2};
+%     end
+%     
+% 
+% else
+%     
+%     model = varargin{1};
+%     options = varargin{2};
+%     
+% end
 
 rpdm_model = model.cellShapeModel;
 train_score = rpdm_model.train_score;
@@ -191,5 +235,13 @@ result.cellimg = cellimg;
 result.nucmesh = nuc_mesh;
 result.cellmesh = cell_mesh;
 
+
+%save img if deployed
+% if isdeployed
+%     disp('saving img(s)...');
+%     output_dir = join([options.output_dir, '/img_output.mat']);
+%     save(output_dir, 'result');
+% 
+% end
 
 end
