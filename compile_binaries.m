@@ -3,7 +3,7 @@ setup
 
 % If cellorganizer-binaries directory already exists, then remove it.
 if exist('cellorganizer-binaries', 'dir')
-    rmdir cellorganizer-binaries s
+    rmdir cellorganizer-binaries
 end
 
 % Create the cellorganizer-binaries directory
@@ -22,7 +22,7 @@ catch exception
     return
 end
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% slml2img %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% slml2img %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 try
     mcc -a ../utilities/bfmatlab/bioformats_package.jar -m slml2img.m -o slml2img
 catch exception
@@ -70,7 +70,7 @@ end
 %%%%%%%%% image2SPHARMparameterization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 try
-    mcc -a ../utilities/bfmatlab/bioformats_package.jar -m image2spharmparameterization.m -a calc_sine_2_jacobian_sphere.m -a calc_sine_1_jacobian_sphere.m -a calc_sine_3_jacobian_sphere.m -a calc_sine_4_jacobian_sphere.m -o image2spharmparameterization
+    mcc -m image2SPHARMparameterization.m -a calc_sine_2_jacobian_sphere.m -a calc_sine_1_jacobian_sphere.m -a calc_sine_3_jacobian_sphere.m -a calc_sine_4_jacobian_sphere.m -o image2SPHARMparameterization
 catch exception
     warning('Failed to compile image2SPHARMparameterization.m');
     msgText = getReport(exception);
@@ -80,9 +80,9 @@ end
 %%%%%%%%% SPHARMparameterization2image %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 try
-    mcc -a ../utilities/bfmatlab/bioformats_package.jar -m spharmparameterization2image.m -o spharmparameterization2image
+    mcc -m SPHARMparameterization2image.m -o SPHARMparameterization2image
 catch exception
-    warning('Failed to compile spharmparameterization2image.m');
+    warning('Failed to compile SPHARMparameterization2image.m');
     msgText = getReport(exception);
     disp(msgText);
 end
@@ -90,9 +90,9 @@ end
 %%%%%%%%% SPHARMparameterization2mesh %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 try
-    mcc -m spharmparameterization2mesh.m -o spharmparameterization2mesh
+    mcc -m SPHARMparameterization2mesh.m -o SPHARMparameterization2mesh
 catch exception
-    warning('Failed to compile spharmparameterization2mesh.m');
+    warning('Failed to compile SPHARMparameterization2mesh.m');
     msgText = getReport(exception);
     disp(msgText);
 end
@@ -108,9 +108,9 @@ delete run_slml2img.sh
 delete run_slml2slml.sh
 delete run_slml2info.sh
 delete run_slml2report.sh
-delete run_image2spharmparameterization.sh
-delete run_spharmparameterization2image.sh
-delete run_spharmparameterization2mesh.sh
+delete run_image2SPHARMparameterization.sh
+delete run_SPHARMparameterization2image.sh
+delete run_SPHARMparameterization2mesh.sh
 
 % Return to previous working directory
 cd ..
