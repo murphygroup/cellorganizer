@@ -1,4 +1,4 @@
-function answer = spharmparameterization2image(varargin)
+function answer = SPHARMparameterization2image(varargin)
 
 if isdeployed
     disp('Running deployed version of spharm_rpdm_sample_or_reconstruct_images...');
@@ -37,7 +37,7 @@ if isdeployed
         options = {};
     end
 
-    model = load(model_path);
+    load(model_path);
     
 
 else
@@ -47,6 +47,7 @@ else
     
 end
 
+disp(model);
 image_mat = spharm_rpdm_sample_or_reconstruct_images(model, options);
 
 disp('saving image(s)');

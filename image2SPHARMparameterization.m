@@ -1,4 +1,4 @@
-function answer = image2spharmparameterization(varargin)
+function answer = image2SPHARMparameterization(varargin)
 
 if isdeployed
     disp('Running deployed version of image2SPHARMparameterization');
@@ -38,7 +38,7 @@ if isdeployed
         options = {};
     end
 
-    cur_image = load(image_path);
+    load(image_path);
     
 
     %read in image
@@ -52,7 +52,10 @@ else
 
 end
 
-cur_image = loadImage(cur_image, options.downsampling);
+%cur_image = ml_readimage(image_path);
+% disp(size(cur_image));
+% disp(cur_image);
+% cur_image = loadImage(cur_image, options.downsampling);
 param_output = spharm_rpdm_image_parameterization(cur_image, options);
 
 %save output if deployed

@@ -35,7 +35,7 @@ if isdeployed
         options = {};
     end
 
-    model = load(model_path);
+    load(model_path);
     descriptor = model.cellShapeModel.all_spharm_descriptors;
     components = model.cellShapeModel.components;
 
