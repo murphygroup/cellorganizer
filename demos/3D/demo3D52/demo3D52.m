@@ -90,6 +90,9 @@ options.spharm_rpdm.NMretry_maxiterbig = 300;
 options.spharm_rpdm.NMcost_tol = 1e-7;
 options.spharm_rpdm.NMlargr_tol = 1e-7;
 options.spharm_rpdm.maxDeg = options.model.spharm_rpdm.maxDeg;
+% this debug option is specifically for creating figures showing SPHARM_RPDM
+% parameterization compared to original image
+options.spharm_rpdm.debug = true;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % the following list of parameters are adapted to the LAMP3 image

@@ -1,4 +1,4 @@
-function varargout = sphereMesh(sphere, varargin)
+function varargout = sphereMeshvariableresolution(sphere, nPhi, nTheta)
 %SPHEREMESH  Create a 3D mesh representing a sphere
 %
 %   [V F] = sphereMesh(S)
@@ -22,28 +22,23 @@ function varargout = sphereMesh(sphere, varargin)
 % Created: 2012-10-25,    using Matlab 7.9.0.529 (R2009b)
 % Copyright 2012 INRA - Cepia Software Platform.
 %
-% Modified 2022-09-13 R.F.Murphy allow user specification of nPhi and nTheta
+% Modified 2022-09-13, R.F.Murphy to allow adjusting the number of vertices
 
 if nargin == 0
-% center and radius of sphere
     sphere = [0 0 0 1];
-% number of meridians
-    nPhi = 32;
-% number of parallels
-    nTheta  = 16;
 end
-
-
 
 % extract sphere data
 xc = sphere(:,1);
 yc = sphere(:,2);
 zc = sphere(:,3);
 r  = sphere(:,4);
-if size(sphere,2) > 4;
-    nPhi = sphere(:,5);
-    nTheta = sphere(:,6);
-end
+
+% number of meridians
+if ~exist('nPhi','var') || isempty(nPhi) nPhi = 32; end
+    
+% number of parallels
+if ~exist('nTheta','var') || isempty(nTheta) nTheta  = 16; end
 
 % compute spherical coordinates
 theta   = linspace(0, pi, nTheta+1);

@@ -1,4 +1,4 @@
-function [param_output] = spharm_rpdm_image_parameterization(cur_image, options)
+function [param_output] = spharm_rpdm_image_parameterization(cur_image, options, imagelegend)
 % extract spharm from image. 
 % use SPHARM-sphericial_parameterization_xr for spherical parameterization
 % created: 09/14/2018 Xiongtao Ruan
@@ -9,62 +9,15 @@ function [param_output] = spharm_rpdm_image_parameterization(cur_image, options)
 % 12/8/2020 R.F.Murphy fix default NMcost_tol (was string instead of float)
 % 8/11/2022 R.F.Murphy replace calls to EqualAreaParametricMeshNewtonMethod_1 
 % (historical artifact) with calls to EqualAreaParametricMeshNewtonMethod 
-% 8/20/2022 Ted make this function deployable as a binary to be used in
-% Docker containers
-
-% if isdeployed
-%     disp('Running deployed version of spharm_rpdm_image_parameterization');
-%     %getting info read into matlab
-%     %when method is deployed
-%     if length(varargin) == 1
-%         text_file = varargin{1};
-%         
-%         [filepath, name, ext] = fileparts(text_file);
-%     
-%         if ~exist(text_file, 'file')
-%             warning('Input file does not exist. Exiting method.');
-%             return
-%         end
-% 
-%         disp(['Attempting to read input file ' text_file]);
-%         fid = fopen(text_file, 'r' );
-% 
-%         disp('Evaluating lines from input file');
-%         while ~feof(fid)
-%             line = fgets(fid);
-%             disp(line);
-%             try
-%                 eval(line);
-%             catch err
-%                 disp('Unable to parse line');
-%                 getReport(err)
-%                 return
-%             end
-%         end
-%         fclose(fid);
-%         if ~exist('options', 'var')
-%             options = {};
-%         end
-% 
-% 
-%         %read in image
-%         img = ml_readimage(cur_image);
-%         cur_image = loadImage(img, options.downsampling);
-% 
-%     else
-%         cur_image = varargin{1};
-%         options = varargin{2};
-%     end
-%        
-% else
-% 
-%     cur_image = varargin{1};
-%     options = varargin{2};
-% 
-% end
+% 9/10/2022 R.F.Murphy reenable debug figures and add optional legend
+% to display on debug figures
 
 if ~exist('options', 'var') || isempty(options)
     options = [];
+end
+
+if ~exist('imagelegend', 'var')
+    imagelegend = 'image';
 end
 
 options = ml_initparam(options, struct('verbose', false, ...
@@ -88,11 +41,6 @@ z_factor = options.z_factor;
 options.spharm_confs.maxDeg = maxDeg;
 options.spharm_confs.savedir = OutDirectory;
 options.spharm_confs.suffix = suffix;
-
-if options.debug
-    figure_dir = [OutDirectory, 'figures/'];
-    mkdir(figure_dir);
-end
 
 disp('Fix topology....');
 % smooth the image a little so that the paraemterization process should be better. 
@@ -125,13 +73,13 @@ hd = inf; hd_1 = inf; hd_2 = inf; hd_3 = inf;
 
 special_case = ~true;
 if ~special_case
-    tStart = tic;
+    tStart = cputime;
     options_in.verbose = options.verbose;
     options_in.cost_tol = options.NMcost_tol;
     options_in.largr_tol = options.NMlargr_tol;
     options_in.max_iter = options.NMfirsttry_maxiter;
     [sph_verts, cost_mat, is_success] = EqualAreaParametricMeshNewtonMethod(vertices, faces, [], options_in);
-    execute_time = toc(tStart);
+    execute_time = cputime-tStart;
     [is_good, hd] = spherical_parameterization_quality_check(sph_verts, vertices, faces);
 
     %  if the parameterization not successful, try to use another
@@ -142,9 +90,9 @@ if ~special_case
         options_in.initialization_method = 'z_axis';
         options_in.max_iter = options.NMretry_maxiter;
         options_in.verbose = options.verbose;
-        tStart_1 = tic;
+        tStart = cputime;
         [sph_verts_1, cost_mat_1, is_success_1] = EqualAreaParametricMeshNewtonMethod(vertices, faces, [], options_in);
-        execute_time_1 = toc(tStart_1);
+        execute_time_1 = cputime-tStart;
         [is_good_1, hd_1] = spherical_parameterization_quality_check(sph_verts_1, vertices, faces);
         if is_success_1 || (~is_success_1 && hd > hd_1)
             sph_verts = sph_verts_1;
@@ -171,9 +119,9 @@ if ~is_good && ~is_good_1
         [bim, vertices_2, faces_2] = fix_topology_by_image_processing(bim);
     end
     options_in.initialization_method = 'pca';
-    tStart_2 = tic;
+    tStart = cputime;
     [sph_verts_2, cost_mat_2, is_success_2] = EqualAreaParametricMeshNewtonMethod(vertices_2, faces_2, [], options_in);  
-    execute_time_2 = toc(tStart_2);    
+    execute_time_2 = cputime-tStart;    
     [is_good_2, hd_2] = spherical_parameterization_quality_check(sph_verts_2, vertices_2, faces_2);
     if is_success_2 || (~is_success_2 && min(hd, hd_1) > hd_2)
         vertices = vertices_2;
@@ -202,9 +150,9 @@ if ~is_good && ~is_good_1 && ~is_good_2
     end
     options_in.initialization_method = 'graph_diameter';
     options_in.max_iter = options.NMretry_maxiterbig;
-    tStart_3 = tic;
+    tStart = cputime;
     [sph_verts_3, cost_mat_3, is_success_3] = EqualAreaParametricMeshNewtonMethod(vertices_3, faces_3, [], options_in);  
-    execute_time_3 = toc(tStart_3);    
+    execute_time_3 = cputime-tStart;    
     [is_good_3, hd_3] = spherical_parameterization_quality_check(sph_verts_3, vertices_3, faces_3);
     if is_success_3 || (~is_success_3 && min([hd, hd_1, hd_2]) > hd_3)
         vertices = vertices_3;
@@ -227,6 +175,7 @@ filename = '';
 [fvec, deg, Z] = create_SPHARM_des_LSF(vertices, faces, sph_verts, maxDeg, filename);
 
 param_output = struct();
+param_output.deg = deg;
 param_output.fvec = fvec;
 param_output.vertices = vertices;
 param_output.faces = faces;
@@ -236,48 +185,59 @@ param_output.execute_time = execute_time;
 param_output.hd_tries = [hd hd_1 hd_2 hd_3];
 param_output.final_hd = hd_final;
 
-dpi = 150;
+if options.debug
+    figure_dir = [OutDirectory, 'figures/'];
+    if ~exist(figure_dir,'dir') mkdir(figure_dir); end
+
+    dpi = 150;
+    fixlegend = replace(imagelegend,'_',' ');
+    
 % generate 3D figure from the mesh of the original image
-if false && options.debug
-    figure, patch('vertices', vertices, 'faces', faces, 'FaceVertexCData',jet(size(vertices,1)),'FaceColor','interp');
-    view([45, 45]);
-    title(num2str(compute_id));
-    figure_filename = sprintf('%soriginal_illustration_%d%s', figure_dir, compute_id);
-    export_fig(figure_filename, '-opengl', '-png', '-a1', ['-r', num2str(dpi)]);
-    dpi = 150;    
-end
+    figtitle = [fixlegend ' original'];
+    figure_filename = sprintf('%soriginal_mesh_%s', figure_dir, imagelegend);
+    mesh2figure(vertices,faces,figtitle,figure_filename,dpi);
 
 % generate 3D figure from the final spherical parameterization
-if false && options.debug
-    [vs fs] = sphereMesh([0 0 0 1]);
-    Zs = calculate_SPHARM_basis(vs, deg);
+    % generate evenly distributed vertices (vs) on the surface of a 
+    % sphere and their connectedness (faces, fs)
+    figtitle = [fixlegend ' reconstructed'];
+    figure_filename = sprintf('%sreconst_mesh_%s', figure_dir, imagelegend);
+    meshtype = [];
+    meshtype.type = 'even';
+    meshtype.nPhi = 64;
+    meshtype.nTheta = 32;
+    spharm2meshfigure(deg,fvec,meshtype,true,figtitle,figure_filename,dpi);
 
-    Zvert = real(Zs*fvec);
-    figure, patch('vertices', Zvert, 'faces', fs, 'FaceVertexCData',jet(size(vs,1)),'FaceColor','interp');
-    view([45, 45]);
-    title(num2str(compute_id));
-    figure_filename = sprintf('%sreconst_illustration_%d%s', figure_dir, compute_id, suffix);
+% generate reconstruction using triangular mesh
+    figtitle = [fixlegend ' reconstructed triangular'];
+    figure_filename = sprintf('%sreconst_trimesh_%s', figure_dir, imagelegend);
+    meshtype = [];
+    meshtype.type = 'triangular';
+    %meshtype.nVertices = 4002;
+    spharm2meshfigure(deg,fvec,meshtype,true,figtitle,figure_filename,dpi);
+
+% generate image from spherical parameterization
+    img = spharm2image(deg,fvec,meshtype);
+    %size(img)
+    figure
+    for zslice=1:size(img,3)
+        imshow(img(:,:,zslice));
+        pause(1)
+    end
+    close
+    %size(cur_image)
+    figure
+    subplot(1,2,1)
+    [ignorethis,maxsliceo]=max(squeeze(sum(sum(cur_image,2),1)));
+    imshow(cur_image(:,:,maxsliceo));
+    legend(['orig: maxslice=' num2str(maxsliceo)]);
+    subplot(1,2,2)
+    [ignorethis,maxslicer]=max(squeeze(sum(sum(img,2),1)));
+    imshow(img(:,:,maxslicer));
+    legend(['recon: maxslice=' num2str(maxslicer)]);
+    figure_filename = sprintf('%sreconst_images_maxslice_%s', figure_dir, imagelegend);
     export_fig(figure_filename, '-opengl', '-png', '-a1', ['-r', num2str(dpi)]);
+    close
 end
-
-if false && options.debug
-    [vs, fs]=SpiralSampleSphere(4002);
-    Zs = calculate_SPHARM_basis(vs, deg);
-    Zvert_pdm = real(Zs*fvec);
-    figure, patch('vertices', Zvert_pdm, 'faces', fs, 'FaceVertexCData',jet(size(Zvert_pdm,1)),'FaceColor','interp');
-    view([45, 45]);
-    title(num2str(compute_id));
-    figure_filename = sprintf('%spdm_reconst_illustration_%d%s', figure_dir, compute_id, suffix);
-    export_fig(figure_filename, '-opengl', '-png', '-a1', ['-r', num2str(dpi)]);
-end
-
-%save output if deployed
-% if isdeployed
-%     disp('saving parameterizations...');
-% %   output_dir = join([options.deployedOut, '/param_output.mat']);
-%     output_dir = join([options.output_dir, '/param_output.mat']);
-%     save(output_dir, 'param_output');
-% 
-% end
 
 end

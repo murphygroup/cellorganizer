@@ -63,6 +63,7 @@ function param = img2param_3D( imdna_path,imcell_path,...
 % 2/7/2021 R.F. Murphy don't skip spharm postprocessing if_skip_nuclear_cell
 % 2/8/2021 R.F. Murphy fix NaN handling after parameterization; check hd_thresh
 % 8/11/2022 R.F.Murphy add default hd_thresh of Inf so that no trimming occurs
+% 9/14/2022 R.F.Murphy save spharm deg into returned params
 
 options = ml_initparam(options, struct('downsampling', [1,1,1], ...
     'display', false, ...
@@ -97,7 +98,7 @@ if ~exist(savefile, 'file') && (~isfield(options,'if_skip_cell_nuclear_model') |
     % xruan 01/06/2016
     % change seg_cell_and_nucleus_2D to seg_cell_and_nucleus_3D
     %    [seg_dna, seg_cell] = seg_cell_and_nucleus_2D( ...
-    tic;
+    tStart = tic;
     %options.display=1;
     [seg_dna, seg_cell] = seg_cell_and_nucleus_3D( ...
         imdna, ...
@@ -106,7 +107,7 @@ if ~exist(savefile, 'file') && (~isfield(options,'if_skip_cell_nuclear_model') |
         immask, ...
         [1 1 1], ...   %% xruan 01/06/2015 this is just set to be compatible with other cases.
         options);
-    options.running_time.segmentation = toc;
+    options.running_time.segmentation = toc(tStart);
     
     seg.nuc = seg_dna;
     seg.cell = seg_cell;
@@ -152,7 +153,7 @@ param.seg = seg;
 savefile = [savedir filesep 'nuc.mat'];
 %if ~isempty(imdna) && ~exist(savefile, 'file')
 if ~exist(savefile, 'file') && (~isfield(options,'if_skip_cell_nuclear_model') || ~options.if_skip_cell_nuclear_model)
-    tic
+    tStart = tic;
     switch options.nucleus.type
         case 'cylindrical_surface'
             [spfeat,surfmap] = tp_nucimgfeat(param.seg.nuc, ...
@@ -167,7 +168,8 @@ if ~exist(savefile, 'file') && (~isfield(options,'if_skip_cell_nuclear_model') |
             
             % xruan 09/14/2018
         case 'spharm_rpdm'
-            [nuc] = spharm_rpdm_image_parameterization(param.seg.nuc, options.spharm_rpdm);
+            [ignorepath,nucfilename,ignoreext]=fileparts(options.dna_image_path);
+            [nuc] = spharm_rpdm_image_parameterization(param.seg.nuc, options.spharm_rpdm, nucfilename)
             nuc.type = 'spharm_rpdm';
         otherwise
             warning(['Unsupported nuclear model type ' options.nucleus.type '. Returning empty model.'])
@@ -175,7 +177,7 @@ if ~exist(savefile, 'file') && (~isfield(options,'if_skip_cell_nuclear_model') |
     end
     
     save(savefile, 'nuc')
-    options.running_time.nuclear_image_parameterization = toc;
+    options.running_time.nuclear_image_parameterization = toc(tStart);
 elseif (isfield(options,'if_skip_cell_nuclear_model') && options.if_skip_cell_nuclear_model)
     nuc = [];
 else
@@ -189,7 +191,7 @@ param.nuc = nuc;
 savefile = [savedir filesep 'cell.mat'];
 if ~isempty(imcell) && (~isfield(options,'if_skip_cell_nuclear_model') || ~options.if_skip_cell_nuclear_model)
     if ~exist(savefile, 'file')
-        tic
+        tStart = tic;
         switch options.cell.type
             case 'ratio'
                 
@@ -207,7 +209,8 @@ if ~isempty(imcell) && (~isfield(options,'if_skip_cell_nuclear_model') || ~optio
                 if strcmp(options.train.flag, 'nuclear')
                     cellfit = nuc;
                 else
-                    [cellfit] = spharm_rpdm_image_parameterization(param.seg.cell, options.spharm_rpdm);
+                    [ignorepath,cellfilename,ignoreext]=fileparts(options.cell_image_path);
+                    [cellfit] = spharm_rpdm_image_parameterization(param.seg.cell, options.spharm_rpdm, cellfilename);
                     if cellfit.final_hd > options.hd_thresh
                         error('error of parameterization above hd_thresh')
                     end
@@ -229,7 +232,7 @@ if ~isempty(imcell) && (~isfield(options,'if_skip_cell_nuclear_model') || ~optio
         end
         
         save(savefile, 'cellfit')
-        options.running_time.cell_image_parameterization = toc;
+        options.running_time.cell_image_parameterization = toc(tStart);
     else
         load(savefile)
     end
@@ -243,6 +246,8 @@ end
 if (strcmp(options.cell.type, 'spharm_rpdm') || strcmp(options.nucleus.type, 'spharm_rpdm')) && options.spharm_rpdm.postprocess && (~isfield(options,'if_skip_cell_nuclear_model') || ~options.if_skip_cell_nuclear_model)
     [cell_post, nuc_post] = spharm_rpdm_sh_postprocess(cellfit, nuc, savedir, options);
     % set the parameter use postprocess parameters
+    if isfield(nuc,'deg') nuc_post.deg = nuc.deg; end
+    if isfield(cellfit,'deg') cell_post.deg = cellfit.deg; end
     param.nuc = nuc_post;
     param.cell = cell_post;
 end
@@ -253,7 +258,7 @@ if ~isempty(improt) && (strcmpi( options.train.flag, 'all' )||strcmpi( options.t
     if exist(savefile, 'file')
         load(savefile)
     else
-        tic
+        tStart = tic;
         switch options.protein.type
             case 'spharm_obj' % build shape model and ppm (Shen Jin, Sep 2019)
                 disp('Preprocessing image for SPHARM object model')
@@ -281,7 +286,7 @@ if ~isempty(improt) && (strcmpi( options.train.flag, 'all' )||strcmpi( options.t
                 error(['Unrecognized protein model type ' options.protein.type])
         end
         save(savefile, 'prot')
-        options.running_time.protein_image_parameterization = toc;
+        options.running_time.protein_image_parameterization = toc(tStart);
     end
     param.prot = prot;
 end

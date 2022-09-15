@@ -87,17 +87,18 @@ options.spharm_rpdm.NMretry_maxiterbig = 300;
 options.spharm_rpdm.NMcost_tol = 1e-7;
 options.spharm_rpdm.NMlargr_tol = 1e-7;
 options.spharm_rpdm.maxDeg = options.model.spharm_rpdm.maxDeg;
+% this debug option is specifically for creating figures showing SPHARM_RPDM
+% parameterization compared to original image
+options.spharm_rpdm.debug = true;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % the following list of parameters are adapted to the LAMP3 image
 % collection, modify these according to your needs
 directory = '../../../images/HeLa/3D/processed/';
 % to reduce compute times, just process the first 9 images in the collection
-dna = [ directory filesep 'LAM_cell[1-9]_ch0_t1.tif' ];
 cellm = [ directory filesep 'LAM_cell[1-9]_ch1_t1.tif' ];
 options.masks = [ directory filesep 'LAM_cell[1-9]_mask_t1.tif' ];
 % uncomment these lines to use all of the images in the collection
-%dna = [ directory filesep 'LAM_cell*_ch0_t1.tif' ];
 %cellm = [ directory filesep 'LAM_cell*_ch1_t1.tif' ];
 %options.masks = [ directory filesep 'LAM_cell*_mask_t1.tif' ];
 
@@ -117,8 +118,6 @@ dimensionality = '3D';
 options.documentation.description = 'This model has been trained using demo3D50 from CellOrganizer';
 options.model.spharm_rpdm.segminnucfraction = 0.1;
 
-
-options.spharm_rpdm.output_dir = './lol';
 %% this is the main function call
 % the 2nd, 3rd, and 4th, arguments to img2slml are the list of nuclear or
 % DNA images, the list of cell membrane images, and the list of cell masks

@@ -106,6 +106,9 @@ options_spharm.spharm_rpdm.NMlargr_tol = 1e-7;
 options_spharm.spharm_rpdm.NMfirsttry_maxiter = 300;
 options_spharm.spharm_rpdm.NMretry_maxiter = 100;
 options_spharm.spharm_rpdm.NMretry_maxiterbig = 300;
+% this debug option is specifically for creating figures showing SPHARM_RPDM
+% parameterization compared to original image
+options_spharm.spharm_rpdm.debug = true;
 
 % setup_everything:
 options.options_spharm = options_spharm;
@@ -144,11 +147,3 @@ options.viewangle = [0,90]; %down z axis
 %options.viewangle = [90,0]; %side view
 options.hd_threshold = 10.; % filter out objects with Hausdorff distance greater than this
 slml2info({'model.mat'},options);
-
-load('model.mat');
-%f = figure('visible','off');
-f = figure('visible','on');
-hist(log10(model.proteinModel.spharm_obj_model.cellShapeModel.hausdorff_distances),25)
-xlabel('Log10 Hausdorff distance between original and SPHARM-RPDM model');
-ylabel('Frequency')
-saveas( f, 'hausdorff_distance_histogram.png', 'png' );
