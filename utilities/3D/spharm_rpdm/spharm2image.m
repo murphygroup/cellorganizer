@@ -1,4 +1,4 @@
-editfunction img = spharm2image(deg,fvec,meshtype,imageSize)
+function img = spharm2image(deg,fvec,meshtype,imageSize)
 
     if ~exist('meshtype','var')
         meshtype = [];

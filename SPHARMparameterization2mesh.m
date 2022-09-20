@@ -36,18 +36,17 @@ if isdeployed
     end
 
     load(model_path);
-    descriptor = model.cellShapeModel.all_spharm_descriptors;
-    components = model.cellShapeModel.components;
+%     descriptor = model.cellShapeModel.all_spharm_descriptors;
+%     components = model.cellShapeModel.components;
 
-    cellind = options.cellind;
+%     cellind = options.cellind;
+%     if numel(model.components) > 1
+%         descriptors = reshape(descriptors, [], 2, size(descriptors, 2), size(descriptors, 3));
+%         descriptors = permute(descriptors, [1, 3, 2, 4]);
+%         descriptors = descriptors(: , :, :, cellind);
+%     end
 
-    if numel(model.components) > 1
-        descriptors = reshape(descriptors, [], 2, size(descriptors, 2), size(descriptors, 3));
-        descriptors = permute(descriptors, [1, 3, 2, 4]);
-        descriptors = descriptors(: , :, :, cellind);
-    end
-
-    descriptors = descriptors(: , :, cellind);
+%     descriptors = descriptors(: , :, cellind);
     
 else
     
@@ -56,7 +55,11 @@ else
     
 end
     
-mesh_out = reconstruct_spharm_descriptor_to_mesh(descriptor, components);
+% mesh_out = reconstruct_spharm_descriptor_to_mesh(descriptor, components);
+[Zvert, fs] = spharm2meshfigure(deg,fvec,meshtype,plot,figtitle,filename,dpi);
+mesh_out = [];
+mesh_out.Zvert = Zvert;
+mesh_out.fs = fs;
 
 disp('saving mesh...');
 % output_dir = join([options.output_dir, '/mesh_output.mat']);
