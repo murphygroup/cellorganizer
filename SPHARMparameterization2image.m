@@ -48,10 +48,11 @@ else
 end
 
 disp(model);
-image_mat = spharm_rpdm_sample_or_reconstruct_images(model, options);
+% image_mat = spharm_rpdm_sample_or_reconstruct_images(model, options);
+img = spharm2img(deg, fvec);
 
-disp('saving image(s)');
-save(options.output_filepath, 'image_mat');
+disp('saving image');
+save(options.output_filepath, 'img');
 
 if exist( [options.output_filepath(1:end-3) 'mat'], 'file' )
     answer = true;
