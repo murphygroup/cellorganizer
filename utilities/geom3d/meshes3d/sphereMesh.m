@@ -39,8 +39,18 @@ elseif nargin == 1
     nTheta  = 16;
     
 else
-    nPhi = varagin{1};
-    nTheta = varagin{2};
+    nPhi = varargin{1};
+    nTheta = varargin{2};
+    
+    % defaults
+    if isempty(nPhi)
+        nPhi = 32;
+    end
+    
+    if isempty(nTheta)
+        nTheta = 16;
+    end
+        
 end
 
 
