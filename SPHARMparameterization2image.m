@@ -51,7 +51,7 @@ end
 % image_mat = spharm_rpdm_sample_or_reconstruct_images(model, options);
 deg = param_output.deg;
 fvec = param_output.fvec;
-img = spharm2img(deg, fvec);
+img = spharm2image(deg, fvec);
 
 disp('saving image');
 save(options.output_filepath, 'img');

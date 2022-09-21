@@ -29,7 +29,7 @@ function [Zvert, fs] = spharm2meshfigure(deg,fvec,meshtype,plot,figtitle,filenam
         % sphere and their connectedness (faces, fs)
         if ~isfield(meshtype,'nPhi') meshtype.nPhi = []; end
         if ~isfield(meshtype,'nTheta') meshtype.nTheta = []; end
-        [vs fs] = sphereMesh([0 0 0 1 meshtype.nPhi meshtype.nTheta]);
+        [vs, fs] = sphereMesh([0 0 0 1], meshtype.nPhi, meshtype.nTheta);
     else
         % generate a triangular mesh
         if ~isfield(meshtype,'nVertices') meshtype.nVertices = 4002; end

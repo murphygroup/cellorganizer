@@ -31,6 +31,16 @@ if nargin == 0
     nPhi = 32;
 % number of parallels
     nTheta  = 16;
+
+elseif nargin == 1
+% number of meridians
+    nPhi = 32;
+% number of parallels
+    nTheta  = 16;
+    
+else
+    nPhi = varagin{1};
+    nTheta = varagin{2};
 end
 
 
