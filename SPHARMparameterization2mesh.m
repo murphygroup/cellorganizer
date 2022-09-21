@@ -56,6 +56,13 @@ else
 end
     
 % mesh_out = reconstruct_spharm_descriptor_to_mesh(descriptor, components);
+%setup
+deg = param_output.deg;
+fvec = param_output.fvec;
+meshtype = options.meshtype;
+plot = options.plot;
+figtitle = options.figtitle;
+dpi = options.dpi;
 [Zvert, fs] = spharm2meshfigure(deg,fvec,meshtype,plot,figtitle,filename,dpi);
 mesh_out = [];
 mesh_out.Zvert = Zvert;
