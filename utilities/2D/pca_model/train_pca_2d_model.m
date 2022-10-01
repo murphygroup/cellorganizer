@@ -96,7 +96,7 @@ end
         
 % X = X - mean(X);
 
-[coeff,score,latent,tsquared,explained, mu] = pca(X);
+[coeff,score,latent,tsquared,explained, mu] = pca(X, 'NumComponents', latent_dim);
 
 train_score = score(:, 1 : latent_dim);
 train_explained = sum(explained(1 : latent_dim));
