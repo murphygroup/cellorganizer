@@ -98,9 +98,11 @@ end
 
 [coeff,score,latent,tsquared,explained, mu] = pca(X, 'NumComponents', latent_dim);
 
-train_score = score(:, 1 : latent_dim);
-train_explained = sum(explained(1 : latent_dim));
-train_coeff = coeff(:, 1 : latent_dim);
+disp(size(score))
+
+train_score = score;
+train_explained = sum(explained;
+train_coeff = coeff;
 
 
 pca_model = struct();
