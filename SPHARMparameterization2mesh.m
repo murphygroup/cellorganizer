@@ -1,5 +1,6 @@
 function answer = spharmparameterization2mesh(varargin)
 
+% Oct. 11, 2022 R.F.Murphy fix argument handling for non-deployed
 if isdeployed
     disp('Running deployed version of reconstruct_spharm_descriptor_to_mesh...');
 
@@ -34,34 +35,22 @@ if isdeployed
     if ~exist('options', 'var')
         options = {};
     end
-
+% this reads in param_output
     load(model_path);
-%     descriptor = model.cellShapeModel.all_spharm_descriptors;
-%     components = model.cellShapeModel.components;
-
-%     cellind = options.cellind;
-%     if numel(model.components) > 1
-%         descriptors = reshape(descriptors, [], 2, size(descriptors, 2), size(descriptors, 3));
-%         descriptors = permute(descriptors, [1, 3, 2, 4]);
-%         descriptors = descriptors(: , :, :, cellind);
-%     end
-
-%     descriptors = descriptors(: , :, cellind);
     
 else
     
-    descriptor = varargin{1};
-    components = varargin{2};
+    param_output = varargin{1};
+    options = varargin{2};
     
 end
     
-% mesh_out = reconstruct_spharm_descriptor_to_mesh(descriptor, components);
-%setup
 deg = param_output.deg;
 fvec = param_output.fvec;
 meshtype = options.meshtype;
 plot = options.plot;
 figtitle = options.figtitle;
+filename = options.filename;
 dpi = options.dpi;
 [Zvert, fs] = spharm2meshfigure(deg,fvec,meshtype,plot,figtitle,filename,dpi);
 mesh_out = [];

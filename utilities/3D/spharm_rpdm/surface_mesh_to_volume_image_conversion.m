@@ -15,6 +15,7 @@ end
 
 default_options.cropping = 'tight';
 default_options.oversampling_scale = 2;
+default_options.debug = false;
 
 if ~exist('options', 'var')
     options = default_options;
@@ -45,7 +46,7 @@ elseif any(size(bim) < img_size)
 end
     
 
-if false
+if options.debug
     figure, patch('faces', input_mesh.faces, 'vertices', input_mesh.vertices, 'FaceVertexCData',jet(size(input_mesh.vertices,1)), 'FaceColor', 'interp')
     view([45, 45]);
     figure, imshow(reshape_2d(bim > 0.5, -1), [])

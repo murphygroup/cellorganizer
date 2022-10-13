@@ -22,7 +22,7 @@ function [Zvert, fs] = spharm2meshfigure(deg,fvec,meshtype,plot,figtitle,filenam
 
     if ~exist('meshtype','var')
         meshtype = [];
-        meshtype.type = 'even';
+        meshtype.type = 'triangular';
     end
     if strcmp(meshtype.type,'even')
         % generate evenly distributed vertices (vs) on the surface of a 
@@ -30,10 +30,12 @@ function [Zvert, fs] = spharm2meshfigure(deg,fvec,meshtype,plot,figtitle,filenam
         if ~isfield(meshtype,'nPhi') meshtype.nPhi = []; end
         if ~isfield(meshtype,'nTheta') meshtype.nTheta = []; end
         [vs, fs] = sphereMesh([0 0 0 1], meshtype.nPhi, meshtype.nTheta);
-    else
+    elseif strcmp(meshtype.type,'triangular')
         % generate a triangular mesh
         if ~isfield(meshtype,'nVertices') meshtype.nVertices = 4002; end
         [vs, fs]=SpiralSampleSphere(meshtype.nVertices);
+    else
+        error('options.meshtype.type is invalid.')
     end
     % convert vertices to SPHARM basis function values
     Zs = calculate_SPHARM_basis(vs, deg);

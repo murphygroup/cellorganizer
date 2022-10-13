@@ -42,16 +42,14 @@ if isdeployed
 
 else
     
-    model = varargin{1};
+    param_output = varargin{1};
     options = varargin{2};
     
 end
 
-% disp(model);
-% image_mat = spharm_rpdm_sample_or_reconstruct_images(model, options);
 deg = param_output.deg;
 fvec = param_output.fvec;
-img = spharm2image(deg, fvec);
+img = spharm2image(deg, fvec, options);
 
 disp('saving image');
 save(options.output_filepath, 'img');
