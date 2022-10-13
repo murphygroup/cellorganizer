@@ -101,7 +101,7 @@ end
 disp(size(score))
 
 train_score = score;
-train_explained = sum(explained;
+train_explained = sum(explained);
 train_coeff = coeff;
 
 
