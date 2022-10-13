@@ -243,40 +243,9 @@ if parallel.gpu.GPUDevice.isAvailable
 end
 
 if isdeployed
-    disp('Running deployed version of slml2img');
-
-    if length(varargin) == 1
-        text_file = varargin{1};
-    else
-        error('Deployed function takes only 1 argument. Exiting method.');
-        return
-    end
-
-    [filepath, name, ext] = fileparts(text_file);
-
-    if ~exist(text_file, 'file')
-        warning('Input file does not exist. Exiting method.');
-        return
-    end
-
-    disp(['Attempting to read input file ' text_file]);
-    fid = fopen(text_file, 'r' );
-
-    disp('Evaluating lines from input file');
-    while ~feof(fid)
-        line = fgets(fid);
-        disp(line);
-        try
-            eval(line);
-        catch err
-            disp('Unable to parse line');
-            getReport(err)
-            return
-        end
-    end
     
-    disp('Closing input file')
-    fclose(fid);
+    is_deployed(varargin)
+    
 else
     if length(varargin) >= 1
         filenames = varargin{1};

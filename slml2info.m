@@ -38,40 +38,8 @@ answer = false;
 
 %parse vargargin
 if isdeployed()
-    %when method is deployed
-    if length(varargin) == 1
-        text_file = varargin{1};
-    else
-        error('Deployed function takes only 1 argument. Exiting method.');
-        return
-    end
+    is_deployed(varargin)
     
-    [filepath, name, ext] = fileparts(text_file);
-    
-    if ~exist(text_file, 'file')
-        warning('Input file does not exist. Exiting method.');
-        return
-    end
-    
-    disp(['Attempting to read input file ' text_file]);
-    fid = fopen(text_file, 'r' );
-    
-    disp('Evaluating lines from input file');
-    while ~feof(fid)
-        line = fgets(fid);
-        disp(line);
-        try
-            eval(line);
-        catch err
-            disp('Unable to parse line');
-            getReport(err)
-            return
-        end
-    end
-    fclose(fid);
-    if ~exist('options', 'var')
-        options = {};
-    end
 else
     if length(varargin) == 1
         files = varargin{1};
