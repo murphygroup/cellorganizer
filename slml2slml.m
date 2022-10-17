@@ -48,26 +48,9 @@ function model = slml2slml( varargin )
 
 model = struct([]);
 if isdeployed
-    disp('Running deployed version of slml2slml');
-
-    if nargin ~= 1
-        warning('Wrong number of input arguments. Exiting method');
-        return
-    end
-    text_file = varargin{1};
-
-    if ~exist(text_file, 'file')
-        warning('Input file does not exist. Exiting method');
-    end
-
-    disp(['Attempting to read input file ', text_file]);
-    fid = fopen(text_file, 'r' );
-    disp('Evaluating lines from input file');
-    while ~feof(fid)
-        line = fgets(fid);
-        eval(line);
-    end
-    fclose(fid);
+    
+    filename = is_deployed(varargin);
+    load(filename);
 else
     % @icaoberg method must accept exactly two parameters
     if nargin ~= 2

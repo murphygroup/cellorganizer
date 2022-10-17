@@ -172,7 +172,8 @@ tstart=cputime;
 
 if isdeployed
     
-    is_deployed(varargin)
+    filename = is_deployed(varargin);
+    load(filename);
     
     disp( 'Checking nuclear membrane images list' )
     if ~isempty( dnaImagesDirectoryPath )

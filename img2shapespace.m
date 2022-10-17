@@ -52,7 +52,8 @@ function answer = img2shapespace(varargin)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if isdeployed()
-    is_deployed(varargin)
+    filename = is_deployed(varargin);
+    load(filename);
 else
     if nargin == 2
         dnaImagesDirectoryPath = varargin{1};

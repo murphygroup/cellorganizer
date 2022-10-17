@@ -1,4 +1,4 @@
-function is_deployed( varargin )
+function filename = is_deployed( varargin )
 
 disp('Checking number of input arguments')
 if length(varargin) == 1
@@ -37,5 +37,11 @@ fclose(fid);
 if ~exist('options', 'var')
     options = {};
 end
+
+%save all the params to a temp file to be loaded back in main function
+[~,guid] = fileparts(tempname);
+filename = strcat('/tmp/', guid, '.mat');
+
+save(filename);
 
 end

@@ -38,7 +38,8 @@ answer = false;
 
 %parse vargargin
 if isdeployed()
-    is_deployed(varargin)
+    filename = is_deployed(varargin);
+    load(filename);
     
 else
     if length(varargin) == 1
