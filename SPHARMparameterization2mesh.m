@@ -3,7 +3,7 @@ function answer = spharmparameterization2mesh(varargin)
 % Oct. 11, 2022 R.F.Murphy fix argument handling for non-deployed
 if isdeployed
 
-    filename = is_deployed(varargin);
+    filename = is_deployed(varargin{1});
     load(filename);
     
     % this reads in param_output

@@ -30,6 +30,7 @@ while ~feof(fid)
         getReport(err)
         return
     end
+end
 
 disp('Closing input file')
 fclose(fid);

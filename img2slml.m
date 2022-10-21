@@ -172,7 +172,7 @@ tstart=cputime;
 
 if isdeployed
     
-    filename = is_deployed(varargin);
+    filename = is_deployed(varargin{1});
     load(filename);
     
     disp( 'Checking nuclear membrane images list' )

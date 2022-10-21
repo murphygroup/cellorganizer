@@ -2,7 +2,7 @@ function answer = SPHARMparameterization2image(varargin)
 
 if isdeployed
     
-    filename = is_deployed(varargin);
+    filename = is_deployed(varargin{1});
     load(filename);
     load(model_path);
     

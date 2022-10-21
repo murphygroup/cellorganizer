@@ -244,7 +244,7 @@ end
 
 if isdeployed
     
-    filename = is_deployed(varargin);
+    filename = is_deployed(varargin{1});
     load(filename);
     
 else

@@ -49,7 +49,7 @@ function model = slml2slml( varargin )
 model = struct([]);
 if isdeployed
     
-    filename = is_deployed(varargin);
+    filename = is_deployed(varargin{1});
     load(filename);
 else
     % @icaoberg method must accept exactly two parameters
