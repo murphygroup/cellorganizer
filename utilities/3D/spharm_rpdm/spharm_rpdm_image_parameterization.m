@@ -11,6 +11,7 @@ function [param_output] = spharm_rpdm_image_parameterization(cur_image, options,
 % (historical artifact) with calls to EqualAreaParametricMeshNewtonMethod 
 % 9/10/2022 R.F.Murphy reenable debug figures and add optional legend
 % to display on debug figures
+% 11/2/2022 R.F.Murphy don't allow debug when deployed
 
 if ~exist('options', 'var') || isempty(options)
     options = [];
@@ -185,7 +186,7 @@ param_output.execute_time = execute_time;
 param_output.hd_tries = [hd hd_1 hd_2 hd_3];
 param_output.final_hd = hd_final;
 
-if options.debug
+if options.debug && ~isdeployed
     figure_dir = [OutDirectory, 'figures/'];
     if ~exist(figure_dir,'dir') mkdir(figure_dir); end
 

@@ -18,7 +18,8 @@ options.hd_thresh = 10
 options.output_filepath = '/tmp/testSPHARMparameterization.mat';
 
 %read in selected image
-path = '/Users/murphy/Desktop/CellOrganizer294/images/HeLa/3D/processed/LAM_cell1_ch1_t1.tif';
+global CELLORGANIZER_ROOT_PATH
+path = [CELLORGANIZER_ROOT_PATH '/images/HeLa/3D/processed/LAM_cell1_ch1_t1.tif'];
 iinfo=imfinfo(path);
 for islice=1:length(iinfo)
     img(:,:,islice) = imread(path,'Index',islice);
@@ -26,14 +27,6 @@ end
 size(img)
 
 %downsample
-% for xpix = 8:8:size(img,1)
-%     for ypix = 8:8:size(img,2)
-%         for zpix = 2:2:size(img,3)
-%             ox = xpix/8; oy = ypix/8; oz = zpix/2;
-%             data(ox,oy,oz) = img(xpix,ypix,zpix);
-%         end
-%     end
-% end
 xyreduced = imresize(img,1/8);
 for zslice = 2:2:size(xyreduced,3)
     oz = zslice/2;
