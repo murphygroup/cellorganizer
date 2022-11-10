@@ -13,6 +13,30 @@ else
 
 end
 
+% set default options
+if ~isfield(options, 'NMfirsttry_maxiter')
+    options.NMfirsttry_maxiter = 300;
+end
+if ~isfield(options, 'NMretry_maxiter')
+    options.NMretry_maxiter = 100;
+end
+if ~isfield(options, 'NMretry_maxiterbig')
+    options.NMretry_maxiterbig = 300;
+end
+if ~isfield(options, 'NMcost_tol')
+    options.NMcost_tol = 1e-7;
+end
+if ~isfield(options, 'NMlarge_tol') 
+    options.NMlarge_tol = 1e-7;
+end
+if ~isfield(options, 'maxDeg')
+    options.maxDeg = 31;
+end
+if ~isfield(options, 'hd_thresh')
+    options.hd_thresh = 10;
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %cur_image = ml_readimage(image_path);
 % disp(size(cur_image));
 % disp(cur_image);
