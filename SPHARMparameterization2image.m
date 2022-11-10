@@ -24,6 +24,30 @@ end
 if ~isfield(options, 'debug')
     options.debug = false;
 end
+if ~isfield(options, 'figtitle')
+    options.figtitle = [];
+end
+if ~isfield(options, 'plot')
+    options.plot = 0;
+end
+if ~isfield(options, 'dpi')
+    options.dpi = 150;
+end
+if ~isfield(options, 'filename')
+    options.filename = [];
+end
+if ~isfield(options,'meshtype.type')
+    options.meshtype.type = 'triangular';
+end
+if ~isfield(options,'meshtype.nPhi')
+    options.meshtype.nPhi = 64;
+end
+if ~isfield(options,'meshtype.nTheta')
+    options.meshtype.nTheta = 32;
+end
+if ~isfield(options,'nVertices')
+    options.nVertices = 4002;
+end
 %%%%%%%%%%%%%%%%%%%%%
 
 deg = param_output.deg;
