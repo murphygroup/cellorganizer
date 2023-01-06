@@ -15,7 +15,7 @@ A CellOrganizer model consists of four components,
 *img2slml(dimensionality, dnaImagesDirectoryPath, cellImagesDirectoryPath, proteinImagesDirectoryPath, options)*
 
 =============================  ===============================================================
-        Inputs                                             Outputs
+        Inputs                                             Descriptions
 =============================  ===============================================================
   dimensionality                2D/3D
   dnaImagesDirectoryPath        Image path for training nuclear membrane submodel (Cell array of files or pattern)

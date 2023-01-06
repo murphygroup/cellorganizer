@@ -7,7 +7,7 @@ This function generates a report from information extracted from a generative mo
 *slml2info(filenames, options)*
 
 =============================  ===============================================================
-        Inputs                                             Outputs
+        Inputs                                             Descriptions
 =============================  ===============================================================
   filenames                     List of files
   options                       Options structure

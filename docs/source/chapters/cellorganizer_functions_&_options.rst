@@ -15,6 +15,12 @@ Options listed for the 5 main functions of CellOrganizer. Default setting shown 
 
 .. include:: cellorganizer_options/slml2slml_options.rst
 
+.. include:: cellorganizer_options/img2spharmparameterization_options.rst
+
+.. include:: cellorganizer_options/spharmparameterization2image_options.rst
+
+.. include:: cellorganizer_options/spharmparameterization2mesh_options.rst
+
 .. include:: cellorganizer_options/options_for_galaxy.rst
 
 .. include:: cellorganizer_options/options_for_docker.rst

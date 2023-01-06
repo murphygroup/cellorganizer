@@ -11,21 +11,21 @@ CellOrganizer Documentation
 .. toctree::
    :maxdepth: 2
 
-   ./source/chapters/getting_started
+   ./chapters/getting_started
    
-   ./source/chapters/cellorganizer_functions_&_options
+   ./chapters/cellorganizer_functions_&_options
 
-   ./source/chapters/cellorganizer_for_matlab
+   ./chapters/cellorganizer_for_matlab
 
-   ./source/chapters/cellorganizer_for_docker
+   ./chapters/cellorganizer_for_docker
 
-   ./source/chapters/model_class_and_type
+   ./chapters/model_class_and_type
 
-   ./source/chapters/advanced
+   ./chapters/advanced
 
-.. commented out sections
-   ./source/chapters/cellorganizer_for_singularity
-   ./source/chapters/cellorganizer_for_galaxy
+.. These are commented out
+   ./chapters/cellorganizer_for_singularity
+   ./chapters/cellorganizer_for_galaxy
 
 .. Indices and tables
 .. ##################

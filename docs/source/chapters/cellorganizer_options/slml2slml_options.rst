@@ -7,7 +7,7 @@ This function combines multiple models into a single model file.
 *slml2report(files, options)*
 
 =============================  ===============================================================
-        Inputs                                             Outputs
+        Inputs                                             Descriptions
 =============================  ===============================================================
   files                         list of paths of models that need to be combined
   options                       List of options
