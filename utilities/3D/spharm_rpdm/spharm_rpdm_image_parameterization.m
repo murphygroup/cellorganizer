@@ -12,6 +12,7 @@ function [param_output] = spharm_rpdm_image_parameterization(cur_image, options,
 % 9/10/2022 R.F.Murphy reenable debug figures and add optional legend
 % to display on debug figures
 % 11/2/2022 R.F.Murphy don't allow debug when deployed
+% 1/31/2023 R.F.Murphy correct passing of options to spharm2image
 
 if ~exist('options', 'var') || isempty(options)
     options = [];
@@ -218,7 +219,9 @@ if options.debug && ~isdeployed
     spharm2meshfigure(deg,fvec,meshtype,true,figtitle,figure_filename,dpi);
 
 % generate image from spherical parameterization
-    img = spharm2image(deg,fvec,meshtype);
+    meshtypeoptions = []; %1/31/2023 pass meshtype using options structure
+    meshtypeoptions.meshtype = meshtype;
+    img = spharm2image(deg,fvec,meshtypeoptions);
     %size(img)
     figure
     for zslice=1:size(img,3)

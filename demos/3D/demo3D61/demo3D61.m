@@ -108,7 +108,9 @@ options_spharm.spharm_rpdm.NMretry_maxiter = 100;
 options_spharm.spharm_rpdm.NMretry_maxiterbig = 300;
 % this debug option is specifically for creating figures showing SPHARM_RPDM
 % parameterization compared to original image
-options_spharm.spharm_rpdm.debug = true;
+options_spharm.spharm_rpdm.debug = false;
+% should be false for spharm_obj models
+options_spharm.if_skip_cell_nuclear_model = false;
 
 % setup_everything:
 options.options_spharm = options_spharm;
@@ -134,7 +136,7 @@ options.max_obj_size = 400;
 options.local_thresholding_sigma = 5;
 options.object_detection_thresPerc = 0.1;
 %options.masks = mask_paths;
-% options.if_skip_cell_nuclear_model = true;
+% only set to true for making protein models that don't need cell/nuclear reference
 options.if_skip_cell_nuclear_model = false;
 
 tic; answer = img2slml(dimensionality, dna_paths, cell_paths, prot_paths , options ); toc,
@@ -147,3 +149,4 @@ options.viewangle = [0,90]; %down z axis
 %options.viewangle = [90,0]; %side view
 options.hd_threshold = 10.; % filter out objects with Hausdorff distance greater than this
 slml2info({'model.mat'},options);
+web(['report' filesep 'index.html'])

@@ -1,16 +1,18 @@
 function img = spharm2image(deg,fvec,options)
+% edits
+% 1/31/2023 R.F.Murphy correct default meshtype from "triangle" to "triangular"
 
-% default_options = [];
-% default_options.meshtype.type = 'triangle';
-% default_options.meshtype.nVertices = 4002;
-% default_options.options.oversampling_scale = 2;
-% default_options.debug = true;
-% 
-% if ~exist('options', 'var')
-%     options = default_options;
-% else
-%     options = process_options_structure(default_options, options);
-% end
+default_options = [];
+default_options.meshtype.type = 'triangular'; %1/31/2023
+default_options.meshtype.nVertices = 4002;
+default_options.options.oversampling_scale = 2;
+default_options.debug = true;
+
+if ~exist('options', 'var')
+    options = default_options;
+else
+    options = process_options_structure(default_options, options);
+end
 
 mesh = [];
 [mesh.vertices,mesh.faces] = spharm2meshfigure(deg,fvec,options.meshtype);

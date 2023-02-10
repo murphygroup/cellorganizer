@@ -2,6 +2,8 @@ function answer = spharm_rpdm_v2(spharm_obj_files,options)
 %call to spharm_rpdm
 % 1/26/2021 R.F. Murphy - save indices of objects that were successfully parameterized
 % 2/8/2021 R.F. Murphy - set a default hd_thresh
+% 1/31/2023 R.F. Murphy - correct passing of objects (was using nuc_path; s/b cell_path)
+%                       add check for correct train.flag
 
 %IMG2SLML2
 answer = false;
@@ -70,10 +72,14 @@ disp('Setting up model options');
 options = setup_model_options(spharm_obj_files, spharm_obj_files, {}, options);
 %Could be cleaned up
 
+% check if train flag option matches requirements
+if options.train.flag ~= 'cell'
+    warning(['options.train.flag was set to ' options.train.flag '; should be "cell"']);
+    options.train.flag = 'cell';
+end
 
 paramfiles = cell(size(spharm_obj_files));
 isdone = false(size(spharm_obj_files));
-
 
 disp(' '); print_large_title('Processing images');
 for i = 1:length(spharm_obj_files)
@@ -91,7 +97,8 @@ for i = 1:length(spharm_obj_files)
         continue
     end
     
-    [spharm_obj,options.dna_image_path] = readfileifnonblank(spharm_obj_files,i);
+    [spharm_obj,options.cell_image_path] = readfileifnonblank(spharm_obj_files,i);
+    %options.nuc_image_path = options.cell_image_path;
     [immask,options.crop_image_path] = readfileifnonblank(options.masks,i);
 
     
