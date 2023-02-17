@@ -1,6 +1,7 @@
 function [ nuclearparams, cellparams, proteinparams ] = getModelReportParams( model, param )
 %GETMODELREPORTPARAMS 
 %   Returns the names of the appropriate fields for each type of model
+% 02/16/2023 R.F.Murphy don't define nuclear report params if spharm-rpdm
 
 if ~exist('param', 'var') | isempty(param)
     param.includenuclear = 1;
@@ -32,7 +33,9 @@ if is3D
     end
     
     if param.includenuclear
-        nuclearparams = {'height.stat.mu', 'height.stat.sigma'}; 
+        if ~strcmpi(model.nuclearShapeModel.type,'spharm_rpdm') %02/16/2023
+            nuclearparams = {'height.stat.mu', 'height.stat.sigma'};
+        end
     end
     
 else

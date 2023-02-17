@@ -1,4 +1,5 @@
-function yAll = compare_shape_model_spharm_obj(models, param, fileID)
+function [yAll, shapecompscore, p_val] = compare_shape_model_spharm_obj(models, param, fileID)
+% 02/16/2023 R.F. Murphy pass back comparison scores for saving
 
 idx = [0];
 xAll = [];
@@ -23,10 +24,10 @@ for j=1:length(models)-1
         prob1 = sum(Idx(2:end) < d1)/8;
         temp(i)=prob1.*log((prob1 + 1e-7)/prob2) + (1-prob1).*log((1-prob1+ 1e-7)/(1-prob2));
     end
-
+    shapecompscore(j) = mean(temp);
 
     text2html(fileID, sprintf('Shape space comparison score between model1 and model2: %.4f;\n', mean(temp)));
-    p_val = permutation_test(mean(temp), yAll{end});
+    p_val(j) = permutation_test(mean(temp), yAll{end});
     text2html(fileID, sprintf('P value of shape space comparison score: %.4f;\n', p_val));
     % KLD = clique_percolation_spatial(y1, y2);
     % text2html(fileID, sprintf('Clique percolation divergence between model1 and model2: %.4f;\n', KLD));

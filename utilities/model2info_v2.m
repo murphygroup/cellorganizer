@@ -35,6 +35,7 @@ function model2info_v2( model, fileID, options )
 % 2021/03/05 R.F. Murphy modified to use new name for hd values
 % 2021/04/24 R.F. Murphy merged in Serena's show_spatial_distribution
 % 2022/08/15 R.F. Murphy add hausdorff distance plots
+% 2023/02/16 R.F. Murphy make figures visible in case running deployed
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MODEL.NAME %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 header2html( fileID, 'Model name');
@@ -359,7 +360,7 @@ end
 function plot_hausdorff_distances(fileID,model)
 
 if isfield(model,'cellShapeModel')
-    f = figure('visible','on');
+    f = figure('visible','off');
     histogram(log10(model.cellShapeModel.hausdorff_distances(1,:)),25,'FaceColor','red')
     xlabel('Log10 Hausdorff distance between original and SPHARM-RPDM model');
     ylabel('Frequency')
@@ -373,7 +374,7 @@ if isfield(model,'cellShapeModel')
         'Hausdorff distances for reconstructions');
         hold off
         % now plot scatter of nuclear vs cell
-        f = figure('visible','on');
+        f = figure('visible','off');
         plot(log10(model.cellShapeModel.hausdorff_distances(2,:)), ...
             log10(model.cellShapeModel.hausdorff_distances(1,:)),'d')
         xlabel('log10 Hausdorff distance for cell shape')
@@ -390,7 +391,7 @@ if isfield(model,'cellShapeModel')
         'Hausdorff distances for reconstructions');
     end
 elseif isfield(model,'nuclearShapeModel')
-    f = figure('visible','on');
+    f = figure('visible','off');
     histogram(log10(model.cellShapeModel.hausdorff_distances(1,:)),25,'FaceColor','green')
     xlabel('Log10 Hausdorff distance between original and SPHARM-RPDM model');
     ylabel('Frequency')

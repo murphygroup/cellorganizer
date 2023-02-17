@@ -20,6 +20,7 @@ function [enrichment_means, enrichment_stds, all_enrichments, all_timepoints, h]
 % 03/01/2021 R.F.Murphy change interpolation from CubicL to PCHIP due to
 % Matlab deprecating CubicL
 % 03/02/2021 R.F.Murphy undo change to CubicL and add documentation for options
+% 02/16/2023 R.F.Murphy make figures invisible in case running deployed
 
 % values for options (all prefixed by model.tcell.)
 %
@@ -292,8 +293,8 @@ for enrichment_region_percentile_index = 1:length(model_mean_enrichment_regions)
   % Recolor the image:
   image_to_show = ind2rgb(floor(contrast_stretch(image_to_show) .* (size(illustration_colormap_to_use, 1) - 1)) + 1, illustration_colormap_to_use);
   % Write:
-  figure,
-  imshow(image_to_show, []);
+  %figure('visible','off'); %02/16/2023 no need to show since saving image
+  %imshow(image_to_show, []);
   image_filename = [sprintf('%smodel_mean_enrichment_region_mdl-type_%s_enr-prct%d', master_script_options.model_prefix, model_type, enrichment_region_percentile)];
   image_full_filename = [ image_filename, '.png'];
   imwrite(image_to_show, image_full_filename)
@@ -401,7 +402,7 @@ for enrichment_type_index = 1:number_enrichment_types
     end
     all_enrichments_mean{enrichment_type_index} = current_enrichment_means;
     all_enrichments_std{enrichment_type_index} = current_enrichment_stds;
-    figure,
+    f1=figure('visible','off'); %2/16/2023 make figure invisible in case deployed
     % by default we only calculate one type of enrichment
     h = plot(model_relative_times, current_enrichment_means);
     errorbar(model_relative_times, current_enrichment_means, current_enrichment_stds);
@@ -410,7 +411,7 @@ for enrichment_type_index = 1:number_enrichment_types
     xlabel('relative times');
     figure_filename = [sprintf('%smodel_mean_enrichment_plot_mdl-type_%s_enr-prct%d', master_script_options.model_prefix, model_type, enrichment_region_percentile)];
     figure_full_filename = [ figure_filename, '.png'];
-    saveas(gcf, figure_full_filename)
+    saveas(f1, figure_full_filename)
     fprintf('Wrote figure %s.png\n', figure_filename)
 end
 

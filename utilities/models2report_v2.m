@@ -53,7 +53,9 @@ function models2report_v2(models, param, classlabels, fileID)
 %
 % For additional information visit http://murphylab.web.cmu.edu or
 % send email to murphy@cmu.edu
-
+%
+% Feb. 16, 2023 R.F.Murphy correct test for whether nuclear shape model is
+% SPHARM; save comparison scores to .mat file
 
 
 %put includespharm under the includeprot
@@ -325,19 +327,16 @@ if param.includeprot
         for i=1:length(models)
             models_ShapeModel{i} = models{i}.proteinModel.spharm_obj_model.cellShapeModel;
         end
-        consolidated_model=compare_shape_space_spharm_obj(models_ShapeModel,fileID,param);
+%        [consolidated_model,shapecomp,shapepvals]=compare_shape_space_spharm_obj(models_ShapeModel,fileID,param);
+%        total_variation=consolidated_model.total_variation;
+%        text2html(fileID, ['Total_Variation=''%s'';\n', total_variation]);
         
-        reducedSPHARMVec=compare_shape_model_spharm_obj(models_ShapeModel, param, fileID);
-%         total_variation=consolidated_model.total_variation;
-%         text2html(fileID, ['Total_Variation=''%s'';\n', total_variation]);
+        [reducedSPHARMVec,shapecomparisonscores,shapecomparisonpvals]=compare_shape_model_spharm_obj(models_ShapeModel, param, fileID);
 
         for j=1:length(models)-1
         %spatial model comparision
             models_SpatialModel{1}=models{j}.proteinModel.spharm_obj_model.spatial;
             models_SpatialModel{2}=models{end}.proteinModel.spharm_obj_model.spatial;
-
-
-
 
             header2html(fileID, 'Spatial Model Comparison');
     %         compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
@@ -351,11 +350,8 @@ if param.includeprot
 
             [x,y,z]=sph2cart(anglestheta,anglesphi,normdists);
             
-            
-
             pos = horzcat(x',y',z');
             [coeff,score,latent] = pca(pos);
-
             
             prob2 = d1/(d1+d2);
             temp = zeros(1, d1+d2);
@@ -365,32 +361,42 @@ if param.includeprot
                 temp(i)=prob1.*log((prob1 + 1e-7)/prob2) + (1-prob1).*log((1-prob1+ 1e-7)/(1-prob2));
             end
 
+            spatialcomparisonscores(j) = mean(temp);
             text2html(fileID, sprintf('Spatial distribution comparison score between model%d and model%d: %.4f;\n', j, length(models), mean(temp)));
+            
             KL_div = show_spatial_distribution(models_SpatialModel,fileID);
             p_val = spatial_permutation_test(KL_div, x(d1+1:end), y(d1+1:end), z(d1+1:end));
-            text2html(fileID, sprintf('P value of hape spatial distribution divergence: %.4f;\n', p_val));
+            spatialcomparisonspval(j) = p_val;
+            text2html(fileID, sprintf('P value of spatial distribution divergence: %.4f;\n', p_val));
 
-            p_val = permutation_test(mean(temp), pos(d1+1:end,:));
+            %p_val = permutation_test(mean(temp), pos(d1+1:end,:));
         end
 
         X = [ones(length(reducedSPHARMVec{end}), 1) pos(length(reducedSPHARMVec{j})+1:end, :)];
         B = X\reducedSPHARMVec{end}(:, 1);
         yCalc = X*B;
-        sq1 = 1 - sum((reducedSPHARMVec{end}(:, 1) - yCalc).^2)/sum((reducedSPHARMVec{end}(:, 1) - mean(reducedSPHARMVec{end}(:, 1))).^2);
-        text2html(fileID, sprintf('R2: %.4f;\n', sq1));
+        shapecomparisonsR2 = 1 - sum((reducedSPHARMVec{end}(:, 1) - yCalc).^2)/sum((reducedSPHARMVec{end}(:, 1) - mean(reducedSPHARMVec{end}(:, 1))).^2);
+        text2html(fileID, sprintf('R2: %.4f;\n', shapecomparisonsR2));
+
+        save('spharm_obj_comparison','shapecomparisonscores','shapecomparisonpvals',...
+            'spatialcomparisonscores','spatialcomparisonspval','shapecomparisonsR2')
     end
 end
 
 if param.includecell
     if strcmpi(models{1}.cellShapeModel.type,'spharm_rpdm')
         models_cellShapeModel{1} = models{1}.cellShapeModel;
-        models_cellShapeModel{2} = models{2}.cellShapeModel; 
+        models_cellShapeModel{2} = models{2}.cellShapeModel;
+        header2html(fileID, 'SPHARM-RPMD Cell Shape Model Comparison');
+        text2html(fileID, sprintf('Number of cells: Model 1 %i; Model 2 %i',...
+            size(models{1}.cellShapeModel.cell_params,3),...
+            size(models{2}.cellShapeModel.cell_params,3)));
         compare_shape_space_spharm_obj(models_cellShapeModel,fileID,param);
     end
 end
  
 if param.includenuclear
-    if strcmpi(models{1}.cellShapeModel.type,'spharm_rpdm')
+    if strcmpi(models{1}.nuclearShapeModel.type,'spharm_rpdm') %corrected 2/13/2023
         models_nucShapeModel{1} = models{1}.nuclearShapeModel;
         models_nucShapeModel{2} = models{2}.nuclearShapeModel;
         compare_shape_space_spharm_obj(models_nucShapeModel,fileID,param);

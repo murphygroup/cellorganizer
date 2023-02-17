@@ -1,9 +1,9 @@
 function KL_div = show_spatial_distribution( model,fileID)
 %Author : Serena Abraham
-
+% 02/16/2023 R.F.Murphy Make figures invisible in case running deployed
 
     KL_div = 0;
-    f = figure('visible','on');
+    f = figure('visible','off');
     spatial=model;
     if length(model) > 1
         normdists=horzcat(model{1}.normdists, model{2}.normdists);
@@ -71,7 +71,7 @@ function KL_div = show_spatial_distribution( model,fileID)
     %final_range2=ml_mappos(final_range);
     final_range2=ml_mappos(horzcat(new_x,new_y,new_z));
    
-    f2 = figure('visible','on');
+    f2 = figure('visible','off');
 %     y_b = mvksdensity(spatial.mappos_x(:,2:6),final_range2(:,2:6),'Bandwidth',0.28,'Kernel','normal');
     if length(model) > 1
         y_b1 = mvksdensity([x1(1:d1)' y1(1:d1)' z1(1:d1)'],[new_x new_y new_z],'Bandwidth',0.28,'Kernel','normal');
@@ -79,7 +79,7 @@ function KL_div = show_spatial_distribution( model,fileID)
         scatter3(new_x,new_y,new_z, 20, 'filled','CData',y_b2);
         title('Spatial Probability Distribution of Model 2 fitted to a Gaussian Kernel');
         colorbar;
-        f3 = figure('visible','on');
+        f3 = figure('visible','off');
         scatter3(new_x,new_y,new_z, 20, 'filled','CData',abs(y_b2-y_b1));
         title('Difference in Spatial Probability Distribution between 2 Models fitted to a Gaussian Kernel');
         colorbar;
