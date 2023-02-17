@@ -33,6 +33,7 @@
 % 
 % Li Shen
 % 11/09/2004 - create
+% 02/17/2023 - R.F.Murphy suppress printing inside L loop
 
 function obj = fill3dholes(obj,conn,epsilon,name)
 
@@ -96,7 +97,7 @@ dn = [3 3 3]; nb = ones(dn); nb(2,2,2) = 0;
 
 % while loop
 while ~isempty(L)
-	fprintf('|L|=%d\n',length(L));
+%	fprintf('|L|=%d\n',length(L));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 	[sorted,order] = sort(phi(L));
 % 	idx = L(order(end)); L = setdiff(L,idx);
