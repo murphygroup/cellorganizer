@@ -43,7 +43,7 @@ The image also comes with
   - `beautifulsoup4 4.7 <https://www.crummy.com/software/BeautifulSoup/bs4/doc/>`_
   - protobuf 3.7
   - `xlrd 2.0.1 <https://xlrd.readthedocs.io/en/latest/>`_
-  - `aicsimageio 4.9.4 <https://github.com/AllenCellModeling/aicsimageio/tags>
+  - `aicsimageio 4.9.4 <https://github.com/AllenCellModeling/aicsimageio/tags>`_
 
 About Docker
 ============
@@ -64,6 +64,8 @@ Installing CellOrganizer for Docker
 Detailed instructions of how to install and successfully run Cellorganizer for Docker can be found here:
 
 `CellOrganizer Docker Instructions <https://docs.google.com/document/d/1v1Kt6ZDUQYIprDndEJonsxtGYgsRIEy4W4E1LLZiS1E/edit?usp=sharing>`_
+
+
 .. Setup
 .. =====
 .. The instructions below describe
