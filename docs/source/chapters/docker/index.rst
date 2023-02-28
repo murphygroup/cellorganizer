@@ -63,7 +63,7 @@ Installing CellOrganizer for Docker
 
 Detailed instructions of how to install and successfully run Cellorganizer for Docker can be found here:
 
-`CellOrganizer Docker Instructions <https://docs.google.com/document/d/1v1Kt6ZDUQYIprDndEJonsxtGYgsRIEy4W4E1LLZiS1E/edit?usp=sharing>` _
+`CellOrganizer Docker Instructions <https://docs.google.com/document/d/1v1Kt6ZDUQYIprDndEJonsxtGYgsRIEy4W4E1LLZiS1E/edit?usp=sharing>`_
 .. Setup
 .. =====
 .. The instructions below describe
