@@ -59,7 +59,7 @@ options_image.output_filepath = '/tmp/SPHARMparameterization2image.mat';
 options_image.cropping = 'tight';
 options_image.oversampling_scale = 1;
 options_image.debug = true;
-options_image
+
 SPHARMparameterization2image(param_output, options_image);
 abc=load(options_image.output_filepath);
 recon_img = abc.img;

@@ -28,26 +28,41 @@ options.verbose = 0;
 options.debug = 0;
 options.display = 0;
 options.model.id = 123;
-options.downsampling = [5, 5, 1];
+options.downsampling = [8, 8, 2];
 options.model.resolution = [0.049, 0.049, 0.2000];
 options.if_skip_cell_nuclear_model = 0;
+
+options.model.spharm_rpdm.postprocess = 1;
+options.model.spharm_rpdm.alignment_method = 'major_axis';
+options.model.spharm_rpdm.rotation_plane = 'xy';
+options.model.spharm_rpdm.maxDeg = 31;
+options.model.spharm_rpdm.latent_dim = 15;
+options.model.spharm_rpdm.segminnucfraction = 0.1;
+options.model.spharm_rpdm.components = {'cell', 'nuc'};
 
 % #set options that control what kind of model is created
 options.train.flag = 'framework';
 options.cell.class = 'cell_membrane';
-options.cell.type = 'ratio';
-% # options.nucleus.class = 'nuclear_membrane';
-% # options.nucleus.type = 'cylindrical_surface';
+options.cell.type = 'spharm_rpdm';
+options.nucleus.class = 'nuclear_membrane';
+options.nucleus.type = 'spharm_rpdm';
 % #options.model.spharm_rpdm.components = {'cell'};
 % # if we are going to include nuclear/DNA images;
-options.nucleus.class = 'nuclear_membrane';
-options.nucleus.type = 'cylindrical_surface';
+% options.nucleus.class = 'nuclear_membrane';
+% options.nucleus.type = 'cylindrical_surface';
+
+
+options.hd_threshold = 10;
+options.hd_thresh = 10;
+
+
+
 
 options.masks = {};
 
 directory = 'images/HeLa/3D/processed';
 dna = {}; cellm = {}; ptions.labels = {};
-for i = 1:10
+for i = 1:3
     dna{i} = [directory filesep 'LAM_cell1' num2str(i-1) '_ch0_t1.tif'];
     cellm{i} = [directory filesep 'LAM_cell1' num2str(i-1) '_ch1_t1.tif'];
 %     protein{i} = [directory filesep 'LAM_cell1' num2str(i) '_ch2_t1.tif'];
