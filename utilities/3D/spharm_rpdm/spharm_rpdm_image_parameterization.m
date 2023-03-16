@@ -13,6 +13,7 @@ function [param_output] = spharm_rpdm_image_parameterization(cur_image, options,
 % to display on debug figures
 % 11/2/2022 R.F.Murphy don't allow debug when deployed
 % 1/31/2023 R.F.Murphy correct passing of options to spharm2image
+% 2/13/2023 R.F.Murphy correct titling of maxslice plots
 
 if ~exist('options', 'var') || isempty(options)
     options = [];
@@ -234,11 +235,11 @@ if options.debug && ~isdeployed
     subplot(1,2,1)
     [ignorethis,maxsliceo]=max(squeeze(sum(sum(cur_image,2),1)));
     imshow(cur_image(:,:,maxsliceo));
-    legend(['orig: maxslice=' num2str(maxsliceo)]);
+    title(['orig: maxslice=' num2str(maxsliceo)]);
     subplot(1,2,2)
     [ignorethis,maxslicer]=max(squeeze(sum(sum(img,2),1)));
     imshow(img(:,:,maxslicer));
-    legend(['recon: maxslice=' num2str(maxslicer)]);
+    title(['recon: maxslice=' num2str(maxslicer)]);
     figure_filename = sprintf('%sreconst_images_maxslice_%s', figure_dir, imagelegend);
     export_fig(figure_filename, '-opengl', '-png', '-a1', ['-r', num2str(dpi)]);
     close
