@@ -3,6 +3,7 @@ function [ consolidated_model ] = compare_shape_space_spharm_obj( models,fileID,
 % used for comparisons of both cell/nuclear shape models and for spharm_obj models
 
 % 8/13/2022 R.F.Murphy add comparison of paired models
+% 3/21/2023 R.F.Murphy fix thumbnail saving
 
     consolidated_model=consolidateshapespacemodels(models{1},models{2});
 
@@ -66,10 +67,10 @@ for i=1:length(models)-1
     updateLabels(consolidated_model,options);
     fname = sprintf('show_shape_space_%d.png', i);
     saveas( f, fname, 'png');
-    I = imread(fname);
-    I = imresize( I, 0.50 );
+    fP = f.Position;
+    f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
     fname2 = sprintf('show_shape_space_%d_thumbnail.png', i);
-    imwrite( I, fname2 );
-    img2html(fileID,fname,fname2,'Joint shape space from SPRM-RPDM models.');
+    saveas( f, fname2, 'png' ); 3/21/2023
+    img2html(fileID,fname,fname2,'Joint shape space from SPHARM-RPDM models.');
 end
 end

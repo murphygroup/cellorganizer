@@ -1,6 +1,7 @@
 function KL_div = show_spatial_distribution( model,fileID)
 %Author : Serena Abraham
 % 02/16/2023 R.F.Murphy Make figures invisible in case running deployed
+% 03/20/2023 R.F.Murphy revise logic of figures depending on number of models 
 
     KL_div = 0;
     f = figure('visible','off');
@@ -46,16 +47,15 @@ function KL_div = show_spatial_distribution( model,fileID)
         legend('model', 'cell boundary');
     end
     hold on
-    
-   
+
     
     title('Spatial Distribution of objects');
     hold off;
     saveas( f, 'show_spatial_distribution.png', 'png');
-    I = imread( 'show_spatial_distribution.png' );
-    I = imresize( I, 0.50 );
-    imwrite( I, 'show_spatial_distribution_thumbnail.png' );
-    img2html(fileID,'show_spatial_distribution.png','show_spatial_distribution_thumbnail.png','Spatial Distribution across both models');
+    fP = f.Position;
+    f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+    saveas( f, 'show_spatial_distribution_thumbnail.png', 'png' ); 3/20/2023
+    img2html(fileID,'show_spatial_distribution.png','show_spatial_distribution_thumbnail.png','Spatial Distribution of objects');
     
     az_ = [];
     phi_ = [];
@@ -72,43 +72,34 @@ function KL_div = show_spatial_distribution( model,fileID)
     final_range2=ml_mappos(horzcat(new_x,new_y,new_z));
    
     f2 = figure('visible','off');
-%     y_b = mvksdensity(spatial.mappos_x(:,2:6),final_range2(:,2:6),'Bandwidth',0.28,'Kernel','normal');
     if length(model) > 1
         y_b1 = mvksdensity([x1(1:d1)' y1(1:d1)' z1(1:d1)'],[new_x new_y new_z],'Bandwidth',0.28,'Kernel','normal');
         y_b2 = mvksdensity([x1(d1+1:end)' y1(d1+1:end)' z1(d1+1:end)'],[new_x new_y new_z],'Bandwidth',0.28,'Kernel','normal');
-        scatter3(new_x,new_y,new_z, 20, 'filled','CData',y_b2);
-        title('Spatial Probability Distribution of Model 2 fitted to a Gaussian Kernel');
-        colorbar;
-        f3 = figure('visible','off');
         scatter3(new_x,new_y,new_z, 20, 'filled','CData',abs(y_b2-y_b1));
-        title('Difference in Spatial Probability Distribution between 2 Models fitted to a Gaussian Kernel');
+        title('Difference in Spatial Probability Distribution between 2 Models');
         colorbar;
-        
-        
-    else
-        y_b = mvksdensity([x1' y1' z1'],[new_x new_y new_z],'Bandwidth',0.28,'Kernel','normal');
-        scatter3(new_x,new_y,new_z, 20, 'filled','CData',y_b);
-        title('Spatial Probability Distribution of Model fitted to a Gaussian Kernel');
-        colorbar;
-    end
-    saveas( f2, 'spatial_model_fit.png', 'png');
-    I = imread( 'spatial_model_fit.png' );
-    I = imresize( I, 0.50 );
-    imwrite( I, 'spatial_model_fit_thumbnail.png' );
-    img2html(fileID,'spatial_model_fit.png','spatial_model_fit_thumbnail.png','Spatial Probability Distribution fitted to a Gaussian Kernel');
-
-    if length(model) > 1
-        saveas( f3, 'spatial_model_diff.png', 'png');
-        I = imread( 'spatial_model_diff.png' );
-        I = imresize( I, 0.50 );
-        imwrite( I, 'spatial_model_diff_thumbnail.png' );
-        img2html(fileID,'spatial_model_diff.png','spatial_model_diff_thumbnail.png','Difference in Spatial Probability Distribution between 2 Models fitted to a Gaussian Kernel');
+        saveas( f2, 'spatial_model_diff.png', 'png');
+        fP = f2.Position;
+        f2.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+        saveas( f2, 'spatial_model_diff_thumbnail.png', 'png' ); 3/20/2023
+        img2html(fileID,'spatial_model_diff.png','spatial_model_diff_thumbnail.png','Difference in Spatial Probability Distribution between 2 Models');
         y_b1 = y_b1 + 1e-5;
         y_b2 = y_b2 + 1e-5;
         y_b1 = y_b1/sum(y_b1);
         y_b2 = y_b2/sum(y_b2);
         KL_div = sum(y_b1.*log(y_b1./y_b2));
         text2html(fileID, sprintf('KL divergence between spatial distributions of model1 and model2: %.4f;\n', KL_div));
+       
+    else
+        y_b = mvksdensity([x1' y1' z1'],[new_x new_y new_z],'Bandwidth',0.28,'Kernel','normal');
+        scatter3(new_x,new_y,new_z, 20, 'filled','CData',y_b);
+        title('Spatial Probability Distribution of Model fitted to a Gaussian Kernel');
+        colorbar;
+        saveas( f2, 'spatial_model_fit.png', 'png');
+        fP = f2.Position;
+        f2.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+        saveas( f2, 'spatial_model_fit_thumbnail.png', 'png' ); 3/20/2023
+        img2html(fileID,'spatial_model_fit.png','spatial_model_fit_thumbnail.png','Spatial Probability Distribution fitted to a Gaussian Kernel');
         
     end
 end

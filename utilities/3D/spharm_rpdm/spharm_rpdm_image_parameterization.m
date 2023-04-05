@@ -13,7 +13,7 @@ function [param_output] = spharm_rpdm_image_parameterization(cur_image, options,
 % to display on debug figures
 % 11/2/2022 R.F.Murphy don't allow debug when deployed
 % 1/31/2023 R.F.Murphy correct passing of options to spharm2image
-% 2/13/2023 R.F.Murphy correct titling of maxslice plots
+% 2/13/2023 R.F.Murphy correct titling of maxslice plots; add jaccard index
 
 if ~exist('options', 'var') || isempty(options)
     options = [];
@@ -176,6 +176,20 @@ end
 %maxDeg = 31;
 filename = '';
 [fvec, deg, Z] = create_SPHARM_des_LSF(vertices, faces, sph_verts, maxDeg, filename);
+% generate reconstructed image from spherical parameterization
+meshtype = [];
+meshtype.type = 'triangular';
+meshtypeoptions = []; %1/31/2023 pass meshtype using options structure
+meshtypeoptions.meshtype = meshtype;
+meshtypeoptions.imagesize = size(cur_image);
+imgr = spharm2image(deg,fvec,meshtypeoptions);
+size(imgr)
+for zslice=1:size(imgr,3)
+    img(:,:,zslice)=transpose(imgr(:,:,zslice));
+end
+size(img)
+jaccard_index = align_calc_jaccard(cur_image,img);
+fprintf("Jaccard index=%f\n",jaccard_index)
 
 param_output = struct();
 param_output.deg = deg;
@@ -187,6 +201,7 @@ param_output.cost_mat = cost_mat;
 param_output.execute_time = execute_time;
 param_output.hd_tries = [hd hd_1 hd_2 hd_3];
 param_output.final_hd = hd_final;
+param_output.jaccard_index = jaccard_index;
 
 if options.debug && ~isdeployed
     figure_dir = [OutDirectory, 'figures/'];
@@ -219,11 +234,7 @@ if options.debug && ~isdeployed
     %meshtype.nVertices = 4002;
     spharm2meshfigure(deg,fvec,meshtype,true,figtitle,figure_filename,dpi);
 
-% generate image from spherical parameterization
-    meshtypeoptions = []; %1/31/2023 pass meshtype using options structure
-    meshtypeoptions.meshtype = meshtype;
-    img = spharm2image(deg,fvec,meshtypeoptions);
-    %size(img)
+% make figure from reconstructed image
     figure
     for zslice=1:size(img,3)
         imshow(img(:,:,zslice));

@@ -56,6 +56,7 @@ function models2report_v2(models, param, classlabels, fileID)
 %
 % Feb. 16, 2023 R.F.Murphy correct test for whether nuclear shape model is
 % SPHARM; save comparison scores to .mat file
+% March 21, 2023 R.F.Murphy add shape space plot to spharm-obj
 
 
 %put includespharm under the includeprot
@@ -195,9 +196,9 @@ if length(yall)>0
         ylabel(paramnames{i});
     end
     saveas(figures(fig_count), sprintf('image%d.png', fig_count), 'png');
-    I = imread( sprintf('image%d.png', fig_count) );
-    I = imresize( I, 0.5 );
-    imwrite( I, sprintf('image%d_thumbnail.png', fig_count) );
+    fP = figures(fig_count).Position;
+    figures(fig_count).Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+    saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); 3/21/2023
     img2html(fileID, sprintf('image%d.png', fig_count), ...
         sprintf('image%d_thumbnail.png', fig_count), 'Parameter comparison');
   end
@@ -231,9 +232,9 @@ if length(yall)>0
  hold off;
 
  saveas(figures(fig_count), sprintf('image%d.png', fig_count), 'png');
- I = imread( sprintf('image%d.png', fig_count) );
- I = imresize( I, 0.5 );
- imwrite( I, sprintf('image%d_thumbnail.png', fig_count) );
+ fP = figures(fig_count).Position;
+ figures(fig_count).Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+ saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); 3/21/2023
  img2html(fileID, sprintf('image%d.png', fig_count), ...
      sprintf('image%d_thumbnail.png', fig_count), 'Parameters with largest differences');
 end
@@ -258,9 +259,9 @@ if param.includeprot
         'YTickLabel','')
 
         saveas(figures(fig_count), sprintf('image%d.png', fig_count), 'png');
-        I = imread( sprintf('image%d.png', fig_count) );
-        I = imresize( I, 0.5 );
-        imwrite( I, sprintf('image%d_thumbnail.png', fig_count) );
+        fP = figures(fig_count).Position;
+        figures(fig_count).Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+        saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); 3/21/2023
         img2html(fileID, sprintf('image%d.png', fig_count), ...
             sprintf('image%d_thumbnail.png', fig_count), 'GMM Vesicle Model Comparison');
 
@@ -312,9 +313,9 @@ if param.includeprot
         end
         fig_count = fig_count + 1;
         saveas(figures(fig_count), sprintf('image%d.png', fig_count), 'png');
-        I = imread( sprintf('image%d.png', fig_count) );
-        I = imresize( I, 0.5 );
-        imwrite( I, sprintf('image%d_thumbnail.png', fig_count) );
+        fP = figures(fig_count).Position;
+        figures(fig_count).Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+        saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); 3/21/2023
         img2html(fileID, sprintf('image%d.png', fig_count),...
             sprintf('image%d_thumbnail.png',fig_count), 'Spatial model comparison');
      end
@@ -322,7 +323,7 @@ if param.includeprot
 %SPHARM_OBJ_MODEL COMPARISON
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if strcmpi(models{1}.proteinModel.type,'spharm_obj')
-        header2html(fileID, 'Spharm Model Comparison');
+        header2html(fileID, 'spharm-obj Model Comparison');
 
         for i=1:length(models)
             models_ShapeModel{i} = models{i}.proteinModel.spharm_obj_model.cellShapeModel;
@@ -330,16 +331,24 @@ if param.includeprot
 %        [consolidated_model,shapecomp,shapepvals]=compare_shape_space_spharm_obj(models_ShapeModel,fileID,param);
 %        total_variation=consolidated_model.total_variation;
 %        text2html(fileID, ['Total_Variation=''%s'';\n', total_variation]);
-        
+
+        % calculate shape comparison statistics 3/21/2023
         [reducedSPHARMVec,shapecomparisonscores,shapecomparisonpvals]=compare_shape_model_spharm_obj(models_ShapeModel, param, fileID);
 
+        % generate composite shape space figure 3/21/2023
+        header2html(fileID, 'spharm-obj Organelle Shape Model Comparison');
+        text2html(fileID, sprintf('Number of objects: Model 1 %i; Model 2 %i',...
+            size(models_ShapeModel{1}.cell_params,3),...
+            size(models_ShapeModel{2}.cell_params,3)));
+        compare_shape_space_spharm_obj(models_ShapeModel,fileID,param);
+        
         for j=1:length(models)-1
         %spatial model comparision
             models_SpatialModel{1}=models{j}.proteinModel.spharm_obj_model.spatial;
             models_SpatialModel{2}=models{end}.proteinModel.spharm_obj_model.spatial;
 
             header2html(fileID, 'Spatial Model Comparison');
-    %         compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
+    %       compare_spatial_model_spharm_obj(models_SpatialModel,fileID,param);
             %clique percolation
             d1 = length(models_SpatialModel{1}.normdists);
             d2 = length(models_SpatialModel{2}.normdists);
@@ -387,7 +396,7 @@ if param.includecell
     if strcmpi(models{1}.cellShapeModel.type,'spharm_rpdm')
         models_cellShapeModel{1} = models{1}.cellShapeModel;
         models_cellShapeModel{2} = models{2}.cellShapeModel;
-        header2html(fileID, 'SPHARM-RPMD Cell Shape Model Comparison');
+        header2html(fileID, 'SPHARM-RPDM Cell Shape Model Comparison');
         text2html(fileID, sprintf('Number of cells: Model 1 %i; Model 2 %i',...
             size(models{1}.cellShapeModel.cell_params,3),...
             size(models{2}.cellShapeModel.cell_params,3)));

@@ -10,7 +10,7 @@ function [bim] = surface_mesh_to_volume_image_conversion(input_mesh, img_size, o
 addpath(genpath('Mesh_voxelisation'));
 
 if nargin < 2
-    img_size = max(vertices);
+    img_size = max(input_mesh.vertices);
 end
 
 default_options.cropping = 'tight';

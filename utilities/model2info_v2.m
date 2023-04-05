@@ -35,7 +35,8 @@ function model2info_v2( model, fileID, options )
 % 2021/03/05 R.F. Murphy modified to use new name for hd values
 % 2021/04/24 R.F. Murphy merged in Serena's show_spatial_distribution
 % 2022/08/15 R.F. Murphy add hausdorff distance plots
-% 2023/02/16 R.F. Murphy make figures visible in case running deployed
+% 2023/02/16 R.F. Murphy make figures invisible in case running deployed
+% 2023/03/20 R.F. Murphy fix saving of shape space thumbnails
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MODEL.NAME %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 header2html( fileID, 'Model name');
@@ -140,9 +141,10 @@ if is_diffeomorphic( model )
     options.subsize = 1000;
     showShapeSpaceFigure( model, labels, options );
     saveas( f, 'show_shape_space.png', 'png' );
-    I = imread( 'show_shape_space.png' );
-    I = imresize( I, 0.50 );
-    imwrite( I, 'show_shape_space_thumbnail.png' );
+    fP = f.Position;
+    f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+    saveas( f, 'show_shape_space_thumbnail.png', 'png' ); 3/20/2023
+    close(f)
     
     img2html(fileID, 'show_shape_space.png', 'show_shape_space_thumbnail.png', 'Diffeomorphic Model Shape space');
     movefile( '*.png', './html' );
@@ -154,9 +156,10 @@ if is_pca_framework( model )
     f = figure('visible','off');
     showPCAShapeSpaceFigure( model, labels, options );
     saveas( f, 'show_shape_space.png', 'png' );
-    I = imread( 'show_shape_space.png' );
-    I = imresize( I, 0.50 );
-    imwrite( I, 'show_shape_space_thumbnail.png' );
+    fP = f.Position;
+    f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+    saveas( f, 'show_shape_space_thumbnail.png', 'png' ); 3/20/2023
+    close(f)
     
     img2html(fileID, 'show_shape_space.png', 'show_shape_space_thumbnail.png', '2D PCA Model Shape space');
     movefile( '*.png', './html' );
@@ -211,33 +214,33 @@ if is_spharm_model( model )
     if showevol
         f = figure('visible','off');
         spharm_rpdm_sample_or_reconstruct_images_figure(model,options);
-        saveas( gcf, 'show_shape_evolution.png', 'png' );
-        I = imread( 'show_shape_evolution.png' );
-        I = imresize( I, 0.50 );
-        imwrite( I, 'show_shape_evolution_thumbnail.png' );
+        saveas( f, 'show_shape_evolution.png', 'png' );
+        fP = f.Position;
+        f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+        saveas( f, 'show_shape_evolution_thumbnail.png', 'png' ); 3/20/2023
         img2html(fileID, 'show_shape_evolution.png', ...
             'show_shape_evolution_thumbnail.png', ...
             [captionbase 'Shape Evolution']);
-        close all
+        close(f)
     end
     
     f = figure('visible','off');
     show_SPHARM_RPDM_Shape_Space_Figure(model.cellShapeModel,labels,options);
     saveas( f, 'show_shape_space.png', 'png' );
-    I = imread( 'show_shape_space.png' );
-    I = imresize( I, 0.50 );
-    imwrite( I, 'show_shape_space_thumbnail.png' );    
+    fP = f.Position;
+    f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
+    saveas( f, 'show_shape_space_thumbnail.png', 'png' ); 3/20/2023
     img2html(fileID, 'show_shape_space.png', ...
         'show_shape_space_thumbnail.png', ...
         [captionbase 'Shape space']);
-    close all
-    
-    movefile( '*.png', './html' );
+    close(f)
     
     %Spatial Distribution
     if isfield(model, 'spatial')
-        show_spatial_distribution(model.spatial,fileID)
+        show_spatial_distribution(model.spatial,fileID);
     end
+
+    movefile( '*.png', './html' );    
 
 end
 

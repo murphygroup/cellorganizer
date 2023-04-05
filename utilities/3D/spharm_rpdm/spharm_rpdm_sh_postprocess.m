@@ -5,13 +5,14 @@ function [cell_post, nuc_post] = spharm_rpdm_sh_postprocess(cellfit, nuc, savedi
 % postprocess for one component.
 % 02/24/2019 xruan: pass alignment option for postprocess
 % 02/24/2019 xruan: update postprocess setting in terms of train flag
+% 03/23/2023 R.F.Murphy pass final hausdorff distance and jaccard index to postprocessing
 
 if strcmp(options.train.flag, 'cell') || strcmp(options.train.flag, 'framework') || strcmp(options.train.flag, 'all')
     cell_postprocess_savefile = [savedir filesep 'cell_postprocess.mat'];
     if ~exist(cell_postprocess_savefile, 'file')
         % postprocess_options = struct();
         postprocess_options = options.spharm_rpdm;
-        [cell_post] = spherical_parameterization_postprocess(cellfit.vertices, cellfit.faces, cellfit.sph_verts, cellfit.fvec, postprocess_options);
+        [cell_post] = spherical_parameterization_postprocess(cellfit.vertices, cellfit.faces, cellfit.sph_verts, cellfit.fvec, cellfit.final_hd, cellfit.jaccard_index, postprocess_options);
         save(cell_postprocess_savefile, 'cell_post');
     else
         load(cell_postprocess_savefile, 'cell_post');

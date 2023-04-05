@@ -6,6 +6,7 @@ function cellparam = spharm_obj_percell_3D(imdna_path,imcell_path,improt_path,im
 % 1/27/2021 R.F. Murphy - also save normdists and angles; don't suppress
 %                           objects with zero distcodes
 % 2/1/2021 R.F. Murphy - mask protein image before object finding
+% 3/21/2023 R.F. Murphy - don't create ppm folder (not used)
 
 min_obj_size = options.min_obj_size;
 max_obj_size = options.max_obj_size;
@@ -28,9 +29,9 @@ improt = loadImage(improt_path, [1,1,1]);
 improt(~seg.cell) = 0;
 [obj_img,numPixels,centers] = find_objects_local(improt,'objects_img',min_obj_size,max_obj_size,sigma,thresPerc);
 
-ppm_dir = [pwd filesep 'ppm_input']; % replace improt image with puncta as center
+%ppm_dir = [pwd filesep 'ppm_input']; % replace improt image with puncta as center
 spharm_dir = [pwd filesep 'spharm_input']; % save all the objects as 3D tif file
-[status, msg, msgID] = mkdir(ppm_dir);
+%[status, msg, msgID] = mkdir(ppm_dir); 3/21/2023
 [status, msg, msgID] = mkdir(spharm_dir);
 save_spharm_obj(obj_img,min_obj_size,cellName) % save all the objects into 3D tif files
 % save ometiff files for objects

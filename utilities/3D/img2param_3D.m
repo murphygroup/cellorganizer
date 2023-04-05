@@ -65,6 +65,7 @@ function param = img2param_3D( imdna_path,imcell_path,...
 % 8/11/2022 R.F.Murphy add default hd_thresh of Inf so that no trimming occurs
 % 9/14/2022 R.F.Murphy save spharm deg into returned params
 % 2/13/2023 R.F.Murphy don't print nuc structure
+% 2/20/2023 R.F.Murphy actuall make the fix!
 
 options = ml_initparam(options, struct('downsampling', [1,1,1], ...
     'display', false, ...
@@ -170,7 +171,7 @@ if ~exist(savefile, 'file') && (~isfield(options,'if_skip_cell_nuclear_model') |
             % xruan 09/14/2018
         case 'spharm_rpdm'
             [ignorepath,nucfilename,ignoreext]=fileparts(options.dna_image_path);
-            [nuc] = spharm_rpdm_image_parameterization(param.seg.nuc, options.spharm_rpdm, nucfilename)
+            [nuc] = spharm_rpdm_image_parameterization(param.seg.nuc, options.spharm_rpdm, nucfilename); %2/20/2023
             nuc.type = 'spharm_rpdm';
         otherwise
             warning(['Unsupported nuclear model type ' options.nucleus.type '. Returning empty model.'])

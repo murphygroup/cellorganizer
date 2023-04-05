@@ -141,6 +141,7 @@ spharm_rpdm_model.rpdm_model_type = rpdm_model_type;            % joint or separ
 spharm_rpdm_model.components = components;                      % components
 spharm_rpdm_model.max_deg = max_deg;
 spharm_rpdm_model.hausdorff_distances = all_spharm_distances;
+spharm_rpdm_model.jaccard_indices = all_jaccard_indices;
 
 % other settings
 spharm_rpdm_model.options = options;
@@ -171,13 +172,14 @@ end
 
 end
 
-function [all_spharm_distances] = collect_distances_from_parameters(input_params)
+function [all_spharm_distances,all_jaccard_indices] = collect_distances_from_parameters(input_params)
 % extract hausdorff distances from the cell of structures of parameters. 
 
 num_params = numel(input_params);
 
 for i = 1 : num_params
-    all_spharm_distances(i) = input_params{i}.hd;    
+    all_spharm_distances(i) = input_params{i}.hd;
+    all_jaccard_indices(i) = input_params{i}.jaccard_index;
 end
 
 end

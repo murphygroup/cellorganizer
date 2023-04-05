@@ -28,6 +28,7 @@ function [param] = show_SPHARM_RPDM_Shape_Space_Figure(model, labels, param)
 % 05/24/2018 add support for labeling
 % 02/26/2019 make enhancement to throw errors when the model is invalid. 
 % 03/05/2021 R. F. Murphy fix hausdorff cutoff to consider both nuc and cell
+% 03/23/2023 R. F. Murphy fix latent dimension check
 
 if ~exist('param', 'var')
     param = [];
@@ -70,13 +71,13 @@ plot_dims = param.plot_dims;
 rebuild_pos = param.rebuild_pos;
 
 % check whether the model is valid
-if size(train_score, 1) < 3
-    error('The minimum number of cells in the model is 5, while the current model only contains %d cell(s). Please increase more cells', size(train_score, 1));
+if size(train_score, 1) < 5 %3/23/2023
+    error('The minimum number of cells in the model is 5, while the current model only contains %d cell(s). Please increase the number of cells', size(train_score, 1));
 end
 
 latent_dims = size(train_score, 2);
 if latent_dims < max(plot_dims)
-    error('At least one of chosen latent dimensions [ %s ] is larger than the latent dimension of the model %d. Please reset param.plot_dims ', num2str(plot_dims), latent_dims);
+    error('At least one of chosen plot dimensions [ %s ] is larger than the latent dimension of the model %d. Please reset param.plot_dims ', num2str(plot_dims), latent_dims);
 end
 
 
