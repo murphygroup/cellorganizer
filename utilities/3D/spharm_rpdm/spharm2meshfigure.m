@@ -41,7 +41,7 @@ function [Zvert, fs] = spharm2meshfigure(deg,fvec,meshtype,plot,figtitle,filenam
     Zs = calculate_SPHARM_basis(vs, deg);
     % adjust the basis functions using the spherical parameterization
     Zvert = real(Zs*fvec);
-    if exist('plot', 'var') && plot
+    if exist('plot', 'var') && plot && ~isdeployed
         if ~exist('figtitle','var') figtitle = []; end
         if ~exist('filename','var') filename = []; end
         if ~exist('dpi','var') dpi = []; end

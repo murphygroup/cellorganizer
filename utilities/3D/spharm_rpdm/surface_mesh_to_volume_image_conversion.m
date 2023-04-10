@@ -46,7 +46,7 @@ elseif any(size(bim) < img_size)
 end
     
 
-if options.debug
+if options.debug && ~isdeployed
     figure, patch('faces', input_mesh.faces, 'vertices', input_mesh.vertices, 'FaceVertexCData',jet(size(input_mesh.vertices,1)), 'FaceColor', 'interp')
     view([45, 45]);
     figure, imshow(reshape_2d(bim > 0.5, -1), [])
