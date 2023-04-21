@@ -32,6 +32,7 @@
 % 04/11/2002 - create
 % 10/15/2002 - rename and modify
 % 11/03/2008 - renamed by Sungeun Kim.
+% 4/17/2023 - change all ints to doubles for arithmetics of complex
 
 function Z = calculate_SPHARM_basis(vs, degree)
 
@@ -55,7 +56,8 @@ for k = 0:(2*max_degree)
     fact(k+1) = factorial(k);
 end
 for m = 0:max_degree
-    exp_i_m_phi(:,m+1) = exp(i*m*phi);
+    m = double(m);
+    exp_i_m_phi(:,m+1) = exp(i*double(m)*phi);
     sign_m(m+1) = (-1)^(m);
 end
 
@@ -67,13 +69,16 @@ for n = 0:max_degree
 	% The returned array P has one more dimension than X, and each element
 	% P(m+1,d1,d2...) contains the associated Legendre function of degree n and order
 	% m evaluated at X(d1,d2...).
-
+    
+    n = double(n);
+    
     Pn = legendre(n,cos(theta'))';
     
     posi_Y = [];
     nega_Y = [];
     
     m= 0:n;
+    m = double(m); %makes it possible to do arithmetics of complex 
     v = sqrt(((2*n+1)/(4*pi))*(fact(n-m+1)./fact(n+m+1)));
     v = v(ones(1,vnum),:).*Pn(:,m+1).*exp_i_m_phi(:,m+1);
     posi_Y(:,m+1) = v; % positive order;
