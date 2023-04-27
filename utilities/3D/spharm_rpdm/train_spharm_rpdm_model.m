@@ -34,6 +34,7 @@ function [spharm_rpdm_model] = train_spharm_rpdm_model(cell_params_fname, option
 % flexible for only cell, only nuclear and joint shapes. 
 % 02/07/2019 xruan also save the filenames of parameterization.
 % 01/22/2021 R.F. Murphy save the final hausdorff distances into the model
+% 4/17/2023 R.F. Murphy save jaccard distances into the model as well; update model version
 
 options = ml_initparam(options, struct('latent_dim', 100, ...
                                        'maxDeg', 31));
@@ -58,7 +59,7 @@ if any(strcmp(components, 'nuc'))
     % this line moves everything in param_tmp{i}.cell into param_temp{i}
     param_tmp = cellfun(@(x) x.nuc, param_tmp, 'Uniformoutput', false);
     nuc_spharm_descriptors = collect_descriptors_from_parameters(param_tmp, max_deg);
-    nuc_spharm_distances = collect_distances_from_parameters(param_tmp);
+    [nuc_spharm_distances,nuc_jaccard_indices] = collect_distances_from_parameters(param_tmp);
 end
 cell_spharm_descriptors = [];
 if any(strcmp(components, 'cell'))
@@ -67,16 +68,18 @@ if any(strcmp(components, 'cell'))
     % this line moves everything in param_tmp{i}.cell into param_temp{i}
     param_tmp = cellfun(@(x) x.cell, param_tmp, 'Uniformoutput', false);    
     cell_spharm_descriptors = collect_descriptors_from_parameters(param_tmp, max_deg);
-    cell_spharm_distances = collect_distances_from_parameters(param_tmp);
+    [cell_spharm_distances,cell_jaccard_indices] = collect_distances_from_parameters(param_tmp);
 end
 
 if strcmp(rpdm_model_type, 'separate')
     if exist(nuc_spharm_descriptors, 'var')
         all_spharm_descriptors = nuc_spharm_descriptors;
         all_spharm_distances = nuc_spharm_distances;
+        all_jaccard_indices = nuc_jaccard_distances;
     else
         all_spharm_descriptors = cell_spharm_descriptors;
         all_spharm_distances = cell_spharm_distances;
+        all_jaccard_indices = cell_jaccard_indices;
     end
     all_centers = all_spharm_descriptors(1, :, :);
     all_spharm_descriptors_1 = all_spharm_descriptors;
@@ -86,6 +89,7 @@ if strcmp(rpdm_model_type, 'separate')
 elseif strcmp(rpdm_model_type, 'joint')
     all_spharm_descriptors = cat(1, cell_spharm_descriptors, nuc_spharm_descriptors);
     all_spharm_distances = cat(1, cell_spharm_distances, nuc_spharm_distances);
+    all_jaccard_indices = cat(1, cell_jaccard_indices, nuc_jaccard_indices);
     switch shape_model_type
         case 1
             % remove center of the descriptors, cell and nuclear shapes are
@@ -141,7 +145,7 @@ spharm_rpdm_model.rpdm_model_type = rpdm_model_type;            % joint or separ
 spharm_rpdm_model.components = components;                      % components
 spharm_rpdm_model.max_deg = max_deg;
 spharm_rpdm_model.hausdorff_distances = all_spharm_distances;
-spharm_rpdm_model.jaccard_indices = all_jaccard_indices;
+spharm_rpdm_model.jaccard_indices = all_jaccard_indices; %4/17/2023
 
 % other settings
 spharm_rpdm_model.options = options;
@@ -152,7 +156,7 @@ spharm_rpdm_model.cell_params = cell_spharm_descriptors;
 spharm_rpdm_model.nuc_params = nuc_spharm_descriptors;
 spharm_rpdm_model.name = 'spharm-rpdm model of the cell';
 spharm_rpdm_model.type = 'spharm_rpdm';
-spharm_rpdm_model.version = 1.0;
+spharm_rpdm_model.version = 1.1; %4/17/2023
 
 end
 

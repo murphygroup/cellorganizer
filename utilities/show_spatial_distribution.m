@@ -1,7 +1,8 @@
 function KL_div = show_spatial_distribution( model,fileID)
 %Author : Serena Abraham
 % 02/16/2023 R.F.Murphy Make figures invisible in case running deployed
-% 03/20/2023 R.F.Murphy revise logic of figures depending on number of models 
+% 03/20/2023 R.F.Murphy revise logic of figures depending on number of models
+% 04/25/2023 R.F.Murphy fix comments from last edit
 
     KL_div = 0;
     f = figure('visible','off');
@@ -54,7 +55,7 @@ function KL_div = show_spatial_distribution( model,fileID)
     saveas( f, 'show_spatial_distribution.png', 'png');
     fP = f.Position;
     f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
-    saveas( f, 'show_spatial_distribution_thumbnail.png', 'png' ); 3/20/2023
+    saveas( f, 'show_spatial_distribution_thumbnail.png', 'png' ); %3/20/2023
     img2html(fileID,'show_spatial_distribution.png','show_spatial_distribution_thumbnail.png','Spatial Distribution of objects');
     
     az_ = [];
@@ -81,7 +82,7 @@ function KL_div = show_spatial_distribution( model,fileID)
         saveas( f2, 'spatial_model_diff.png', 'png');
         fP = f2.Position;
         f2.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
-        saveas( f2, 'spatial_model_diff_thumbnail.png', 'png' ); 3/20/2023
+        saveas( f2, 'spatial_model_diff_thumbnail.png', 'png' ); %3/20/2023
         img2html(fileID,'spatial_model_diff.png','spatial_model_diff_thumbnail.png','Difference in Spatial Probability Distribution between 2 Models');
         y_b1 = y_b1 + 1e-5;
         y_b2 = y_b2 + 1e-5;

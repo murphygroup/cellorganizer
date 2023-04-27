@@ -5,7 +5,11 @@ function mesh2figure(vs,fs,figtitle,filename,dpi)
 % figtitle = (optional) title to put on figure
 % filename = (optional) filenname to save figure to (default not saved)
 % dpi = (optional) dots per inch % figtitle = (optional) title to put on figure (default none)
-    figure, patch('vertices', vs, 'faces', fs, 'FaceVertexCData',jet(size(vs,1)),'FaceColor','interp');
+%
+% 4/26/2023 R.F.Murphy make figure invisible in case deployed
+
+    figure('visible','off');
+    patch('vertices', vs, 'faces', fs, 'FaceVertexCData',jet(size(vs,1)),'FaceColor','interp');
     view([45, 45]);
     if exist('figtitle','var')
         title(figtitle);

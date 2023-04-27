@@ -3,6 +3,7 @@ function [bim_out, vertices, faces] = fix_topology_by_image_processing(bim)
 % use isosurface for judgement, which is faster.
 
 % 1/11/2021 R.F. Murphy trap cases where eroded image goes to zero
+% 4/24/2023 R.F. Murphy trap more such cases and fix message logic
 
 origin = [0, 0, 0];
 vxsize = [1, 1, 1];
@@ -21,9 +22,14 @@ if size(vertices, 1) - size(faces, 1) ~= 2
         se = strel('disk', se_size);
         bim_1 = imdilate(bim, se);
         bim_1 = imerode(bim_1, se);
+        % check whether everything was eroded meaning approach didn't work
+        if sum(bim_1(:))<=0
+            bim_1 = bim;
+            break
+        end
         [chi, labels] = imEuler3d(bim_1);
     end
-    % only use the connected component that fix the holes. 
+    % only use the connected component that fixes the holes. 
     if chi == 1
         bim_diff = bim_1 - bim;
         CC = bwconncomp(bim_diff > 0, 6);
@@ -39,13 +45,13 @@ if size(vertices, 1) - size(faces, 1) ~= 2
         [vertices, faces] =  gen_surf_data(bim_2,origin,vxsize);
         bim_out = bim_2;
     end
-    disp(['fix_topology_by_image_processing 2nd try; voxels,vertices,faces:',...
-        num2str(sum(bim_out(:))),',',num2str(size(vertices,1)),',',...
-        num2str(size(faces,1))])
 end
 % if still cannot fix the topology, then use gen_surf_data as criterion
 % and use imopen to remove some small voxels
 if size(vertices, 1) - size(faces, 1) ~= 2
+    disp(['fix_topology_by_image_processing 2nd try; voxels,vertices,faces:',...
+        num2str(sum(bim_out(:))),',',num2str(size(vertices,1)),',',...
+        num2str(size(faces,1))])
     se_size = 0; bim_1 = bim;
     [vertices, faces] =  gen_surf_data(bim_1,origin,vxsize);
     while  size(vertices, 1) - size(faces, 1) ~= 2 && se_size <= 20
@@ -53,7 +59,8 @@ if size(vertices, 1) - size(faces, 1) ~= 2
         se = strel('disk', se_size);
         bim_1_prev = bim_1;
         bim_1 = imerode(bim, se);
-        % check whether everything was eroded meaning approach didn't work
+        % check whether everything was eroded meaning approach didn't work,
+        % in which case keep the previous iteration
         if sum(bim_1(:))<=0
             bim_1 = bim_1_prev;
             break
@@ -84,13 +91,13 @@ if size(vertices, 1) - size(faces, 1) ~= 2
     
     [vertices, faces] =  gen_surf_data(bim_2,origin,vxsize);
     bim_out = bim_2;  
-    disp(['fix_topology_by_image_processing 3rd try; voxels,vertices,faces:',...
-        num2str(sum(bim_out(:))),',',num2str(size(vertices,1)),',',...
-        num2str(size(faces,1))])
     % if still not working, then use the Euler number as criterion, as
     % generation of mesh is slow, we use a group update, that is, we first
     % put N CCs together, if not work, then evaluate them and remove bad ones.
     if size(vertices, 1) - size(faces, 1) ~= 2
+        disp(['fix_topology_by_image_processing 3rd try; voxels,vertices,faces:',...
+            num2str(sum(bim_out(:))),',',num2str(size(vertices,1)),',',...
+            num2str(size(faces,1))])
         bim_2 = bim_1;
         per_partition = 20;
         if CC.NumObjects < 10
@@ -126,15 +133,15 @@ if size(vertices, 1) - size(faces, 1) ~= 2
         end
         [vertices, faces] =  gen_surf_data(bim_2,origin,vxsize);
         bim_out = bim_2;
-        disp(['fix_topology_by_image_processing 4th try; voxels,vertices,faces:',...
-            num2str(sum(bim_out(:))),',',num2str(size(vertices,1)),',',...
-            num2str(size(faces,1))])
     end
 end
 
 CC = bwconncomp(bim_out > 0, 6);
 % if still not fixed, then first close then open to see if it works
 if size(vertices, 1) - size(faces, 1) ~= 2 || CC.NumObjects ~= 1
+    disp(['fix_topology_by_image_processing 4th try; voxels,vertices,faces:',...
+        num2str(sum(bim_out(:))),',',num2str(size(vertices,1)),',',...
+        num2str(size(faces,1))])
     se_size = 0; bim_1 = bim;
     [vertices, faces] =  gen_surf_data(bim_1,origin,vxsize);
     while  size(vertices, 1) - size(faces, 1) ~= 2 && se_size <= 20
@@ -173,12 +180,10 @@ if size(vertices, 1) - size(faces, 1) ~= 2 || CC.NumObjects ~= 1
     if size(vertices, 1) - size(faces, 1) ~= 2
         bim_out = bim_1;
     end    
-    disp(['fix_topology_by_image_processing 5th try; voxels,vertices,faces:',...
-        num2str(sum(bim_out(:))),',',num2str(size(vertices,1)),',',...
-        num2str(size(faces,1))])
 end
 % check if everything failed and return the input image
 if size(vertices, 1) - size(faces, 1) ~= 2
+    disp('fix_topology_by_image_processing failed; returning original image')
     bim_out = bim;
 end
 [vertices, faces] =  gen_surf_data(bim_out,origin,vxsize);

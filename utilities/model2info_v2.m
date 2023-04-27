@@ -37,6 +37,8 @@ function model2info_v2( model, fileID, options )
 % 2022/08/15 R.F. Murphy add hausdorff distance plots
 % 2023/02/16 R.F. Murphy make figures invisible in case running deployed
 % 2023/03/20 R.F. Murphy fix saving of shape space thumbnails
+% 2023/04/24 R.F. Murphy add comment indicators to 3/20/2023 tag; add stats
+%                           and plots for jaccard indices
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MODEL.NAME %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 header2html( fileID, 'Model name');
@@ -143,7 +145,7 @@ if is_diffeomorphic( model )
     saveas( f, 'show_shape_space.png', 'png' );
     fP = f.Position;
     f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
-    saveas( f, 'show_shape_space_thumbnail.png', 'png' ); 3/20/2023
+    saveas( f, 'show_shape_space_thumbnail.png', 'png' ); %3/20/2023
     close(f)
     
     img2html(fileID, 'show_shape_space.png', 'show_shape_space_thumbnail.png', 'Diffeomorphic Model Shape space');
@@ -158,7 +160,7 @@ if is_pca_framework( model )
     saveas( f, 'show_shape_space.png', 'png' );
     fP = f.Position;
     f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
-    saveas( f, 'show_shape_space_thumbnail.png', 'png' ); 3/20/2023
+    saveas( f, 'show_shape_space_thumbnail.png', 'png' ); %3/20/2023
     close(f)
     
     img2html(fileID, 'show_shape_space.png', 'show_shape_space_thumbnail.png', '2D PCA Model Shape space');
@@ -186,19 +188,36 @@ if is_spharm_model( model )
     mdl = model.cellShapeModel;
     if isfield(mdl,'hausdorff_distances') 
         if isfield(model,'cellShapeModel') 
-            text2html(fileID,strcat("Cell:", hd_stats(mdl.hausdorff_distances(1,:))));
+            text2html(fileID,strcat("Cell:", hd_stats(mdl.hausdorff_distances(1,:),'Hausdorff distances')));
             if isfield(model,'nuclearShapeModel')
-                text2html(fileID,strcat("Nuc:", hd_stats(mdl.hausdorff_distances(2,:))));
+                text2html(fileID,strcat("Nuc:", hd_stats(mdl.hausdorff_distances(2,:),'Hausdorff distances')));
             end
         else if isfield(model,'nuclearShapeModel')
-            text2html(fileID,strcat("Nuc:", hd_stats(mdl.hausdorff_distances(1,:))));
+            text2html(fileID,strcat("Nuc:", hd_stats(mdl.hausdorff_distances(1,:),'Hausdorff distances')));
             end
         end
-        plot_hausdorff_distances(fileID,model)
+        plot_hd_or_ji(fileID,model,mdl.hausdorff_distances,'hausdorff distances','hausdorff_distances')
     end
     catch
        text2html(fileID,'Unable to display hausdorff distance statistics and plots') 
     end
+    try
+        if isfield(mdl,'jaccard_indices')
+            if isfield(model,'cellShapeModel') 
+                text2html(fileID,strcat("Cell:", hd_stats(mdl.jaccard_indices(1,:),'Jaccard indices')));
+            if isfield(model,'nuclearShapeModel')
+                text2html(fileID,strcat("Nuc:", hd_stats(mdl.jaccard_indices(2,:),'Jaccard indices')));
+            end
+        else if isfield(model,'nuclearShapeModel')
+            text2html(fileID,strcat("Nuc:", hd_stats(mdl.jaccard_indices(1,:),'Jaccard indices')));
+            end
+        end
+        plot_hd_or_ji(fileID,model,mdl.jaccard_indices,'jaccard indices','jaccard_indices')
+    end
+    catch
+       text2html(fileID,'Unable to display jaccard index statistics and plots') 
+    end
+       
     
     header2html( fileID, 'Additional Figures');
     showevol = true;
@@ -212,16 +231,7 @@ if is_spharm_model( model )
     captionbase = 'SPHARM-RPDM Cell Shape Model: ';
     if spharm_obj captionbase = 'SPHARM-RPDM Protein Object Model: '; end
     if showevol
-        f = figure('visible','off');
         spharm_rpdm_sample_or_reconstruct_images_figure(model,options);
-        saveas( f, 'show_shape_evolution.png', 'png' );
-        fP = f.Position;
-        f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
-        saveas( f, 'show_shape_evolution_thumbnail.png', 'png' ); 3/20/2023
-        img2html(fileID, 'show_shape_evolution.png', ...
-            'show_shape_evolution_thumbnail.png', ...
-            [captionbase 'Shape Evolution']);
-        close(f)
     end
     
     f = figure('visible','off');
@@ -229,7 +239,7 @@ if is_spharm_model( model )
     saveas( f, 'show_shape_space.png', 'png' );
     fP = f.Position;
     f.Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
-    saveas( f, 'show_shape_space_thumbnail.png', 'png' ); 3/20/2023
+    saveas( f, 'show_shape_space_thumbnail.png', 'png' ); %3/20/2023
     img2html(fileID, 'show_shape_space.png', ...
         'show_shape_space_thumbnail.png', ...
         [captionbase 'Shape space']);
@@ -349,59 +359,59 @@ end
 
 end
 
-function outstr = hd_stats(hd)
+function outstr = hd_stats(hd,tag)
 
 [hdmin,hdmini] = min(hd);
 [hdmax,hdmaxi] = max(hd);
 hdavg = mean(hd);
 hdsd = std(hd);
-outstr = strcat("Hausdorff dist: avg=",num2str(hdavg), ...
+outstr = strcat(tag," avg=",num2str(hdavg), ...
     ", sd=", num2str(hdsd), ", min=", num2str(hdmin), " [", num2str(hdmini), ...
     "], max=", num2str(hdmax), " [", num2str(hdmaxi), "]");
 end
 
-function plot_hausdorff_distances(fileID,model)
+function plot_hd_or_ji(fileID,model,distnces,tag,tag2)
 
 if isfield(model,'cellShapeModel')
     f = figure('visible','off');
-    histogram(log10(model.cellShapeModel.hausdorff_distances(1,:)),25,'FaceColor','red')
-    xlabel('Log10 Hausdorff distance between original and SPHARM-RPDM model');
+    histogram(log10(distnces(1,:)),25,'FaceColor','red')
+    xlabel(['Log10 ' tag ' between original and SPHARM-RPDM model']);
     ylabel('Frequency')
     if isfield(model,'nuclearShapeModel')
         hold on
-        histogram(log10(model.cellShapeModel.hausdorff_distances(2,:)),25,'FaceColor','green')
+        histogram(log10(distnces(2,:)),25,'FaceColor','green')
         legend('cells','nuclei')
-        saveas( f, 'hausdorff_distance_histogram.png', 'png' );
-        img2html(fileID, 'hausdorff_distance_histogram.png', ...
-        'hausdorff_distance_histogram.png', ...
-        'Hausdorff distances for reconstructions');
+        saveas( f, [tag2 '_histogram.png'], 'png' );
+        img2html(fileID, [tag2 '_histogram.png'], ...
+        [tag2 '_histogram.png'], ...
+        [tag ' for reconstructions']);
         hold off
         % now plot scatter of nuclear vs cell
         f = figure('visible','off');
-        plot(log10(model.cellShapeModel.hausdorff_distances(2,:)), ...
-            log10(model.cellShapeModel.hausdorff_distances(1,:)),'d')
-        xlabel('log10 Hausdorff distance for cell shape')
-        ylabel('log10 Hausdorff distance for nuclear shape')
-        saveas( f, 'hausdorff_distance_scatter.png', 'png' );
-        img2html(fileID, 'hausdorff_distance_scatter.png', ...
-        'hausdorff_distance_scatter.png', ...
-        'Hausdorff distances');
+        plot(log10(distnces(2,:)), ...
+            log10(distnces(1,:)),'d')
+        xlabel(['log10 ' tag ' for cell shape'])
+        ylabel(['log10 ' tag ' for nuclear shape'])
+        saveas( f, [tag2 '_scatter.png'], 'png' );
+        img2html(fileID, [tag2 '_scatter.png'], ...
+        [tag2 '_scatter.png'], ...
+        tag);
     else
         legend('cells')
-        saveas( f, 'hausdorff_distance_histogram.png', 'png' );
-        img2html(fileID, 'hausdorff_distance_histogram.png', ...
-        'hausdorff_distance_histogram.png', ...
-        'Hausdorff distances for reconstructions');
+        saveas( f, [tag2 '_histogram.png'], 'png' );
+        img2html(fileID, [tag2 '_histogram.png'], ...
+        [tag2 '_histogram.png'], ...
+        [tag ' for reconstructions']);
     end
 elseif isfield(model,'nuclearShapeModel')
     f = figure('visible','off');
-    histogram(log10(model.cellShapeModel.hausdorff_distances(1,:)),25,'FaceColor','green')
-    xlabel('Log10 Hausdorff distance between original and SPHARM-RPDM model');
+    histogram(log10(distnces(1,:)),25,'FaceColor','green')
+    xlabel(['Log10 ' tag ' between original and SPHARM-RPDM model']);
     ylabel('Frequency')
     legend('nuclei')
-    saveas( f, 'hausdorff_distance_histogram.png', 'png' );
-    img2html(fileID, 'hausdorff_distance_histogram.png', ...
-    'hausdorff_distance_histogram.png', ...
-    'Hausdorff distances for reconstructions');
+    saveas( f, [tag2 '_histogram.png'], 'png' );
+    img2html(fileID, [tag2 '_histogram.png'], ...
+    [tag2 '_histogram.png'], ...
+    [tag ' for reconstructions']);
 end
 end

@@ -2,12 +2,14 @@ function img = spharm2image(deg,fvec,options)
 % edits
 % 1/31/2023 R.F.Murphy correct default meshtype from "triangle" to "triangular"
 % 3/23/2023 R.F.Murphy add option to control output image size
+% 4/13/2023 R.F.Murphy change default debug option to false; fix oversampling_scale option
+% 4/26/2023 R.F.Murphy flip and rotate image to match original orientation
 
 default_options = [];
 default_options.meshtype.type = 'triangular'; %1/31/2023
 default_options.meshtype.nVertices = 4002;
-default_options.options.oversampling_scale = 2;
-default_options.debug = true;
+default_options.oversampling_scale = 2; %4/13/2023
+default_options.debug = false;
 default_options.imagesize = [0, 0, 0];
 
 if ~exist('options', 'var')
@@ -27,7 +29,8 @@ else
     adjustLater = true;
 end
 img = surface_mesh_to_volume_image_conversion(mesh, imageSize, options);
-img = img > 0.5;
+imgf = flip(img,1); imgr = rot90(imgf,3); %4/26/2023
+img = imgr > 0.5;
 if adjustLater
     zmaxes = squeeze(max(max(img,[],1),[],2));
     nonemptyslices = find(zmaxes>0);

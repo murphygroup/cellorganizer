@@ -1,4 +1,4 @@
-function [param_postprocess] = spherical_parameterization_postprocess(vertices, faces, final_hd, jaccard_index, sph_verts, fvec, options)
+function [param_postprocess] = spherical_parameterization_postprocess(vertices, faces, sph_verts, fvec, final_hd, jaccard_index, options)
 % perform postprocess for spherical parameterization. 
 % 
 % Author: Xiongtao Ruan
@@ -6,6 +6,7 @@ function [param_postprocess] = spherical_parameterization_postprocess(vertices, 
 % 
 % 02/24/2019 add options for rotation either in xy-plane (default) or xyz
 % 03/23/2023 pass in final_hd and jaccard_index
+% 04/12/2023 fix error in calling sequence
 
 options = process_options_structure(struct('alignment_method', 'major_axis', ...
                                          'rotation_plane', 'xy', ...    
@@ -84,8 +85,8 @@ param_postprocess.fvec = fvec_new;
 param_postprocess.vertices = vertices_1;
 param_postprocess.faces = faces;
 param_postprocess.sph_verts = sph_verts_aligned;
-param_postprocess.hd = final_hd; 3/23/2023
-param_postprocess.jaccard_index = jaccard_index; 3/23/2023
+param_postprocess.hd = final_hd; %3/23/2023
+param_postprocess.jaccard_index = jaccard_index; %3/23/2023
 param_postprocess.postprocess = true;
 
 if strcmp(alignment_method, 'foe') || strcmp(alignment_method, 'major_axis')

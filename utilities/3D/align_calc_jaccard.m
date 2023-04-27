@@ -1,6 +1,7 @@
 function jaccard_index = align_calc_jaccard(img1,img2)
 % created 3/23/2023 R.F.Murphy
 % 4/7/2023 R.F. Murphy trap and report erros
+% 4/13/2023 R.F. Murphy fix jaccard index calculation
 
 try
 % requires that the two images are the same size
@@ -20,9 +21,9 @@ try
     else
         img1shifted = img1;
     end
-    xorimg=xor(img1shifted,img2);
+    orimg=or(img1shifted,img2);
     andimg=and(img1shifted,img2);
-    jaccard_index=sum(xorimg(:))/sum(andimg(:));
+    jaccard_index=sum(andimg(:))/sum(orimg(:)); %4/13/2023
     end
 catch
     warning('In align_calc_jaccard: calculation failed.');

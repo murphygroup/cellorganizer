@@ -67,7 +67,7 @@ resolution = [0.049, 0.049, 0.2000];
 
 % parameters for spharm
 options_spharm.verbose = true;
-options_spharm.debug = ~false;
+options_spharm.debug = false;
 
 %set this off as it's causing an error
 %Ted 03/18/2020
@@ -101,11 +101,12 @@ options_spharm.model.spharm_rpdm.rotation_plane = 'xyz';
 options_spharm.documentation.description = 'This model has been trained for shape-location protein model from CellOrganizer';
 options_spharm.model.spharm_rpdm.segminnucfraction = 0.1;
 options_spharm.verbose = 1;
-options_spharm.spharm_rpdm.NMcost_tol = 1e-7;
-options_spharm.spharm_rpdm.NMlargr_tol = 1e-7;
-options_spharm.spharm_rpdm.NMfirsttry_maxiter = 300;
-options_spharm.spharm_rpdm.NMretry_maxiter = 100;
-options_spharm.spharm_rpdm.NMretry_maxiterbig = 300;
+options_spharm.spharm_rpdm.NMcost_tol = 1e-11;
+options_spharm.spharm_rpdm.NMlargr_tol = 1e-9;
+options_spharm.spharm_rpdm.NMfirsttry_maxiter = 500;
+options_spharm.spharm_rpdm.NMretry_maxiter = 500;
+options_spharm.spharm_rpdm.NMretry_maxiterbig = 500;
+options_spharm.spharm_rpdm.hd_thresh = 1.0; %keep fitting until reaching this Haussdorff distance
 % this debug option is specifically for creating figures showing SPHARM_RPDM
 % parameterization compared to original image
 options_spharm.spharm_rpdm.debug = false;
@@ -147,6 +148,6 @@ options.labels = 'unique';
 options.subsize = 100; % smaller number means bigger objects
 options.viewangle = [0,90]; %down z axis
 %options.viewangle = [90,0]; %side view
-options.hd_threshold = 10.; % filter out objects with Hausdorff distance greater than this
+options.hd_threshold = 1.0; % filter out objects with Hausdorff distance greater than this from the report
 slml2info({'model.mat'},options);
 web(['report' filesep 'index.html'])

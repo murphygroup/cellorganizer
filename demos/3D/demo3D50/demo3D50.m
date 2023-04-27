@@ -86,6 +86,7 @@ options.spharm_rpdm.NMretry_maxiterbig = 300;
 %decreasing these numbers can sometimes decrease compute time but potentially reduces model quality
 options.spharm_rpdm.NMcost_tol = 1e-7;
 options.spharm_rpdm.NMlargr_tol = 1e-7;
+options.spharm_rpdm.hd_thresh = 10.0; %keep fitting until reaching this Haussdorff distance
 options.spharm_rpdm.maxDeg = options.model.spharm_rpdm.maxDeg;
 % this debug option is specifically for creating figures showing SPHARM_RPDM
 % parameterization compared to original image

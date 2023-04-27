@@ -39,6 +39,7 @@ function [m_x_out, cost_mat, is_success] = EqualAreaParametricMeshNewtonMethod(.
 % 10/22/2020 R.F.Murphy initialize m_x_best_bu
 % 12/4/2020 R.F. Murphy disable singular matrix warnings
 % 2/1/2021 R.F. Murphy fix error when number of iter is less than 21
+% 4/24/2023 R.F. Murphy fix missing <CR> on termination message
 %%
 % ------------------------------------------------------------------------
 % Modifications June 2021 by Khaled Khairy: khaled.khairy@stjude.org
@@ -466,7 +467,7 @@ for iter = 1 : MaxIter
             cost_mat(iter + 1 : end, :) = [];
             m_x_best = m_x;
             if verbose fprintf("\n"); end
-            fprintf("Exiting with acceptable cost after %d iterations",iter);
+            fprintf("Exiting with acceptable cost after %d iterations\n",iter);
             break;
         end
     end

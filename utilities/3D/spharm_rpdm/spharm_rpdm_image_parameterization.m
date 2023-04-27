@@ -14,6 +14,9 @@ function [param_output] = spharm_rpdm_image_parameterization(cur_image, options,
 % 11/2/2022 R.F.Murphy don't allow debug when deployed
 % 1/31/2023 R.F.Murphy correct passing of options to spharm2image
 % 2/13/2023 R.F.Murphy correct titling of maxslice plots; add jaccard index
+% 4/13/2023 R.F.Murphy pass options.debug flag to spharm2image; show debug figure of same slice
+% 4/24/2023 R.F.Murphy return empty param struct if parameterization fails;
+%                       make figure invisible in case deployed
 
 if ~exist('options', 'var') || isempty(options)
     options = [];
@@ -83,7 +86,7 @@ if ~special_case
     options_in.max_iter = options.NMfirsttry_maxiter;
     [sph_verts, cost_mat, is_success] = EqualAreaParametricMeshNewtonMethod(vertices, faces, [], options_in);
     execute_time = cputime-tStart;
-    [is_good, hd] = spherical_parameterization_quality_check(sph_verts, vertices, faces);
+    [is_good, hd] = spherical_parameterization_quality_check(sph_verts, vertices, faces, options);
 
     %  if the parameterization not successful, try to use another
     %  initialization method and redo the optimization. 
@@ -96,7 +99,7 @@ if ~special_case
         tStart = cputime;
         [sph_verts_1, cost_mat_1, is_success_1] = EqualAreaParametricMeshNewtonMethod(vertices, faces, [], options_in);
         execute_time_1 = cputime-tStart;
-        [is_good_1, hd_1] = spherical_parameterization_quality_check(sph_verts_1, vertices, faces);
+        [is_good_1, hd_1] = spherical_parameterization_quality_check(sph_verts_1, vertices, faces, options);
         if is_success_1 || (~is_success_1 && hd > hd_1)
             sph_verts = sph_verts_1;
             cost_mat = cost_mat_1;
@@ -125,7 +128,7 @@ if ~is_good && ~is_good_1
     tStart = cputime;
     [sph_verts_2, cost_mat_2, is_success_2] = EqualAreaParametricMeshNewtonMethod(vertices_2, faces_2, [], options_in);  
     execute_time_2 = cputime-tStart;    
-    [is_good_2, hd_2] = spherical_parameterization_quality_check(sph_verts_2, vertices_2, faces_2);
+    [is_good_2, hd_2] = spherical_parameterization_quality_check(sph_verts_2, vertices_2, faces_2, options);
     if is_success_2 || (~is_success_2 && min(hd, hd_1) > hd_2)
         vertices = vertices_2;
         faces = faces_2;
@@ -156,7 +159,7 @@ if ~is_good && ~is_good_1 && ~is_good_2
     tStart = cputime;
     [sph_verts_3, cost_mat_3, is_success_3] = EqualAreaParametricMeshNewtonMethod(vertices_3, faces_3, [], options_in);  
     execute_time_3 = cputime-tStart;    
-    [is_good_3, hd_3] = spherical_parameterization_quality_check(sph_verts_3, vertices_3, faces_3);
+    [is_good_3, hd_3] = spherical_parameterization_quality_check(sph_verts_3, vertices_3, faces_3, options);
     if is_success_3 || (~is_success_3 && min([hd, hd_1, hd_2]) > hd_3)
         vertices = vertices_3;
         faces = faces_3;        
@@ -166,7 +169,8 @@ if ~is_good && ~is_good_1 && ~is_good_2
     end     
 end
 % compare final parameterization to the original mesh
-[is_good_final, hd_final] = spherical_parameterization_quality_check(sph_verts, vertices, faces);
+options.final = true;
+[is_good_final, hd_final] = spherical_parameterization_quality_check(sph_verts, vertices, faces, options);
 if is_good_final
     fprintf("Final parameterization passed quality check; Hausdorff distance=%f\n",hd_final)
 else
@@ -182,14 +186,22 @@ meshtype.type = 'triangular';
 meshtypeoptions = []; %1/31/2023 pass meshtype using options structure
 meshtypeoptions.meshtype = meshtype;
 meshtypeoptions.imagesize = size(cur_image);
-imgr = spharm2image(deg,fvec,meshtypeoptions);
-size(imgr)
-for zslice=1:size(imgr,3)
-    img(:,:,zslice)=transpose(imgr(:,:,zslice));
-end
-size(img)
+meshtypeoptions.debug = options.debug;
+img = spharm2image(deg,fvec,meshtypeoptions);
 jaccard_index = align_calc_jaccard(cur_image,img);
 fprintf("Jaccard index=%f\n",jaccard_index)
+%for zslice=1:size(img,3)
+%    imgt(:,:,zslice)=flip(imgin(:,:,zslice),1);
+%end
+%imgt=flip(img,1);
+%jaccard_index = align_calc_jaccard(cur_image,imgt);
+%fprintf("Jaccard index flip1=%f\n",jaccard_index)
+%imgt2=flip(img,2);
+%jaccard_index = align_calc_jaccard(cur_image,imgt2);
+%fprintf("Jaccard index flip2=%f\n",jaccard_index)
+%imgt3=flip(imgt,2);
+%jaccard_index = align_calc_jaccard(cur_image,imgt3);
+%fprintf("Jaccard index flip1+2=%f\n",jaccard_index)
 
 param_output = struct();
 param_output.deg = deg;
@@ -235,22 +247,22 @@ if options.debug && ~isdeployed
     spharm2meshfigure(deg,fvec,meshtype,true,figtitle,figure_filename,dpi);
 
 % make figure from reconstructed image
-    figure
-    for zslice=1:size(img,3)
-        imshow(img(:,:,zslice));
-        pause(1)
-    end
+    %figure
+    %for zslice=1:size(img,3)
+    %    imshow(img(:,:,zslice));
+    %    pause(1)
+    %end
     close
     %size(cur_image)
-    figure
+    figure('visible','off');
     subplot(1,2,1)
     [ignorethis,maxsliceo]=max(squeeze(sum(sum(cur_image,2),1)));
     imshow(cur_image(:,:,maxsliceo));
     title(['orig: maxslice=' num2str(maxsliceo)]);
     subplot(1,2,2)
-    [ignorethis,maxslicer]=max(squeeze(sum(sum(img,2),1)));
-    imshow(img(:,:,maxslicer));
-    title(['recon: maxslice=' num2str(maxslicer)]);
+    %[ignorethis,maxslicer]=max(squeeze(sum(sum(img,2),1))); 4/13/2023
+    imshow(img(:,:,maxsliceo));
+    title(['recon: maxslice=' num2str(maxsliceo)]);
     figure_filename = sprintf('%sreconst_images_maxslice_%s', figure_dir, imagelegend);
     export_fig(figure_filename, '-opengl', '-png', '-a1', ['-r', num2str(dpi)]);
     close

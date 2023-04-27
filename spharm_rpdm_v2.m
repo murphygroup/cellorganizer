@@ -4,6 +4,8 @@ function answer = spharm_rpdm_v2(spharm_obj_files,options)
 % 2/8/2021 R.F. Murphy - set a default hd_thresh
 % 1/31/2023 R.F. Murphy - correct passing of objects (was using nuc_path; s/b cell_path)
 %                       add check for correct train.flag
+% 4/25/2023 R.F.Murphy - change default for hd_thresh to spharm_rpdm.hd_thresh
+%                       for compatibility with other functions
 
 %IMG2SLML2
 answer = false;
@@ -50,12 +52,13 @@ options.dimensionality = '3D';
 
 model = [];
 
-options = ml_initparam( options, struct( 'display', false ,...
+default_options = struct( 'display', false ,...
     'debug', false, ...
     'verbose', false, ...
     'paramdir', [pwd filesep 'param'], ...
-    'tempparent', [pwd filesep 'temp'],...
-    'hd_thresh', 20));
+    'tempparent', [pwd filesep 'temp'])
+default_options.spharm_rpdm = struct('hd_thresh', 20);
+options = ml_initparam( options, default_options);
 
 check_required_options(options, {'dimensionality'})
 check_required_options(options.model, {'resolution'})

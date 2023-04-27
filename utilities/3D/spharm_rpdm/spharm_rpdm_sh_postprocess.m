@@ -6,6 +6,7 @@ function [cell_post, nuc_post] = spharm_rpdm_sh_postprocess(cellfit, nuc, savedi
 % 02/24/2019 xruan: pass alignment option for postprocess
 % 02/24/2019 xruan: update postprocess setting in terms of train flag
 % 03/23/2023 R.F.Murphy pass final hausdorff distance and jaccard index to postprocessing
+% 04/12/2023 R.F.Murphy fix error in calling sequence introduced by previous change
 
 if strcmp(options.train.flag, 'cell') || strcmp(options.train.flag, 'framework') || strcmp(options.train.flag, 'all')
     cell_postprocess_savefile = [savedir filesep 'cell_postprocess.mat'];
