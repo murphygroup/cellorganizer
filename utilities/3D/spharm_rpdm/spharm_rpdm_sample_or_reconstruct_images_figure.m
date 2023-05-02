@@ -32,6 +32,7 @@ function [h] = spharm_rpdm_sample_or_reconstruct_images_figure(model, options )
 % visible; add support for making movies (options.makemovie); ignore
 % options.pair_method
 % 5/1/2023 R.F. Murphy Switch video profile if deployed (Linux doesn't support MPEG-4)
+% 5/2/2023 R.F. Murphy close figure window if making movie
 
 %close all;
 f = figure('visible','off');
@@ -238,8 +239,9 @@ else
     img2html(fileID, 'show_shape_evolution.png', ...
         'show_shape_evolution_thumbnail.png', ...
         [captionbase 'Shape Evolution']);
-    close(f)
 end
+
+close(f)
 
 end
 
