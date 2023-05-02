@@ -31,6 +31,7 @@ function [h] = spharm_rpdm_sample_or_reconstruct_images_figure(model, options )
 % 4/26/2023 R.F. Murphy Don't close open figures and don't make figure
 % visible; add support for making movies (options.makemovie); ignore
 % options.pair_method
+% 5/1/2023 R.F. Murphy Switch video profile if deployed (Linux doesn't support MPEG-4)
 
 %close all;
 f = figure('visible','off');
@@ -164,7 +165,11 @@ elseif any(strcmp(rpdm_model.components, 'nuc'))
 end
 
 if options.makemovie
-    vidfile = VideoWriter('ShapeEvolutionMovie.mp4','MPEG-4');
+    if isdeployed
+        vidfile = VideoWriter('ShapeEvolutionMovie.avi','Motion JPEG AVI');
+    else
+        vidfile = VideoWriter('ShapeEvolutionMovie.mp4','MPEG-4');
+    end
     open(vidfile);
 end
 

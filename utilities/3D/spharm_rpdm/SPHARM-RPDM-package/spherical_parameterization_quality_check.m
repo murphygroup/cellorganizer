@@ -4,6 +4,7 @@ function [is_good, hd] = spherical_parameterization_quality_check(sph_verts, ver
 % The idea is to perform spharm, and do reconstrucation and see the
 % reconstruction error measured by hausdorff distance. 
 % 4/13/2023 R.F. Murphy add figures for debugging
+% 5/1/2023 R.F. Murphy don't display debugging figures if deployed
 
 if nargin < 4
     options = struct();
@@ -24,7 +25,7 @@ vertices_reconst = real(Zs*fvec);
 %figtitle = ['original mesh'];
 %figure_filename = sprintf('%soriginal_mesh_%s', figure_dir, imagelegend);
 %mesh2figure(vertices,faces,figtitle,figure_filename,dpi);
-if options.final
+if options.final && ~ideployed
     figure(1), patch('vertices', vertices, 'faces', faces, 'FaceVertexCData',jet(size(vs,1)),'FaceColor','interp');
     view([45, 45]);
     figure(2), patch('vertices', vertices_reconst, 'faces', fs, 'FaceVertexCData',jet(size(vs,1)),'FaceColor','interp');
@@ -37,17 +38,6 @@ if hd < hd_thresh
     is_good = true;
 else
     is_good = false;
-end
-
-if false
-    figure, patch('vertices', vertices, 'faces', faces, 'FaceVertexCData',jet(size(vertices,1)),'FaceColor','interp');
-    view([45, 45]);
-    
-    [vs, fs]=SpiralSampleSphere(4002);
-    Zs = calculate_SPHARM_basis(vs, deg);
-    Zvert_pdm = real(Zs*fvec);
-    figure, patch('vertices', Zvert_pdm, 'faces', fs, 'FaceVertexCData',jet(size(Zvert_pdm,1)),'FaceColor','interp');
-    view([45, 45]);
 end
 
 end
