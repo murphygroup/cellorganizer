@@ -55,4 +55,9 @@ else
     answer = false;
 end
 
+
+if isdeployed
+    close all
+end
+
 end

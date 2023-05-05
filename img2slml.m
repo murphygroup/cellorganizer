@@ -158,6 +158,8 @@ function answer = img2slml( varargin )
 % send email to cellorganizer@compbio.cmu.edu
 %
 % 8/15/2022 R.F. Murphy add cputime to logging
+% 5/3/2023 R.F. Murphy enable ROI processing for non-deployed case; replace
+% references to "param" with "options" for compatibility with deployed
 
 answer = false;
 
@@ -170,10 +172,23 @@ logfile = [ pwd filesep 'log' filesep logfile, '.log' ];
 diary( logfile )
 tstart=cputime;
 
-if isdeployed
-    
+if isdeployed   
     filename = is_deployed(varargin{1});
     load(filename);
+else
+    disp('Running img2slml')
+    
+    dimensionality = varargin{1};
+    dnaImagesDirectoryPath = varargin{2};
+    cellImagesDirectoryPath = varargin{3};
+    proteinImagesDirectoryPath = varargin{4};
+    disp('Check number of input arguments')
+    try
+        options = varargin{5};
+    catch
+        options = [];
+    end
+ end
     
     disp( 'Checking nuclear membrane images list' )
     if ~isempty( dnaImagesDirectoryPath )
@@ -204,35 +219,17 @@ if isdeployed
     end
     
     disp('Checking and getting default parameters')
-    param = get_cellorganizer_default_parameters( 'training', options );
-else
-    disp('Running img2slml')
-    disp('Check number of input arguments')
-    try
-        param = varargin{5};
-    catch
-        param = [];
-    end
-    
-    dimensionality = varargin{1};
-    dnaImagesDirectoryPath = varargin{2};
-    cellImagesDirectoryPath = varargin{3};
-    proteinImagesDirectoryPath = varargin{4};
-    param = varargin{5};
-    
-    disp('Checking and getting default parameters')
-    param = get_cellorganizer_default_parameters( 'training', param );
-end
-
+    options = get_cellorganizer_default_parameters( 'training', options );
+   
 %%%%%%%%%%%%%%%%%%%%%%%%%% CHECK INPUT ARGUMENTS %%%%%%%%%%%%%%%%%%%%%%%%%%
 disp(' '); print_large_title('Validating input arguments' );
 if isdeployed || length(varargin) == 5
     [dnaImagesDirectoryPath, cellImagesDirectoryPath, ...
         proteinImagesDirectoryPath,labels] = check_images_directory_paths( ...
         dnaImagesDirectoryPath, cellImagesDirectoryPath, ...
-        proteinImagesDirectoryPath, param );
+        proteinImagesDirectoryPath, options );
     
-    if ~ismember( param.train.flag, {'protein'} ) && ...
+    if ~ismember( options.train.flag, {'protein'} ) && ...
             isempty( dnaImagesDirectoryPath ) && ...
             isempty( cellImagesDirectoryPath ) && ...
             isempty( proteinImagesDirectoryPath )
@@ -240,20 +237,20 @@ if isdeployed || length(varargin) == 5
         return
     end
     
-    if (isfield( param, 'protein' ) && ...
-            isfield( param.protein, 'class' ) && ...
-            strcmpi( param.protein.class, 'standardized_voxels' )) && ...
-            (isfield( param, 'protein' ) && ...
-            isfield( param.protein, 'type' ) && ...
-            strcmpi( param.protein.type, 'standardized_map_half-ellipsoid' ))
+    if (isfield( options, 'protein' ) && ...
+            isfield( options.protein, 'class' ) && ...
+            strcmpi( options.protein.class, 'standardized_voxels' )) && ...
+            (isfield( options, 'protein' ) && ...
+            isfield( options.protein, 'type' ) && ...
+            strcmpi( options.protein.type, 'standardized_map_half-ellipsoid' ))
         disp(' '); print_large_title('Cleaning up data' );
-        if isfield(param.model, 'tcell') && isfield(param.model.tcell, 'ometiff') && ...
-                (param.model.tcell.ometiff == true)
+        if isfield(options.model, 'tcell') && isfield(options.model.tcell, 'ometiff') && ...
+                (options.model.tcell.ometiff == true)
             get_tif_annotation_from_ometiff( proteinImagesDirectoryPath );
         end
     end
-    param = clean_up_training_input_arguments( dimensionality, param );
-    if isempty( param )
+    options = clean_up_training_input_arguments( dimensionality, options );
+    if isempty( options )
         warning('Unable to extract one or several parameters. Exiting method');
         return
     end
@@ -262,17 +259,17 @@ else
     return
 end
 
-if param.verbose
+if options.verbose
     fprintf( 1, '%s\n', 'Checking the existence of temporary folder' );
 end
 
 % %TRAIN THE GENERATIVE MODEL
 disp(' '); print_large_title('Training generative model' );
-param.dimensionality = dimensionality;
+options.dimensionality = dimensionality;
 model = img2model( dnaImagesDirectoryPath, ...
     cellImagesDirectoryPath, ...
     proteinImagesDirectoryPath, ...
-    param );
+    options );
 
 if isempty( model ) || numel(fields(model)) <=2
     warning( ['Method img2model returned an empty model. Exiting method.']);
@@ -284,29 +281,29 @@ end
 disp(' '); print_large_title('Parse and clean generative model' );
 if strcmpi( dimensionality, '2D' )
     disp(upper('Adding parameters to model structure'));
-    model = parse_and_clean_generative_model( model, param );
+    model = parse_and_clean_generative_model( model, options );
     
     disp(upper('Adding documentation to model structure'));
-    model = add_documentation_to_model( model, param );
+    model = add_documentation_to_model( model, options );
     
     disp(upper('Clean up and wrap up model structure'));
-    model = clean_up_and_wrap_up_model( model, param );
+    model = clean_up_and_wrap_up_model( model, options );
     
     disp(' '); disp(upper('Clean up workspace and environment'));
-    answer = clean_up( param );
+    answer = clean_up( options );
 else
     disp(upper('Adding parameters to model structure'));
-    model = parse_and_clean_generative_model( model, param );
+    model = parse_and_clean_generative_model( model, options );
     
     disp(upper('Adding documentation to model structure'));
-    model = add_documentation_to_model( model, param );
+    model = add_documentation_to_model( model, options );
     
     disp(upper('Adding parameters to model structure'));
-    model = parse_and_clean_generative_model( model, param );
+    model = parse_and_clean_generative_model( model, options );
     
     disp(' '); print_simple_title('Clean up workspace and environment');
-    model = clean_up_and_wrap_up_model( model, param );
-    answer = clean_up( param );
+    model = clean_up_and_wrap_up_model( model, options );
+    answer = clean_up( options );
 end%3D
 print_underlined_text(['Elapsed time used by img2slml= ' num2str(cputime-tstart)])
 diary off
@@ -527,4 +524,9 @@ try
 catch
     save( filename, 'model' );
 end
+
+if isdeployed
+    close all
+end
+
 end%clean_up_and_wrap_up_model

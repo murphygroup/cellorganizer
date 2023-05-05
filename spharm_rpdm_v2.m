@@ -168,6 +168,10 @@ answer = clean_up( options );
 diary off
 
 
+if isdeployed
+    close all
+end
+
 end
 
 

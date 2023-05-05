@@ -156,4 +156,9 @@ try
 catch
     match = false;
 end
+
+if isdeployed
+    close all
+end
+
 end%checkmodelclassandtype

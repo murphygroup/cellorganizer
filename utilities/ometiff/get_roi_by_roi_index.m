@@ -33,9 +33,11 @@ disp(roi_index);
 %
 % For additional information visit http://murphylab.web.cmu.edu or
 % send email to murphy@cmu.edu
-
 % 09132017 icaoberg Updated method to dilate the edge of the image returned
 % by the ROI call to Bioformats
+% 5/5/2023 tedz: Update roi reader to process properly formated
+% bioformats metadata rois.
+
 
 img = [];
 
@@ -81,12 +83,26 @@ for j = 1:omeMeta.getShapeCount(roi_index-1)
          % Xin's original code for getting Polygon ROI points
       Points = omeMeta.getPolygonPoints(roi_index-1, j-1);
       points_ = strsplit(char(Points),'points');
-      points_id = points_{2};
-      f_ind = strfind(points_id,'[');
-      points_id = strsplit(points_id(f_ind+1:end-2), ' ');
+      %format to read if points_ is just 1x1 array
+      s = size(points_);
+      if s(2) == 1
+          points_id = points_{1};
+          points_id = strsplit(points_id,' ');
+      else
+          points_id = points_{2};
+          f_ind = strfind(points_id,'[');
+          points_id = strsplit(points_id(f_ind+1:end-2), ' ');
+      end
       for k = 1:numel(points_id)
           point = strsplit(points_id{k}, ',');
-          mask(str2num(point{1}), str2num(point{2})) = 1;
+          if s(2) == 1
+              x = str2num(point{1}) + 1;
+              y = str2num(point{1}) + 1;
+          else
+              x = str2num(point{1});
+              y = str2num(point{2});
+          end
+          mask(x,y) = 1;
       end
       se = strel( 'disk', 2, 4 );
       mask1 = imdilate( mask, se );

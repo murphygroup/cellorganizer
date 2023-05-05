@@ -180,4 +180,9 @@ temporary_model.documentation.selection = options.selection;
 
 model = temporary_model; clear temporary_model;
 save( options.output_filename, 'model' );
+
+if isdeployed
+    close all
+end
+
 end%slml2slml

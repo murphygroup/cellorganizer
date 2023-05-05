@@ -142,4 +142,10 @@ else
     disp ('Failed to find the model file. Exiting application.' );
     answer = false;
 end
+
+
+if isdeployed
+    close all
+end
+
 end%img2shapespace

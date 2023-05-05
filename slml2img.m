@@ -1063,6 +1063,10 @@ end
 disp( 'Closing log file' );
 fclose( fileID );
 
+if isdeployed
+    close all
+end
+
 %icaoberg 7/1/2013
 disp( 'Finished synthesis' );
 answer = true;

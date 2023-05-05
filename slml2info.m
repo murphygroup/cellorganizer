@@ -125,6 +125,10 @@ if exist([pwd filesep 'html'])
     movefile([pwd filesep 'html' filesep '*'], options.output_directory );
     rmdir([pwd filesep 'html'], 's' );
 end
+
+if isdeployed
+    close all
+end
     
 answer = true;
 end%slml2info
