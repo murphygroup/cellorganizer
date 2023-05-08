@@ -1,6 +1,5 @@
 function img = get_roi_by_roi_index(img_path, channel_index, roi_index )
-disp(roi_index);
-% ROI = GET_ROI( IMAGE_PATH, CHANNEL, ROIID )
+% ROI = GET_ROI_by_roi_index( IMAGE_PATH, CHANNEL, ROIID )
 %
 % Input
 % * img_path (path to a valid OME.TIFF file)
@@ -37,6 +36,7 @@ disp(roi_index);
 % by the ROI call to Bioformats
 % 5/5/2023 tedz: Update roi reader to process properly formated
 % bioformats metadata rois.
+% 5/6/2023 R.F. Murphy give formatted display for roi# and #channels
 
 
 img = [];
@@ -53,7 +53,6 @@ end
 % Check channel index argument 
 
 channel_count = get_number_of_channels( img_path );
-disp(channel_count);
 if channel_count < channel_index || channel_index < 1
     warning('Input argument channel_index is out of range.');
     img = tif2img( img_path );
@@ -72,6 +71,9 @@ if number_of_rois < roi_index || roi_index < 1
     img = tif2img( img_path );
     return 
 else
+
+disp(['File has ' num2str(channel_count) ' channels; reading channel ' ...
+    num2str(channel_index) ' for ROI ' num2str(roi_index)]);
 
 %     Get all the shapes belonging to the ROI at this index
 mask = uint8(zeros(str2num(omeMeta.getPixelsSizeY(0)), str2num(omeMeta.getPixelsSizeX(0)))); 

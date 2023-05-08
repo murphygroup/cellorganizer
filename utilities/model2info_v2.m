@@ -39,6 +39,7 @@ function model2info_v2( model, fileID, options )
 % 2023/03/20 R.F. Murphy fix saving of shape space thumbnails
 % 2023/04/24 R.F. Murphy add comment indicators to 3/20/2023 tag; add stats
 %                           and plots for jaccard indices
+% 2023/05/08 R.F. Murphy pass fileid to spharm_rpdm_sample_or_reconstruct_images_figure
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MODEL.NAME %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 header2html( fileID, 'Model name');
@@ -231,7 +232,7 @@ if is_spharm_model( model )
     captionbase = 'SPHARM-RPDM Cell Shape Model: ';
     if spharm_obj captionbase = 'SPHARM-RPDM Protein Object Model: '; end
     if showevol
-        spharm_rpdm_sample_or_reconstruct_images_figure(model,options);
+        spharm_rpdm_sample_or_reconstruct_images_figure(model,fileID,options);
     end
     
     f = figure('visible','off');

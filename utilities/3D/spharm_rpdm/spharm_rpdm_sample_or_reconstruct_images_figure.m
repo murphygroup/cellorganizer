@@ -1,4 +1,4 @@
-function [h] = spharm_rpdm_sample_or_reconstruct_images_figure(model, options )
+function [h] = spharm_rpdm_sample_or_reconstruct_images_figure(model, fileID, options)
 % This function is used for illustration of shape evolution in the shape space for Spharm_RPDM method, 
 % The shape evolution is performed through linear pathes in the shape space. 
 % The two end points are chosen from the training image randomly. 
@@ -33,12 +33,13 @@ function [h] = spharm_rpdm_sample_or_reconstruct_images_figure(model, options )
 % options.pair_method
 % 5/1/2023 R.F. Murphy Switch video profile if deployed (Linux doesn't support MPEG-4)
 % 5/2/2023 R.F. Murphy close figure window if making movie
-% 5/3/2023 R.F. Murphy allow specification of 
+% 5/3/2023 R.F. Murphy allow specification of movie profile through makemovie option
+% 5/7/2023 R.F. Murphy pass fileID so that html can be written
 
 %close all;
 f = figure('visible','off');
 
-if nargin < 2
+if nargin < 3
 	options = struct();
 end
 
@@ -235,7 +236,7 @@ else
     saveas( f, 'show_shape_evolution_thumbnail.png', 'png' ); %3/20/2023
     img2html(fileID, 'show_shape_evolution.png', ...
         'show_shape_evolution_thumbnail.png', ...
-        [captionbase 'Shape Evolution']);
+        ['Shape Evolution']);
 end
 
 close(f)
