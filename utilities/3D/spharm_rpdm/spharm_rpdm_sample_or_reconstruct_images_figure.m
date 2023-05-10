@@ -35,6 +35,7 @@ function [h] = spharm_rpdm_sample_or_reconstruct_images_figure(model, fileID, op
 % 5/2/2023 R.F. Murphy close figure window if making movie
 % 5/3/2023 R.F. Murphy allow specification of movie profile through makemovie option
 % 5/7/2023 R.F. Murphy pass fileID so that html can be written
+% 5/11/2023 R.F. Murphy fix makemovie value comparisons
 
 %close all;
 f = figure('visible','off');
@@ -167,7 +168,7 @@ elseif any(strcmp(rpdm_model.components, 'nuc'))
     bbox = [min(nuc_vertices_st) - [2, 2, 0.5]; max(nuc_vertices_st) + [2, 2, 0.5]];
 end
 
-if options.makemovie~='none'
+if ~strcmp(options.makemovie,'none')
     vidfile = VideoWriter('ShapeEvolutionMovie.avi',options.makemovie);
     open(vidfile);
 end
@@ -187,7 +188,7 @@ for i = 1 : numel(steps)
 	    [nuc_vertices, nuc_faces] = reorder_mesh_vertices(Zvert_nuc, fs, 'x-axis');
     end
 
-    if options.makemovie == 'none'
+    if strcmp(options.makemovie,'none')
     	curr_col = i;
         curr_row = 1;
         curr_position = [border_width + ( w_interval + per_width) * (curr_col - 1), 1 - (border_hight + (h_interval + per_height) * (curr_row -1) + per_height), per_width, per_height];
@@ -218,7 +219,7 @@ for i = 1 : numel(steps)
 	set(findobj(gca, '-property', 'fontsize'), 'fontsize', 15);
 	set(findobj(gca, '-property', 'fontweight'), 'fontweight', 'bold');
 
-    if options.makemovie ~= 'none'
+    if ~strcmp(options.makemovie,'none')
         %saveas( gcf, ['frame' int2str(i) '.png'], 'png' );
         Frm=getframe(gcf);
         writeVideo(vidfile,Frm);
@@ -227,7 +228,7 @@ for i = 1 : numel(steps)
 
 end
 
-if options.makemovie ~= 'none'
+if ~strcmp(options.makemovie,'none')
     close(vidfile);
 else
     saveas( f, 'show_shape_evolution.png', 'png' );

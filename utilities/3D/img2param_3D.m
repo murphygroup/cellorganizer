@@ -68,6 +68,7 @@ function param = img2param_3D( imdna_path,imcell_path,...
 % 2/20/2023 R.F.Murphy actuall make the fix!
 % 3/24/2023 R.F.Murphy test hd against correct option (options.spharm_rpdm.hd_thresh)
 % 3/25/2023 R.F.Murphy add default for spharm_rpdm.hd_thresh
+% 5/9/2023 R.F. Murphy fix case where input file specs are handles or missing
 
 default_options = struct('downsampling', [1,1,1], ...
     'display', false, ...
@@ -174,7 +175,11 @@ if ~exist(savefile, 'file') && (~isfield(options,'if_skip_cell_nuclear_model') |
             
             % xruan 09/14/2018
         case 'spharm_rpdm'
-            [ignorepath,nucfilename,ignoreext]=fileparts(options.dna_image_path);
+            if isfield(options,'dna_image_path') && ~strcmpi(class(options.dna_image_path), 'function_handle')
+                [ignorepath,nucfilename,ignoreext]=fileparts(options.dna_image_path);
+            else
+                [~,nucfilename] = fileparts(tempname);
+            end
             [nuc] = spharm_rpdm_image_parameterization(param.seg.nuc, options.spharm_rpdm, nucfilename); %2/20/2023
             nuc.type = 'spharm_rpdm';
         otherwise
@@ -215,7 +220,11 @@ if ~isempty(imcell) && (~isfield(options,'if_skip_cell_nuclear_model') || ~optio
                 if strcmp(options.train.flag, 'nuclear')
                     cellfit = nuc;
                 else
-                    [ignorepath,cellfilename,ignoreext]=fileparts(options.cell_image_path);
+            if isfield(options,'cell_image_path') && ~strcmpi(class(options.cell_image_path), 'function_handle')
+                        [ignorepath,cellfilename,ignoreext]=fileparts(options.cell_image_path);
+                    else
+                        [~,cellfilename] = fileparts(tempname);
+                    end
                     [cellfit] = spharm_rpdm_image_parameterization(param.seg.cell, options.spharm_rpdm, cellfilename);
                     if cellfit.final_hd > options.spharm_rpdm.hd_thresh %4/24/2023
                         error('error of parameterization above options.spharm_rpdm.hd_thresh')

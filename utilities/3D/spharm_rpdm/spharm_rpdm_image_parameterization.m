@@ -17,6 +17,7 @@ function [param_output] = spharm_rpdm_image_parameterization(cur_image, options,
 % 4/13/2023 R.F.Murphy pass options.debug flag to spharm2image; show debug figure of same slice
 % 4/24/2023 R.F.Murphy return empty param struct if parameterization fails;
 %                       make figure invisible in case deployed
+% 5/9/2023 R.F.Murphy flip X and Y dimensions before calling spharm2image
 
 if ~exist('options', 'var') || isempty(options)
     options = [];
@@ -185,7 +186,8 @@ meshtype = [];
 meshtype.type = 'triangular';
 meshtypeoptions = []; %1/31/2023 pass meshtype using options structure
 meshtypeoptions.meshtype = meshtype;
-meshtypeoptions.imagesize = size(cur_image);
+imgsizetemp = size(cur_image);
+meshtypeoptions.imagesize = imgsizetemp([2, 1, 3]);
 meshtypeoptions.debug = options.debug;
 img = spharm2image(deg,fvec,meshtypeoptions);
 jaccard_index = align_calc_jaccard(cur_image,img);

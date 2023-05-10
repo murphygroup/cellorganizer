@@ -57,6 +57,7 @@ function models2report_v2(models, param, classlabels, fileID)
 % Feb. 16, 2023 R.F.Murphy correct test for whether nuclear shape model is
 % SPHARM; save comparison scores to .mat file
 % March 21, 2023 R.F.Murphy add shape space plot to spharm-obj
+% May 9, 2023 R.F. Murphy fix comments from March 21 changes
 
 
 %put includespharm under the includeprot
@@ -198,7 +199,7 @@ if length(yall)>0
     saveas(figures(fig_count), sprintf('image%d.png', fig_count), 'png');
     fP = figures(fig_count).Position;
     figures(fig_count).Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
-    saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); 3/21/2023
+    saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); %3/21/2023
     img2html(fileID, sprintf('image%d.png', fig_count), ...
         sprintf('image%d_thumbnail.png', fig_count), 'Parameter comparison');
   end
@@ -234,7 +235,7 @@ if length(yall)>0
  saveas(figures(fig_count), sprintf('image%d.png', fig_count), 'png');
  fP = figures(fig_count).Position;
  figures(fig_count).Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
- saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); 3/21/2023
+ saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); %3/21/2023
  img2html(fileID, sprintf('image%d.png', fig_count), ...
      sprintf('image%d_thumbnail.png', fig_count), 'Parameters with largest differences');
 end
@@ -261,7 +262,7 @@ if param.includeprot
         saveas(figures(fig_count), sprintf('image%d.png', fig_count), 'png');
         fP = figures(fig_count).Position;
         figures(fig_count).Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
-        saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); 3/21/2023
+        saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); %3/21/2023
         img2html(fileID, sprintf('image%d.png', fig_count), ...
             sprintf('image%d_thumbnail.png', fig_count), 'GMM Vesicle Model Comparison');
 
@@ -315,7 +316,7 @@ if param.includeprot
         saveas(figures(fig_count), sprintf('image%d.png', fig_count), 'png');
         fP = figures(fig_count).Position;
         figures(fig_count).Position = [fP(1) fP(2) round(fP(3)/2) round(fP(4)/2)];
-        saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); 3/21/2023
+        saveas( figures(fig_count), sprintf('image%d_thumbnail.png', fig_count), 'png' ); %3/21/2023
         img2html(fileID, sprintf('image%d.png', fig_count),...
             sprintf('image%d_thumbnail.png',fig_count), 'Spatial model comparison');
      end
