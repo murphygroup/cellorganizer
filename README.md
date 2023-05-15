@@ -1,28 +1,27 @@
 <!-- CellOrganizer
 -------------
-For generating 3D images, using a computer with at least 4GB of memory, 8Gb is recommended.
+I. CellOrganizer takes as input 2D-4D images of cells and creates generative models of many aspects of cell size, shape and internal organization.  It also contains utilities for evaluating, comparing and otherwise using this models.
 
-I. Installation
----------------
-To install CellOrganizer
+In addition to the Matlab version, CellOrganizer is also available as compiled executables in a Docker image with Jupyter Notebook support.
 
-(1) Download the latest distribution from
+The full documentation for CellOrganizer is available at 
+
+https://cellorganizer.readthedocs.io/en/latest/
+
+An extensive tutorial on the Docker/Jupyter version of CellOrganizer can be found at
+
+https://docs.google.com/document/d/10LFLwMmpuQrN8880Sf0ndh7VYeWZDJ7E/
+
+The release notes for v2.10 can be found at
+
+https://docs.google.com/document/d/1D7AAdWc-_xvBu3YCtOfURevpjlCZrZrRAROhJhipCHQ/edit?usp=sharing
+
+Additional information on CellOrganizer is available at
 
 http://www.cellOrganizer.org
 
-or
 
-http://murphylab.web.cmu.edu/software/CellOrganizer
-
-(2) Unzip the distribution into a folder of your choice
-
-(3) Start Matlab and change the default directory to the folder chosen above
-
-II. Using CellOrganizer via the Graphical User Interface
-
-Enter "startup" at the Matlab command prompt
-
-III. Using CellOrganizer from the Matlab command line
+II. Using CellOrganizer from the Matlab command line
 
 Enter "startup" at the Matlab command prompt to add the relevant paths.  The main CellOrganizer commands are
 
@@ -34,15 +33,7 @@ and
 
 > slml2img
 
-which synthesizes one or more image(s) from a trained model.
-
-IV. Examples using the Matlab command line
-
-There are a numbers of demo files that illustrate how to use CellOrganizer from the command line.  Type
-
-> demoinfo
-
-to get a listing of available demos. -->
+which synthesizes one or more images from a trained model.
 
 
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
