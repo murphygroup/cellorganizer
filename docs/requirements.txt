@@ -1,2 +1,2 @@
 pyexec
-sphinxcontrib.gist
+# sphinxcontrib.gist
