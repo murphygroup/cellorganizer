@@ -34,7 +34,6 @@
 % Li Shen
 % 11/09/2004 - create
 % 02/17/2023 - R.F.Murphy suppress printing inside L loop
-% 03/14/2023 - R.F.Murphy suppress plot creation if deployed
 
 function obj = fill3dholes(obj,conn,epsilon,name)
 
@@ -165,7 +164,6 @@ if ~isdeployed
         material([.3 .4 .2 10]); lighting phong;
         axis equal; view(3); axis(ax); 
     end
-
 end
 
 obj = Y(3:end-2,3:end-2,3:end-2); 

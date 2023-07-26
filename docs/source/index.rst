@@ -12,6 +12,8 @@ CellOrganizer Documentation
    :maxdepth: 2
 
    ./chapters/getting_started
+
+   ./sections/tutorials.rst
    
    ./chapters/cellorganizer_functions_&_options
 
