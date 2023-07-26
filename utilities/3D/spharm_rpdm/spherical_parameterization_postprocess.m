@@ -7,6 +7,7 @@ function [param_postprocess] = spherical_parameterization_postprocess(vertices, 
 % 02/24/2019 add options for rotation either in xy-plane (default) or xyz
 % 03/23/2023 pass in final_hd and jaccard_index
 % 04/12/2023 fix error in calling sequence
+% 7/15/2023 R.F.Murphy only check quality if option is true
 
 options = process_options_structure(struct('alignment_method', 'major_axis', ...
                                          'rotation_plane', 'xy', ...    
@@ -22,15 +23,17 @@ maxDeg = options.maxDeg;
 check_quality = options.check_quality;
 hd_thresh = options.hd_thresh;
 
-[is_good, hd] = spherical_parameterization_quality_check(sph_verts, vertices, faces, options);
-if ~is_good
-    disp('The parameterization is bad, skip it!');
-    param_postprocess = [];
-    return;
-end
-if hd~=final_hd %3/23/2023
-    disp('hd calculated in spherical_parameterization_process does not match final_hd');
-    final_hd=hd;
+if check_quality %7/15/2023
+    [is_good, hd] = spherical_parameterization_quality_check(sph_verts, vertices, faces, options);
+    if ~is_good
+        disp('The parameterization is bad, skip it!');
+        param_postprocess = [];
+        return;
+    end
+    if hd~=final_hd %3/23/2023
+        disp('hd calculated in spherical_parameterization_process does not match final_hd');
+        final_hd=hd;
+    end
 end
 
 if options.use_given_rotation_matrix

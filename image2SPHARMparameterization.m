@@ -1,5 +1,7 @@
 function answer = image2SPHARMparameterization(varargin)
 
+% July 15, 2023 R.F. Murphy add options.spharmrotate to do rotation by various methods
+
 if isdeployed
     
     filename = is_deployed(varargin{1});
@@ -42,6 +44,22 @@ end
 % disp(cur_image);
 % cur_image = loadImage(cur_image, options.downsampling);
 param_output = spharm_rpdm_image_parameterization(cur_image, options);
+
+% rotationally align if desired
+if options.spharmrotate
+    param_post = spherical_parameterization_postprocess(param_output.vertices, param_output.faces, ...
+        param_output.sph_verts, param_output.fvec, param_output.final_hd, param_output.jaccard_index, options);
+    param_output.fvec = param_post.fvec;
+    param_output.vertices = param_post.vertices;
+    param_output.faces = param_post.faces;
+    param_output.sph_verts = param_post.sph_verts;
+%    if isfield('param_post','R')
+    try
+        param_output.R = param_post.R;
+        param_output.rotation_center = param_post.rotation_center;
+    catch
+    end
+end
 
 %save output if deployed
 % if isdeployed
